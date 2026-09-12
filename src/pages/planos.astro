@@ -4,6 +4,7 @@ import PageMasthead from "../components/layout/PageMasthead.astro";
 import Plans from "../components/sections/Plans.astro";
 import Faq from "../components/sections/Faq.astro";
 import FinalCta from "../components/sections/FinalCta.astro";
+import GooeyStack from "../components/layout/GooeyStack.astro";
 import { PLANS, formatBRL } from "../data/plans.ts";
 import { SITE_URL } from "../data/site.ts";
 
@@ -42,5 +43,10 @@ const schema = {
   />
   <Plans heading="Escolha o tamanho do seu." intro="Todos incluem hospedagem, suporte técnico e manutenção. A diferença está no tamanho do site e no conteúdo mensal." />
   <Faq />
-  <FinalCta />
+  {/* The closing CTA is a blue mass on a light ground, so it needs that
+      ground: on the home it comes from the stack it shares with Plans and FAQ,
+      here from one of its own. */}
+  <GooeyStack tone="light" variant="b">
+    <FinalCta />
+  </GooeyStack>
 </BaseLayout>

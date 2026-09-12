@@ -6,6 +6,7 @@ Every raster and video shipped in `public/` and where it came from.
 |---|---|---|
 | `public/assets/img/logo.svg` | `assets/img/logo.svg` — approved PLOP! vector wordmark, supplied by the client | Coordinate precision rounded to 2dp and whitespace collapsed (125 KB → 109 KB). Paths, colours and proportions unchanged. |
 | `public/favicon.svg` | Authored for this build | Original drawing: brand-blue rounded square, white `p`, lime dot. Not derived from the wordmark. |
+| `_astro/laptop-front.*.webp` (built) | `src/assets/img/laptop-front.png` — retouched front-on laptop render supplied by the client (1672×941, 340 KB) | Built by `astro:assets` from the FinalCta `<Image>`: WebP q82 at 560 / 1120 / 1672 px wide, alpha preserved. Nothing is hand-encoded, so the widths, the hashes and the intrinsic dimensions follow the master. |
 | `public/assets/video/hero-laptop.webm` | `assets/video/bg-hero.mp4` — client-supplied hero render (1916×1080, 24fps, 15s, 18.5 MB) | Scaled to 1600px wide, audio stripped, VP9 CRF 40 → 638 KB |
 | `public/assets/video/hero-laptop.mp4` | same | Scaled to 1600px wide, audio stripped, H.264 CRF 30, faststart → 789 KB |
 | `public/assets/video/hero-laptop-poster.webp` | same | Frame at t=0.2s, 1600px wide, WebP q82 → 43 KB |

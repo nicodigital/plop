@@ -28,6 +28,7 @@
   --color-plop-blue: #2563ff;
   --color-plop-lime: #c7ff00;
   --color-plop-lime-bright: #d6ff3d;
+  --color-plop-lime-deep: #9ec300;
   --color-plop-white: #ffffff;
   --color-plop-violet: #8b6cf6;
   --color-plop-pink: #ff4d84;
@@ -94,7 +95,7 @@
 
 :root {
   --gutter: clamp(20px, 4vw, 64px);
-  --section-space: clamp(80px, 12vw, 180px);
+  --section-space: clamp(80px, 10vw, 150px);
   --duration-fast: 180ms;
   --duration-normal: 320ms;
   --duration-slow: 600ms;
@@ -372,7 +373,7 @@ html.lenis body {
 }
 
 .card-swiper {
-  @apply relative m-0 aspect-[720/356] w-full overflow-hidden rounded-[var(--radius-plop-lg)] border border-white;
+  @apply relative m-0 aspect-[720/356] w-full overflow-hidden rounded-[var(--radius-plop-lg)] border-[2px] border-blue-400;
   corner-shape:squircle;
 
   video{

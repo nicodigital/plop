@@ -9,20 +9,20 @@ interface Props {
 const { headingLevel: Heading = "h2" } = Astro.props;
 ---
 
-<section class="on-white bg-white py-[var(--section-space)]">
+<section class="on-white py-20">
   <div class="shell">
-    <div class="spine-grid">
-      <div>
-        <Heading class="text-[length:var(--text-h2)] mb-10" data-reveal>
+
+      <div class="max-w-[40rem] mx-auto mb-20">
+        <Heading class="text-[length:var(--text-h2)] mb-10 text-center" data-reveal>
           Antes que você pergunte.
         </Heading>
-        <p class="muted measure mt-6 text-[length:var(--text-lead)] leading-[1.3]" data-reveal>
+        <p class="measure mt-6 text-[length:var(--text-lead)] leading-[1.3] text-plop-blue-deep text-center" data-reveal>
           As dúvidas que aparecem em quase toda conversa, respondidas aqui para
           você não precisar perguntar.
         </p>
       </div>
 
-      <div data-reveal>
+      <div data-reveal class="max-w-[66%] mx-auto">
         {
           FAQ.map((item) => (
             <details class="group border-t border-plop-hairline last:border-b" name="faq">
@@ -39,6 +39,6 @@ const { headingLevel: Heading = "h2" } = Astro.props;
           ))
         }
       </div>
-    </div>
+
   </div>
 </section>

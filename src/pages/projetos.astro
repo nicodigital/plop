@@ -49,5 +49,10 @@ import { PROJECTS } from "../data/projects.ts";
     </div>
   </section>
 
-  <FinalCta />
+  {/* The closing CTA is a blue mass on a light ground, so it needs that
+      ground: on the home it comes from the stack it shares with Plans and FAQ,
+      here from one of its own. */}
+  <GooeyStack tone="light" variant="b">
+    <FinalCta />
+  </GooeyStack>
 </BaseLayout>

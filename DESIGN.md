@@ -593,13 +593,17 @@ Swiper y hacía que el slider pareciera roto en vez de simplemente quieto.
 
 Lo que sostiene la conformidad en su lugar:
 
-- **Un único control de reproducción** (`[data-projects-playback]`, en el
-  slider), que detiene y reanuda todo lo que se mueve solo: las dos bandas, los
-  videos del portfolio y los fondos líquidos —estos últimos vía
-  `:root[data-motion-paused]`. WCAG 2.2 SC 2.2.2 pide que el movimiento
-  automático de más de cinco segundos sea detenible, no que no exista; el
-  control es lo que cumple ese criterio ahora, y por eso borrarlo saca a la
-  página de AA. `scripts/a11y.mjs` falla si no está.
+- ~~**Un único control de reproducción** (`[data-projects-playback]`).~~
+  **Quitado a pedido del dueño.** El botón interceptaba la lectura del slider
+  y, junto con el drag de Swiper, impedía que las tarjetas —que ahora son
+  enlaces a los sitios en vivo— se pudieran clickear. Las bandas corren sin
+  fin y sólo se detienen fuera de pantalla, donde nadie las ve.
+  **Consecuencia conocida y aceptada:** WCAG 2.2 SC 2.2.2 pide que el
+  movimiento automático de más de cinco segundos sea detenible, así que sin
+  ese control la página queda fuera de AA en ese criterio. `scripts/a11y.mjs`
+  lo reporta como nota, no como falla, y conserva las verificaciones por si el
+  control vuelve. La regla `:root[data-motion-paused]` de `GooeyBackground`
+  sigue ahí, ahora sin nadie que la active.
 - **Nada queda escondido.** El reveal corre para todos, y `scripts/a11y.mjs`
   verifica que tras recorrer la página entera no quede un solo `[data-reveal]`
   bajo opacidad 1.

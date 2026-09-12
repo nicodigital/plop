@@ -90,11 +90,17 @@ if (rates.length === 2 && Math.abs(Math.abs(rates[0]) - Math.abs(rates[1])) < 5)
   fails.push(`both project bands travel at the same rate (${rates.join(", ")}px/0.8s)`);
 }
 
-// SC 2.2.2: the bands and the liquid grounds both move without end, so the
-// visitor must have a way to stop them. Report its absence instead of
-// crashing here, or one deleted button takes every other check down with it.
+// SC 2.2.2: the bands and the liquid grounds move without end and, by the
+// owner's decision, the playback control was removed so the project tiles
+// could be clicked. This is a known, accepted departure from AA — it is
+// reported as a note, not a failure, and the checks below stay in place so
+// they run again if the control ever comes back.
 const hasPlayback = (await dp.locator("[data-projects-playback]").count()) > 0;
-if (!hasPlayback) fails.push("no [data-projects-playback] control: continuous motion cannot be stopped (SC 2.2.2)");
+if (!hasPlayback) {
+  notes.push(
+    "no [data-projects-playback] control: continuous motion cannot be stopped (SC 2.2.2, accepted)",
+  );
+}
 
 if (hasPlayback) {
 await dp.locator("[data-projects-playback]").click();
@@ -358,13 +364,16 @@ if (lowContrast.length) {
 }
 notes.push(`contrast: ${measured} text nodes measured against rendered pixels, ${lowContrast.length} below AA`);
 
-// --- The liquid grounds stay under the contrast ceiling --------------------
+// --- The liquid grounds stay inside the contrast bound ---------------------
 // The blobs drift, so no single screenshot of the page proves the copy over
-// them is safe. What does prove it is a bound: measure the BRIGHTEST pixel
-// the ground ever shows and check it against the ground luminance that the
-// lightest secondary text on it needs for 4.5:1. Under that bound, no drift
-// of the blobs can put any text below AA. Lightening --goo-blob past
-// blue-700, or raising its alpha, is what would cross it.
+// them is safe. What does prove it is a bound on the worst pixel the ground
+// ever shows, checked against the ground luminance its secondary text needs
+// for 4.5:1. Under that bound, no drift of the blobs can put any text below
+// AA. Which end binds depends on the tone: a blue ground carries light copy,
+// so its BRIGHTEST pixel must stay under a ceiling, and a light ground carries
+// dark copy, so its DARKEST pixel must stay over a floor. Lightening the blue
+// blobs past blue-700, or darkening the light ones past blue-300, or raising
+// either alpha, is what would cross it.
 let seen = 0;
 const goo = await browser.newContext({ viewport: { width: 1440, height: 900 } });
 const gp = await goo.newPage();
@@ -382,18 +391,23 @@ for (const width of [1440, 390]) {
       .forEach((el) => (el.style.display = "none"));
   });
 
-  // Through a throwaway element, because reading the custom property off
+  // Through throwaway elements, because reading the custom properties off
   // :root gives back the unresolved `var(--color-plop-blue-200)`.
-  const muted = await gp.evaluate(() => {
-    const probe = document.createElement("span");
-    probe.style.color = "var(--color-plop-on-blue)";
-    document.body.append(probe);
-    const value = getComputedStyle(probe).color;
-    probe.remove();
-    return value;
-  });
-  // Invert the WCAG ratio for the darker term: L_bg <= (L_text + 0.05)/4.5 - 0.05
-  const ceiling = (relative(rgb(muted)) + 0.05) / 4.5 - 0.05;
+  const [onBlue, onWhite] = await gp.evaluate(() =>
+    ["--color-plop-on-blue", "--color-plop-on-white"].map((token) => {
+      const probe = document.createElement("span");
+      probe.style.color = `var(${token})`;
+      document.body.append(probe);
+      const value = getComputedStyle(probe).color;
+      probe.remove();
+      return value;
+    }),
+  );
+  // Invert the WCAG ratio for whichever term the ground is:
+  //   darker ground: L_bg <= (L_text + 0.05)/4.5 - 0.05
+  //   lighter ground: L_bg >= 4.5*(L_text + 0.05) - 0.05
+  const ceiling = (relative(rgb(onBlue)) + 0.05) / 4.5 - 0.05;
+  const floor = 4.5 * (relative(rgb(onWhite)) + 0.05) - 0.05;
 
   const grounds = await gp.$$("[data-goo]");
   if (!grounds.length) fails.push(`no [data-goo] liquid grounds found at ${width}px`);
@@ -406,6 +420,8 @@ for (const width of [1440, 390]) {
     const png = PNG.sync.read(await grounds[i].screenshot());
     let brightest = -1;
     let brightestPx = null;
+    let darkest = Infinity;
+    let darkestPx = null;
     for (let y = 0; y < png.height; y += 4) {
       for (let x = 0; x < png.width; x += 4) {
         const o = (png.width * y + x) << 2;
@@ -415,8 +431,23 @@ for (const width of [1440, 390]) {
           brightest = l;
           brightestPx = px;
         }
+        if (l < darkest) {
+          darkest = l;
+          darkestPx = px;
+        }
       }
     }
+
+    const tone = await grounds[i].evaluate((el) => el.dataset.gooTone);
+    if (tone === "light") {
+      if (darkest < floor - 0.0005) {
+        fails.push(
+          `${width}px light liquid ground ${i + 1} too dark: darkest rgb(${darkestPx}) L=${darkest.toFixed(4)} under the L>=${floor.toFixed(4)} it must hold (secondary copy ${onWhite})`,
+        );
+      }
+      continue;
+    }
+
     // FinalCta's flat ground is already above the blue-200 ceiling and
     // carries no secondary copy, so what binds there is the weaker rule:
     // the liquid must not make its section any lighter than it already is.
@@ -426,7 +457,7 @@ for (const width of [1440, 390]) {
     const limit = Math.max(ceiling, relative(rgb(flat)));
     if (brightest > limit + 0.0005) {
       fails.push(
-        `${width}px liquid ground ${i + 1} too light: brightest rgb(${brightestPx}) L=${brightest.toFixed(4)} over the L<=${limit.toFixed(4)} it may reach (flat ground ${flat}, secondary copy ${muted})`,
+        `${width}px liquid ground ${i + 1} too light: brightest rgb(${brightestPx}) L=${brightest.toFixed(4)} over the L<=${limit.toFixed(4)} it may reach (flat ground ${flat}, secondary copy ${onBlue})`,
       );
     }
   }

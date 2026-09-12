@@ -15,7 +15,10 @@ export type IconName =
   | "chevron-left"
   | "chevron-right"
   | "play"
-  | "pause";
+  | "pause"
+  | "desktop"
+  | "desktop-speed"
+  | "calendar";
 
 interface Props {
   name: IconName;
@@ -36,6 +39,11 @@ const strokePaths: Partial<Record<IconName, string>> = {
   "chevron-right": "M9 5l7 7-7 7",
   play: "M8 5.6v12.8L18.4 12 8 5.6Z",
   pause: "M9.5 5.5v13M14.5 5.5v13",
+  desktop: "M12 16H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v8m-6 6 2 2 4-4M7 20h4m-2-4v4",
+  "desktop-speed":
+    "M14.5 16H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v7.5M7 20h6m-4-4v4m10-4-2 3h4l-2 3",
+  calendar:
+    "M11.5 21H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6M16 3v4M8 3v4m-4 4h16m-5 8 2 2 4-4",
 };
 
 const path = strokePaths[name];

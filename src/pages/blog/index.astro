@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PageMasthead from "../../components/layout/PageMasthead.astro";
 import FinalCta from "../../components/sections/FinalCta.astro";
+import GooeyStack from "../../components/layout/GooeyStack.astro";
 import Icon from "../../components/ui/Icon.astro";
 
 const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
@@ -80,5 +81,10 @@ const dateFormat = new Intl.DateTimeFormat("pt-BR", {
     </div>
   </section>
 
-  <FinalCta />
+  {/* The closing CTA is a blue mass on a light ground, so it needs that
+      ground: on the home it comes from the stack it shares with Plans and FAQ,
+      here from one of its own. */}
+  <GooeyStack tone="light" variant="b">
+    <FinalCta />
+  </GooeyStack>
 </BaseLayout>

@@ -17,14 +17,14 @@ const {
 ---
 
 <section
-  class="on-white bg-plop-paper py-[var(--section-space)]"
+  class="on-white py-[var(--section-space)]"
   id="planos"
   data-plans-section
 >
   <div class="shell">
-    <div class="max-w-[40rem]">
-      <Heading class="max-w-[15ch] text-[length:var(--text-h2)]" data-reveal>{heading}</Heading>
-      <p class="muted measure mt-6 text-[length:var(--text-lead)]" data-reveal>{intro}</p>
+    <div class="max-w-[40rem] mx-auto">
+      <Heading class="text-[length:var(--text-h2)] text-center" data-reveal>{heading}</Heading>
+      <p class="measure mt-6 text-[length:var(--text-lead)] leading-[1.3] text-plop-blue-deep text-center" data-reveal>{intro}</p>
     </div>
 
     {/*
@@ -40,7 +40,7 @@ const {
               "plan-card flex flex-col rounded-[var(--radius-plop-lg)] p-[clamp(24px,2.6vw,36px)]",
               plan.recommended
                 ? "bg-plop-ink text-white"
-                : "border-2 border-plop-hairline bg-white",
+                : "border-1 border-plop-blue/50 bg-white/50",
             ]}
             data-reveal
           >
@@ -174,9 +174,9 @@ const {
       }
     </ul>
 
-    <p class="muted mt-8 max-w-[62ch] text-ui">
-      O domínio fica no seu nome. Se um dia você quiser levar o site para outro
-      lugar, ele vai com você.
+    <p class="muted mt-8 max-w-[62ch] text-ui text-center mx-auto">
+      O domínio fica no seu nome. Se um dia você quiser levar o site<br> 
+      para outro lugar, ele vai com você.
     </p>
   </div>
 </section>

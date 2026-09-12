@@ -23,15 +23,28 @@ interface Props {
   /** Tailwind background utility for the flat colour under the liquid. */
   ground?: string;
   variant?: "a" | "b";
+  /**
+   * `blue` is the brand surface with white liquid; `light` is the paper
+   * surface with pale-blue liquid, for the stretch of the page that carries
+   * dark copy (Plans, FAQ).
+   */
+  tone?: "blue" | "light";
 }
 
-const { ground = "", variant = "a" } = Astro.props as Props;
+const { ground = "", variant = "a", tone = "blue" } = Astro.props as Props;
+
+/* The wash under the liquid. It is part of the tone, not of the section: the
+   sections slotted in stay transparent so the pin reads as one surface. */
+const WASH = {
+  blue: "bg-gradient-to-br from-blue-700 to-blue-500",
+  light: "bg-gradient-to-br from-plop-blue-50 to-white",
+} as const;
 ---
 
 <div class:list={["relative isolate", ground]}>
   <div class="pointer-events-none absolute inset-0 -z-10">
-    <div class="sticky top-0 h-svh bg-gradient-to-br from-blue-700 to-blue-500">
-      <GooeyBackground variant={variant} />
+    <div class:list={["sticky top-0 h-svh", WASH[tone]]}>
+      <GooeyBackground variant={variant} tone={tone} />
     </div>
   </div>
 

@@ -7,18 +7,26 @@
  * instead of reading as separate discs. The filter itself lives once in
  * BaseLayout, because an SVG `id` may only be defined once per document.
  *
- * Usually you want GooeyStack, not this: one ground pinned behind several
- * sections reads as a single body of liquid the page scrolls over, where one
- * ground per section reads as the same wallpaper repeated. Use this directly
- * only for a section that stands alone, as FinalCta does.
+ * You want GooeyStack, not this: one ground pinned behind several sections
+ * reads as a single body of liquid the page scrolls over, where one ground per
+ * section reads as the same wallpaper repeated. Nothing mounts this component
+ * directly any more — FinalCta was the last one to, and it now sits on the
+ * light stack with its blue as a flat rounded mass instead.
  *
- * CONTRAST CEILING. Secondary copy on these grounds is `--color-plop-on-blue`
- * (blue-200, L=0.692), which needs the ground at L<=0.115 to clear 4.5:1. The
- * blobs are blue-700 at 50% over blue-800, which lands at L=0.100 — the
- * lightest step with real headroom. blue-600 at the same alpha reaches 0.122
- * and drops that text to 4.32:1. So the ramp stops at 700 unless the muted
- * text on these sections moves to white first. `scripts/a11y.mjs` measures the
- * rendered pixels against that ceiling and will say so if it is crossed.
+ * CONTRAST CEILING. Secondary copy on the `blue` grounds is
+ * `--color-plop-on-blue` (blue-200, L=0.692), which needs the ground at
+ * L<=0.115 to clear 4.5:1. The blobs are blue-700 at 50% over blue-800, which
+ * lands at L=0.100 — the lightest step with real headroom. blue-600 at the
+ * same alpha reaches 0.122 and drops that text to 4.32:1. So the ramp stops at
+ * 700 unless the muted text on these sections moves to white first.
+ *
+ * The `light` tone inverts that bound. Its copy is `--color-plop-on-white`
+ * (#3d4a66, L=0.068), so there the ground must not get DARKER than L>=0.476.
+ * blue-300 at 55% over blue-50 is the darkest the liquid ever reaches and
+ * lands at L~0.69, which is why the light ramp stops at 300.
+ *
+ * Either way `scripts/a11y.mjs` measures the rendered pixels of every ground
+ * against the bound its tone implies, and will say so if one is crossed.
  */
 interface Props {
   /**
@@ -26,9 +34,14 @@ interface Props {
    * recognisably the same drawing.
    */
   variant?: "a" | "b";
+  /**
+   * Which way the liquid reads against the section under it: `blue` is white
+   * liquid on the brand blue, `light` is pale-blue liquid on paper/white.
+   */
+  tone?: "blue" | "light";
 }
 
-const { variant = "a" } = Astro.props as Props;
+const { variant = "a", tone = "blue" } = Astro.props as Props;
 
 const TRANSFORMS = { a: "none", b: "rotate(180deg)" } as const;
 const DELAYS = { a: "0s", b: "-7s" } as const;
@@ -36,7 +49,13 @@ const DELAYS = { a: "0s", b: "-7s" } as const;
 const style = `--goo-turn:${TRANSFORMS[variant]};--goo-delay:${DELAYS[variant]}`;
 ---
 
-<div class="goo" style={style} aria-hidden="true" data-goo>
+<div
+  class:list={["goo", tone === "light" && "goo--light"]}
+  style={style}
+  aria-hidden="true"
+  data-goo
+  data-goo-tone={tone}
+>
   <div class="goo-body">
     <span class="blob blob--xl at-1"></span>
     <span class="blob blob--lg at-2"></span>
@@ -56,12 +75,23 @@ const style = `--goo-turn:${TRANSFORMS[variant]};--goo-delay:${DELAYS[variant]}`
     /* One unit for every size and every travel distance below, so the whole
        composition scales as one thing and stops growing on ultrawide. */
     --goo-unit: min(1vmax, 15px);
-    --goo-blob: white;
+    --goo-core: rgb(255 255 255);
+    --goo-edge: rgb(255 255 255 / 0.5);
     /* The alpha lives here and not in the colour: the goo filter's ramp
        (22 -9) drives every alpha to 0 or 1, so a translucent blob comes out
        of the filter fully opaque. Fading the whole layer afterwards is the
        only place 50% survives. */
     --goo-alpha: 0.1;
+  }
+
+  /* On paper the white liquid disappears, so the tint has to come from the
+     blob itself. It still has to stay light enough for the dark secondary
+     copy over it — see the contrast note above for why the ramp stops at
+     blue-300. */
+  .goo--light {
+    --goo-core: var(--color-plop-blue-300);
+    --goo-edge: color-mix(in srgb, var(--color-plop-blue-200) 50%, transparent);
+    --goo-alpha: 0.55;
   }
 
   .goo-body {
@@ -76,8 +106,11 @@ const style = `--goo-turn:${TRANSFORMS[variant]};--goo-delay:${DELAYS[variant]}`
     position: absolute;
     display: block;
     border-radius: 50%;
-    /* background: var(--goo-blob); */
-    background: radial-gradient(ellipse at center,  rgba(255,255,255,1) 0%,rgba(255,255,255,0.5) 100%);
+    background: radial-gradient(
+      ellipse at center,
+      var(--goo-core) 0%,
+      var(--goo-edge) 100%
+    );
     will-change: transform;
   }
 

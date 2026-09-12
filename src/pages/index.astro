@@ -38,7 +38,16 @@ const faqSchema = {
     <About />
     <HowItWorks />
   </GooeyStack>
-  <Plans />
-  <Faq />
-  <FinalCta />
+  {/*
+    Same idea on the light half of the page: Plans, FAQ and the closing CTA
+    share a paper/white seam, so one pale ground behind all three reads as the
+    liquid surfacing again rather than as three flat panels. FinalCta carries
+    its own blue as a rounded mass on top of that ground instead of as a band,
+    so it no longer needs a liquid ground of its own.
+    */}
+  <GooeyStack tone="light" variant="b">
+    <Plans />
+    <Faq />
+    <FinalCta />
+  </GooeyStack>
 </BaseLayout>
