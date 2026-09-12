@@ -2,6 +2,7 @@
 import Icon from "../ui/Icon.astro";
 import Button from "../ui/Button.astro";
 import { PLANS, formatBRL } from "../../data/plans.ts";
+import { CONTACT_ANCHOR } from "../../data/nav.ts";
 
 interface Props {
   heading?: string;
@@ -159,10 +160,18 @@ const {
             </ul>
 
             <div class="mt-8 flex pt-1">
+              {/*
+                The card used to hand the plan to `/contato/` as a query
+                string. The form now lives in the footer of this same page, so
+                the plan travels as an attribute and the script below drops it
+                into the select — the visitor arrives at the form with their
+                answer already given, exactly as before.
+              */}
               <Button
-                href={`/contato/?plano=${plan.slug}`}
+                href={CONTACT_ANCHOR}
                 variant={plan.recommended ? "primary" : "solid-ink"}
                 class="w-full"
+                data-plan-pick={plan.slug}
                 data-track="plan_select"
                 data-track-value={plan.slug}
               >
@@ -174,8 +183,8 @@ const {
       }
     </ul>
 
-    <p class="muted mt-8 max-w-[62ch] text-ui text-center mx-auto">
-      O domínio fica no seu nome. Se um dia você quiser levar o site<br> 
+    <p class="muted balanced-breaks mx-auto mt-8 max-w-[62ch] text-center text-ui">
+      O domínio fica no seu nome. Se um dia você quiser levar o site<br />
       para outro lugar, ele vai com você.
     </p>
   </div>
@@ -207,3 +216,26 @@ const {
     }
   }
 </style>
+
+<script>
+  /**
+   * The plan a card was selected from. It used to ride to `/contato/` as a
+   * query string; the form is now on this same page, so the pick is applied
+   * to the select directly. The scroll itself is the site's shared anchor
+   * handler — this only has to have set the value before the visitor gets
+   * there, and a click handler always runs first.
+   */
+  document.querySelectorAll<HTMLAnchorElement>("[data-plan-pick]").forEach((link) => {
+    link.addEventListener("click", () => {
+      const slug = link.dataset.planPick;
+      if (!slug) return;
+
+      const target = document.querySelector<HTMLElement>(link.hash || "#contato");
+      const select = target?.querySelector<HTMLSelectElement>('select[name="plano"]');
+      if (!select) return;
+
+      select.value = slug;
+      select.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+  });
+</script>

@@ -10,6 +10,11 @@ interface Props {
   height?: number;
   /** Alternative to height when a layout is measured across, not down. */
   width?: number;
+  /**
+   * Sizing classes take over from the intrinsic style, so the mark can be
+   * responsive. `width`/`height` stay on the element either way: they are
+   * what reserves its room before the SVG arrives.
+   */
   class?: string;
   /** Decorative when the surrounding link already names the destination. */
   decorative?: boolean;
@@ -34,5 +39,9 @@ const width = widthProp ?? Math.round(RATIO * height);
   alt={decorative ? "" : "PLOP! Sites"}
   aria-hidden={decorative ? "true" : undefined}
   decoding="async"
-  style={widthProp ? `width:${width}px;height:auto` : `height:${height}px;width:auto`}
+  style={className
+    ? undefined
+    : widthProp
+      ? `width:${width}px;height:auto`
+      : `height:${height}px;width:auto`}
 />

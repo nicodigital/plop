@@ -9,9 +9,14 @@ import { CONTACT_EMAIL, HAS_WHATSAPP, PHONE_DISPLAY, PHONE_NUMBER, SITE_NAME, wh
 const year = new Date().getFullYear();
 ---
 
-<footer class="on-ink">
+{/*
+  The footer is the site's contact section: it carries the `#contato` target
+  every CTA and the nav point at, so the id belongs on the block that holds
+  the invitation and the form, not on the form element itself.
+*/}
+<footer id="contato" class="on-ink">
   <GooeyStack variant="b">
-    <div class="shell py-[clamp(64px,10vw,150px)]">
+    <div class="shell py-[clamp(56px,10vw,150px)]">
       <div class="spine-grid">
         <div>
           <h2 class="text-[length:var(--text-h2)]">
@@ -23,7 +28,9 @@ const year = new Date().getFullYear();
             com prazo, escopo e preço fechado — sem reunião obrigatória.
           </p>
 
-          <dl class="mt-10 flex flex-col gap-10 pt-20">
+          {/* The long lead-in is a desktop rhythm; on a phone it is a blank
+              screenful between the invitation and the way to answer it. */}
+          <dl class="mt-8 flex flex-col gap-6 pt-2 lg:mt-10 lg:gap-10 lg:pt-20">
             <div>
               <dt class="muted flex items-center gap-2 font-semibold">
                 <Icon name={HAS_WHATSAPP ? "phone" : "send"} size={22} class="shrink-0" />
@@ -82,15 +89,17 @@ const year = new Date().getFullYear();
           </p>
         </div>
 
-        <div class="lg:w-[50%] pt-20">
-          <h4 class="text-[length:var(--text-h3)] text-white">
-            Fale com a gente<br> e coloque <span class="text-plop-lime"> seu negócio no ar.</span>
+        <div class="pt-2 lg:w-[50%] lg:pt-20">
+          <h4 class="balanced-breaks text-[length:var(--text-h3)] text-white">
+            Fale com a gente<br /> e coloque <span class="text-plop-lime"> seu negócio no ar.</span>
           </h4>
         </div>
 
       </div>
 
-      <div class="shell pb-9">
+      {/* The fixed WhatsApp affordance lives in this corner, so the last line
+          of the page keeps clear of it rather than sitting under it. */}
+      <div class="shell pb-9 pr-20 sm:pr-0">
         <p class="muted text-small">
           © {year} {SITE_NAME}
         </p>

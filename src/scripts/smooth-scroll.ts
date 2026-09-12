@@ -38,22 +38,82 @@ export function initSmoothScroll(): void {
   };
   requestAnimationFrame(frame);
 
-  wireAnchors(lenis);
+  wireAnchors();
+  landOnInitialHash(lenis);
+}
+
+/**
+ * Scroll to a section by id, the one way the whole site does it.
+ *
+ * Exported because the header drawer has to close before the travel starts:
+ * a drawer left open over the page would hide the very section the link was
+ * asking for.
+ */
+export function scrollToSection(
+  target: HTMLElement,
+  { immediate = false }: { immediate?: boolean } = {},
+): void {
+  if (lenis) {
+    /**
+     * The destination is measured here and handed over as a number, rather
+     * than handing Lenis the element.
+     *
+     * Given an element, Lenis resolves it as `rect.top + animatedScroll` —
+     * its own idea of where the page is. Any scroll it did not drive and has
+     * not yet absorbed (a browser find-in-page, a `scrollIntoView` from
+     * elsewhere on the page, a restored position) leaves that value stale for
+     * a frame, and the anchor then lands short by exactly the drift. Measured
+     * against `window.scrollY`, which is the scroll that is actually applied,
+     * the sum is the element's absolute offset whatever Lenis believes.
+     */
+    lenis.scrollTo(target.getBoundingClientRect().top + window.scrollY, {
+      immediate,
+      offset: 0,
+    });
+  } else {
+    target.scrollIntoView({ behavior: immediate ? "auto" : "smooth" });
+  }
+
+  // Focus follows the eye, so a keyboard visitor carries on from the section
+  // that just arrived rather than from the link they left behind.
+  if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
+  target.focus({ preventScroll: true });
+}
+
+/**
+ * The hash a link is asking for, but only when it means "a section of the
+ * page you are already on". The nav writes its links root-relative
+ * (`/#planos`) so they also work from `/blog/`; on the home itself that is
+ * still an in-page jump and must not reload the document.
+ */
+export function samePageHash(link: HTMLAnchorElement): string | null {
+  if (!link.hash || link.hash.length <= 1) return null;
+  if (link.target && link.target !== "_self") return null;
+  if (link.origin !== window.location.origin) return null;
+  // Astro serves with `trailingSlash: "always"`, so `/` and `/#x` agree here.
+  if (link.pathname !== window.location.pathname) return null;
+  return link.hash;
 }
 
 /**
  * In-page links have to be handled explicitly: while Lenis holds the scroll
  * position, the browser's own jump to a fragment gets overwritten on the next
- * frame. Focus moves either way, so the keyboard lands where the eye does.
+ * frame.
  */
-function wireAnchors(instance: Lenis | null): void {
+function wireAnchors(): void {
   document.addEventListener("click", (event) => {
-    const link = (event.target as Element | null)?.closest?.<HTMLAnchorElement>(
-      'a[href^="#"]',
-    );
-    if (!link || link.hash.length <= 1) return;
+    if (event.defaultPrevented || event.button !== 0) return;
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
 
-    const target = document.querySelector<HTMLElement>(link.hash);
+    const link = (event.target as Element | null)?.closest?.<HTMLAnchorElement>(
+      "a[href]",
+    );
+    if (!link) return;
+
+    const hash = samePageHash(link);
+    if (!hash) return;
+
+    const target = document.querySelector<HTMLElement>(hash);
     if (!target) return;
 
     event.preventDefault();
@@ -62,14 +122,27 @@ function wireAnchors(instance: Lenis | null): void {
     // one control that exists to save time cost a second.
     const immediate = link.matches(".sr-only, [data-scroll-immediate]");
 
-    if (instance) {
-      instance.scrollTo(target, { immediate, offset: 0 });
-    } else {
-      target.scrollIntoView({ behavior: immediate ? "auto" : "smooth" });
-    }
+    scrollToSection(target, { immediate });
+    history.replaceState(null, "", hash);
+  });
+}
 
-    if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
-    target.focus({ preventScroll: true });
-    history.replaceState(null, "", link.hash);
+/**
+ * Arriving from another page at `/#planos`, the browser jumps to the section
+ * before Lenis exists and then Lenis restores the position it captured on the
+ * frame it started. Re-issuing the jump through Lenis is what makes the two
+ * agree; it is instant, because the visitor asked for the section, not for a
+ * tour of everything above it.
+ */
+function landOnInitialHash(instance: Lenis | null): void {
+  const hash = window.location.hash;
+  if (!hash || hash.length <= 1) return;
+
+  const target = document.querySelector<HTMLElement>(hash);
+  if (!target) return;
+
+  requestAnimationFrame(() => {
+    instance?.resize();
+    scrollToSection(target, { immediate: true });
   });
 }

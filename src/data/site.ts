@@ -21,7 +21,7 @@ export const HAS_WHATSAPP = WHATSAPP_NUMBER.length > 0;
 export const whatsappHref = (message: string = WHATSAPP_MESSAGE): string =>
   HAS_WHATSAPP
     ? `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`
-    : "/contato/";
+    : "/#contato";
 
 export const CONTACT_EMAIL = "ola@plopsites.com.br";
 

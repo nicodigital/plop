@@ -1,77 +1,199 @@
 ---
 import Button from "../ui/Button.astro";
+import { CONTACT_ANCHOR, PLANS_ANCHOR } from "../../data/nav.ts";
 ---
 
-<section class="on-blue relative isolate overflow-hidden">
-  {/*
-    Decorative background. It carries no information: every word, price and
-    action in this viewport is real HTML in the spine beside it.
-  */}
-  <div class="absolute inset-0 -z-20" aria-hidden="true">
-    <video
-      class="size-full object-cover object-[68%_bottom] lg:object-[76%_85%]"
-      autoplay
-      muted
-      loop
-      playsinline
-      preload="metadata"
-      poster="/assets/video/hero-laptop-poster.webp"
-      data-hero-video
-    >
-      <source src="/assets/video/hero-laptop-alpha.webm" type="video/webm" />
-      <source src="/assets/video/hero-laptop-alpha.mp4" type="video/mp4" />
-    </video>
-  </div>
-
-  {/*
-    Readability scrim in the brand blue itself, not black: the spine keeps
-    its contrast without the identity going grey. In portrait the copy runs
-    from 22% to 78% of the hero and the laptop sits under it, so the scrim
-    stays solid past the last line and only then opens onto the machine —
-    a frame of bright screen behind the trust row costs more than the extra
-    inch of laptop is worth. In landscape the copy is beside the laptop
-    instead of over it, so the scrim sweeps across rather than down.
-  */}
-  <div
-    class="shell relative flex min-h-[max(600px,100svh)] flex-col justify-center pb-24 pt-[clamp(124px,15vh,168px)] lg:pb-[clamp(48px,7vw,88px)]"
-  >
+<section id="topo" class="hero on-blue relative isolate flex flex-col overflow-hidden">
+  <div class="hero-body shell relative flex flex-1 flex-col justify-center">
     <div class="max-w-[42rem] lg:max-w-[54%]">
-      <h1 class="mt-5 max-w-[20ch] text-[length:var(--text-h1)]">
-        Seu site pronto <br>
+      <h1 class="max-w-[20ch] text-[length:var(--text-h1)]">
+        Seu site pronto <br />
         <span class="text-plop-lime"> e melhor! </span>
       </h1>
 
-      <p class="muted mt-7 max-w-[34ch] text-[length:var(--text-lead)] leading-[1.3]">
+      <p
+        class="muted mt-5 max-w-[34ch] text-[length:var(--text-lead)] leading-[1.3] lg:mt-7"
+      >
         Sites modernos, rápidos e fáceis de gerenciar. Design de alto desempenho
         com um preço que faz sentido.
       </p>
 
-      <div class="mt-8 flex flex-wrap items-center gap-3">
-        <Button href="/contato/" size="lg" data-track="cta_primary_click">
+      <div class="mt-6 flex flex-wrap items-center gap-3 lg:mt-8">
+        <Button href={CONTACT_ANCHOR} size="lg" data-track="cta_primary_click">
           Quero meu site
         </Button>
-        <Button href="/planos/" variant="outline" size="lg" icon="arrow-down">
+        <Button href={PLANS_ANCHOR} variant="outline" size="lg" icon="arrow-down">
           Ver planos
         </Button>
       </div>
 
       {/* Separators are drawn, not listed, so a wrap never strands one. */}
       <ul
-        class="muted mt-9 flex flex-wrap gap-x-6 gap-y-1 text-ui font-semibold"
+        class="muted mt-6 flex flex-wrap gap-x-5 gap-y-1 text-ui font-semibold lg:mt-9 lg:gap-x-6"
       >
-        <li class="before:mr-6 before:text-plop-on-blue/55 before:content-['·'] first:before:hidden">
+        <li class="before:mr-5 before:text-plop-on-blue/55 before:content-['·'] first:before:hidden lg:before:mr-6">
           No ar em semanas
         </li>
-        <li class="before:mr-6 before:text-plop-on-blue/55 before:content-['·'] first:before:hidden">
+        <li class="before:mr-5 before:text-plop-on-blue/55 before:content-['·'] first:before:hidden lg:before:mr-6">
           Hospedagem inclusa
         </li>
-        <li class="before:mr-6 before:text-plop-on-blue/55 before:content-['·'] first:before:hidden">
+        <li class="before:mr-5 before:text-plop-on-blue/55 before:content-['·'] first:before:hidden lg:before:mr-6">
           Cuidado todo mês
         </li>
       </ul>
     </div>
   </div>
+
+  {/*
+    Decorative background. It carries no information: every word, price and
+    action in this viewport is real HTML in the block above it.
+
+    The composition follows the shape of the screen, not only its size. In
+    landscape the machine sits in the right third and the copy runs beside it,
+    so the video can cover the whole hero. In portrait there is no "beside" —
+    a covering video puts the lit screen directly under the paragraph and the
+    trust row, which is how this hero came to be unreadable on a phone. So on
+    portrait the machine gets its own band at the foot of the hero, as a real
+    row rather than as reserved padding, and the copy can never grow into it.
+    The file carries an alpha channel, so the band needs no scrim and leaves
+    no seam: what sits around the machine is the same liquid ground.
+  */}
+  <div class="hero-media relative -z-20" aria-hidden="true">
+    <video
+      class="hero-video"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+      poster="/assets/video/hero-laptop-alpha-poster.webp"
+      data-hero-video
+    >
+      <source src="/assets/video/hero-laptop-alpha.webm" type="video/webm" />
+      {/*
+        Safari does not decode VP9 alpha, so it lands here — on the cut with
+        the blue baked in. On a portrait band that would draw its own edge
+        against the liquid ground, which is what the mask on `.hero-media` is
+        for. The WebM path never notices the mask: what it fades is empty.
+      */}
+      <source src="/assets/video/hero-laptop-blue.mp4" type="video/mp4" />
+    </video>
+  </div>
 </section>
+
+<style>
+  .hero {
+    min-height: max(620px, 100svh);
+  }
+
+  .hero-media {
+    /* The foot of the hero the machine occupies on a portrait screen, in the
+       source frame's own 16:9 — a proportion of the width, not a share of the
+       height.
+
+       That is the whole trick here. Phone heights range across two to one
+       while their widths barely move, so a band measured in `svh` crops the
+       frame differently on every device: one framing centres the machine on a
+       tall phone and slides it off the right edge on a short one. Measured
+       against the width, the crop is identical everywhere and a single
+       framing holds. */
+    height: 56.25vw;
+    /* A safety valve for a screen so short that even this would crowd the
+       copy. Nothing but a very small phone in landscape reaches it. */
+    max-height: 42svh;
+    flex: none;
+    overflow: hidden;
+    /* Only the opaque fallback has an edge to soften, and it has to stop
+       short of the lid, which starts about 7% down the band. */
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 5%);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 5%);
+  }
+
+  .hero-video {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    width: 100%;
+    /* Taller than the band, anchored at its foot: the surplus is cropped off
+       the top, which is empty frame, and what is left is a machine drawn
+       large enough to read on a phone rather than a thumbnail floating in its
+       own margins. It is the machine's share of the width that this number
+       sets — at 145% it lands on about 70% of the screen. */
+    height: 145%;
+    object-fit: cover;
+    /* The machine sits right of centre in the frame, so the window on it is
+       taken from the right edge. */
+    object-position: 100% bottom;
+  }
+
+  .hero-body {
+    padding-top: clamp(96px, 13vh, 168px);
+    padding-bottom: clamp(16px, 3vh, 32px);
+  }
+
+  /* A short portrait screen cannot hold the copy, the actions, the trust row
+     and a band at full size. The copy cannot shrink, so the band does — the
+     alternative is a hero that runs past the fold and cuts the machine across
+     its base, which is the one thing the band exists to avoid. */
+  @media (orientation: portrait) and (max-height: 760px) {
+    .hero-media {
+      height: 50vw;
+    }
+
+    .hero-body {
+      padding-top: clamp(76px, 11vh, 120px);
+      padding-bottom: 8px;
+    }
+  }
+
+  /* Landscape phones and tablets have no room for a band under the copy, so
+     there the hero behaves as it does on a laptop. */
+  @media (orientation: landscape) and (max-width: 1023px) {
+    .hero {
+      min-height: max(520px, 100svh);
+    }
+
+    /* The copy runs beside the machine here, not above it, so it has to give
+       up the right of the screen the way it does on a laptop. Left at its
+       portrait measure it runs under the lid and the secondary action lands
+       on the bezel. */
+    .hero-body > * {
+      max-width: 56%;
+    }
+  }
+
+  @media (orientation: landscape) and (max-width: 1023px), (min-width: 1024px) {
+    .hero-media {
+      position: absolute;
+      inset: 0;
+      height: auto;
+      max-height: none;
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+
+    .hero-video {
+      position: absolute;
+      inset: 0;
+      height: 100%;
+      object-position: 78% bottom;
+    }
+
+    .hero-body {
+      padding-bottom: clamp(32px, 6vh, 64px);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero-video {
+      object-position: 76% 85%;
+    }
+
+    .hero-body {
+      padding-bottom: clamp(48px, 7vw, 88px);
+    }
+  }
+</style>
 
 <script>
   // A background video is decoration; it must never spend battery or

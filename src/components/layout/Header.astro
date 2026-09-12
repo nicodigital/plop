@@ -4,18 +4,24 @@ import Icon from "../ui/Icon.astro";
 import { NAV_ITEMS, PRIMARY_CTA } from "../../data/nav.ts";
 
 const pathname = Astro.url.pathname;
-const isCurrent = (href: string) =>
-  href === "/" ? pathname === "/" : pathname.startsWith(href);
+
+/**
+ * Only real pages can be "current" on the server. Section links are decided
+ * by where the visitor is on the page, which is a client-side question — the
+ * script below answers it and marks them `aria-current="location"`.
+ */
+const isCurrentPage = (item: (typeof NAV_ITEMS)[number]) =>
+  !item.watches && (item.href === "/" ? pathname === "/" : pathname.startsWith(item.href));
 ---
 
 <header class="on-blue absolute inset-x-0 top-0 z-50">
-  <div class="shell flex items-center justify-between gap-6 py-5 lg:py-7">
+  <div class="shell flex items-center justify-between gap-4 py-4 sm:py-5 lg:gap-6 lg:py-7">
     <a
-      href="/"
+      href="/#topo"
       class="inline-flex min-h-[44px] shrink-0 items-center rounded-lg transition-opacity duration-[var(--duration-fast)] hover:opacity-85"
       aria-label="PLOP! Sites — início"
     >
-      <Logo height={65} decorative />
+      <Logo height={65} class="h-11 w-auto sm:h-14 lg:h-[65px]" decorative />
     </a>
 
     <nav class="hidden lg:block" aria-label="Principal">
@@ -25,16 +31,15 @@ const isCurrent = (href: string) =>
             <li>
               <a
                 href={item.href}
-                aria-current={isCurrent(item.href) ? "page" : undefined}
-                class="relative inline-flex min-h-[44px] items-center rounded-full px-4 text-ui font-semibold text-white/85 no-underline transition-colors duration-[var(--duration-fast)] hover:text-white aria-[current=page]:text-white"
+                data-watches={item.watches}
+                aria-current={isCurrentPage(item) ? "page" : undefined}
+                class="nav-link relative inline-flex min-h-[44px] items-center rounded-full px-4 text-ui font-semibold text-white/85 no-underline transition-colors duration-[var(--duration-fast)] hover:text-white"
               >
                 {item.label}
-                {isCurrent(item.href) && (
-                  <span
-                    class="absolute inset-x-4 bottom-[9px] h-[2px] rounded-full bg-plop-lime"
-                    aria-hidden="true"
-                  />
-                )}
+                <span
+                  class="nav-bar absolute inset-x-4 bottom-[9px] h-[2px] rounded-full bg-plop-lime"
+                  aria-hidden="true"
+                />
               </a>
             </li>
           ))
@@ -53,32 +58,44 @@ const isCurrent = (href: string) =>
       <button
         type="button"
         id="nav-toggle"
-        class="inline-flex size-11 items-center justify-center rounded-full border-2 border-white/45 text-white transition-colors duration-[var(--duration-fast)] hover:border-white lg:hidden"
+        class="group inline-flex size-11 items-center justify-center rounded-full border-2 border-white/45 text-white transition-colors duration-[var(--duration-fast)] hover:border-white lg:hidden"
         aria-expanded="false"
         aria-controls="nav-drawer"
       >
         <span class="sr-only">Abrir menu</span>
-        <Icon name="menu" size={22} />
+        {/* Both marks ship and `aria-expanded` decides which one is drawn, so
+            the control never waits on a script to say what it will do. The
+            switch is a utility rather than a rule in the block below: these
+            are child components, which the scoped stylesheet cannot reach. */}
+        <Icon name="menu" size={22} class="group-aria-expanded:hidden" />
+        <Icon name="close" size={22} class="hidden group-aria-expanded:block" />
       </button>
     </div>
   </div>
 
-  <div
-    id="nav-drawer"
-    class="shell hidden pb-6 lg:hidden"
-    data-nav-drawer
-  >
-    <nav aria-label="Principal, mobile">
-      <ul class="flex flex-col gap-1 border-t border-white/20 pt-4">
+  {/*
+    The drawer sits over the hero, so it needs a ground of its own: without
+    one the menu reads on top of the headline it is covering. Ink rather than
+    brand blue, because the hero behind it is brand blue and two identical
+    surfaces would not separate.
+  */}
+  <div id="nav-drawer" class="shell hidden pb-4 lg:hidden" data-nav-drawer>
+    <nav
+      class="on-ink rounded-[var(--radius-plop-lg)] bg-plop-ink p-3 [corner-shape:squircle]"
+      aria-label="Principal, mobile"
+    >
+      <ul class="flex flex-col gap-1">
         {
           NAV_ITEMS.map((item) => (
             <li>
               <a
                 href={item.href}
-                aria-current={isCurrent(item.href) ? "page" : undefined}
-                class="flex min-h-[52px] items-center rounded-[var(--radius-plop-sm)] px-3 font-display text-ui-xl font-semibold text-white/85 no-underline transition-colors duration-[var(--duration-fast)] hover:bg-white/10 hover:text-white aria-[current=page]:text-plop-lime"
+                data-watches={item.watches}
+                aria-current={isCurrentPage(item) ? "page" : undefined}
+                class="nav-link flex min-h-[52px] items-center justify-between gap-4 rounded-[var(--radius-plop-sm)] px-4 font-display text-ui-xl font-semibold text-white/85 no-underline transition-colors duration-[var(--duration-fast)] hover:bg-white/10 hover:text-white"
               >
                 {item.label}
+                <span class="nav-dot size-2 shrink-0 rounded-full bg-plop-lime" aria-hidden="true" />
               </a>
             </li>
           ))
@@ -96,20 +113,81 @@ const isCurrent = (href: string) =>
   </div>
 </header>
 
+<style>
+  /* The current item is marked twice over — colour and a drawn mark — so the
+     state never rests on hue alone. Both marks are painted by the same
+     attribute, whether the server set it (a real page) or the scroll spy did
+     (a section of this page). */
+  .nav-bar,
+  .nav-dot {
+    opacity: 0;
+    transition: opacity var(--duration-fast) var(--ease-plop-out);
+  }
+
+  .nav-link[aria-current] {
+    color: var(--color-plop-white);
+  }
+
+  .nav-link[aria-current] .nav-bar,
+  .nav-link[aria-current] .nav-dot {
+    opacity: 1;
+  }
+
+  .nav-link[aria-current] .nav-dot {
+    color: var(--color-plop-lime);
+  }
+
+</style>
+
 <script>
+  import { getLenis, samePageHash, scrollToSection } from "../../scripts/smooth-scroll.ts";
+
   const toggle = document.getElementById("nav-toggle");
   const drawer = document.querySelector<HTMLElement>("[data-nav-drawer]");
 
-  if (toggle && drawer) {
-    const setOpen = (open: boolean) => {
-      drawer.classList.toggle("hidden", !open);
-      toggle.setAttribute("aria-expanded", String(open));
-      const label = toggle.querySelector(".sr-only");
-      if (label) label.textContent = open ? "Fechar menu" : "Abrir menu";
-    };
+  const setOpen = (open: boolean) => {
+    if (!toggle || !drawer) return;
+    drawer.classList.toggle("hidden", !open);
+    toggle.setAttribute("aria-expanded", String(open));
+    const label = toggle.querySelector(".sr-only");
+    if (label) label.textContent = open ? "Fechar menu" : "Abrir menu";
 
+    // The header is absolute, not fixed, so a page that keeps scrolling under
+    // an open drawer carries the menu off the top of the screen with it. Lenis
+    // holds the position while the drawer is the thing on screen, and its
+    // `lenis-stopped` class is what stops a finger doing the same.
+    if (open) getLenis()?.stop();
+    else getLenis()?.start();
+  };
+
+  if (toggle && drawer) {
     toggle.addEventListener("click", () => {
       setOpen(toggle.getAttribute("aria-expanded") !== "true");
+    });
+
+    /**
+     * A section link inside the drawer has to close it before the travel
+     * starts: the drawer covers the top of the page, which is exactly where
+     * `#topo` lands. The scroll is re-issued here rather than left to the
+     * global handler so the close happens first, in the same frame.
+     */
+    drawer.addEventListener("click", (event) => {
+      const link = (event.target as Element | null)?.closest?.<HTMLAnchorElement>("a[href]");
+      if (!link) return;
+
+      const hash = samePageHash(link);
+      if (!hash) {
+        setOpen(false);
+        return;
+      }
+
+      const target = document.querySelector<HTMLElement>(hash);
+      if (!target) return;
+
+      event.preventDefault();
+      setOpen(false);
+      scrollToSection(target);
+      history.replaceState(null, "", hash);
     });
 
     document.addEventListener("keydown", (event) => {
@@ -118,5 +196,78 @@ const isCurrent = (href: string) =>
         toggle.focus();
       }
     });
+
+    // A drawer that stays open across a resize into the desktop nav would
+    // leave a second copy of the menu stacked under the first.
+    const wide = window.matchMedia("(min-width: 1024px)");
+    wide.addEventListener("change", (event) => {
+      if (event.matches) setOpen(false);
+    });
+  }
+
+  /**
+   * Scroll spy. On a single-page site the nav's current state is a question
+   * about scroll position, not about the URL, so it is answered here: the
+   * marked item is the last watched section whose top has passed the middle
+   * of the viewport.
+   *
+   * A position test rather than an IntersectionObserver because the watched
+   * sections do not tile the page — About, FAQ and the closing CTA sit
+   * between them — and an observer would drop the mark entirely while one of
+   * those is on screen.
+   */
+  const watchers = Array.from(
+    document.querySelectorAll<HTMLAnchorElement>(".nav-link[data-watches]"),
+  );
+
+  if (watchers.length) {
+    /**
+     * Sorted down the document, not by the order of the menu: the two differ
+     * (Projetos comes before Planos on the page and after it in the nav), and
+     * "the last section the midline has passed" is a question about the page.
+     */
+    const sections = [...new Set(watchers.map((link) => link.dataset.watches!))]
+      .map((id) => ({ id, el: document.getElementById(id) }))
+      .filter((entry): entry is { id: string; el: HTMLElement } => Boolean(entry.el))
+      .sort(
+        (a, b) =>
+          a.el.getBoundingClientRect().top - b.el.getBoundingClientRect().top,
+      );
+
+    if (sections.length) {
+      let queued = false;
+
+      const sync = () => {
+        queued = false;
+        const line = window.scrollY + window.innerHeight * 0.5;
+        const atEnd =
+          window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+
+        let current = sections[0].id;
+        sections.forEach((section) => {
+          if (section.el.getBoundingClientRect().top + window.scrollY <= line) {
+            current = section.id;
+          }
+        });
+        // The contact form is the last thing on the page and is shorter than
+        // a viewport, so its top never crosses the midline on a tall screen.
+        if (atEnd) current = sections[sections.length - 1].id;
+
+        watchers.forEach((link) => {
+          if (link.dataset.watches === current) link.setAttribute("aria-current", "location");
+          else link.removeAttribute("aria-current");
+        });
+      };
+
+      const schedule = () => {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(sync);
+      };
+
+      sync();
+      window.addEventListener("scroll", schedule, { passive: true });
+      window.addEventListener("resize", schedule, { passive: true });
+    }
   }
 </script>

@@ -30,7 +30,7 @@ const groups: { title: string; icon: IconName; items: string[] }[] = [
 ];
 ---
 
-<section class="on-ink relative py-[var(--section-space)]">
+<section id="servico" class="on-ink relative py-[var(--section-space)]">
   <div class="shell">
     <div class="mx-auto max-w-[56rem] text-center">
       <h2
@@ -39,14 +39,22 @@ const groups: { title: string; icon: IconName; items: string[] }[] = [
       >
         Seu site não precisa parar <span class="text-plop-lime">depois de publicado.</span>
       </h2>
+      {/*
+        The line breaks are a desktop composition, not punctuation: on a phone
+        they land mid-sentence and the centred paragraph goes ragged. They are
+        drawn by CSS from `lg` up instead, so the copy is one flowing block
+        wherever the measure is narrow.
+      */}
       <p
-        class="muted mx-auto mt-8 max-w-[55ch] text-[length:var(--text-lead)] leading-[1.3]"
+        class="muted balanced-breaks mx-auto mt-8 max-w-[55ch] text-[length:var(--text-lead)] leading-[1.3]"
         data-reveal
       >
-      Criamos seu site e continuamos cuidando dele todos os meses.<br> O plano mensal inclui hospedagem, suporte técnico e a publicação<br> de <strong
+        Criamos seu site e continuamos cuidando dele todos os meses.<br /> O plano
+        mensal inclui hospedagem, suporte técnico e a publicação<br /> de <strong
           class="font-semibold text-white"
           data-numeric>1 novo post mensal</strong
-        >, para que seu site siga ativo, atualizado e ganhando relevância em buscadores e inteligência artificial ao longo do tempo.
+        >, para que seu site siga ativo, atualizado e ganhando relevância em
+        buscadores e inteligência artificial ao longo do tempo.
       </p>
     </div>
 
@@ -59,9 +67,13 @@ const groups: { title: string; icon: IconName; items: string[] }[] = [
 
     <ul class="mt-[clamp(32px,3.5vw,48px)] grid gap-[clamp(16px,1.6vw,24px)] md:grid-cols-3">
       {
+        /* The tall minimum on the card exists to level three of them standing
+           side by side. Stacked on a phone there is nothing to level, and it
+           turns the shortest card into a long empty panel — so it starts
+           where the columns do. */
         groups.map((group, index) => (
           <li
-            class="flex flex-col justify-between rounded-[var(--radius-plop-lg)] bg-plop-ink/30 p-[clamp(28px,3vw,50px)] min-h-[26rem] border border-blue-400 backdrop-blur-xs"
+            class="flex flex-col justify-between rounded-[var(--radius-plop-lg)] border border-blue-400 bg-plop-ink/30 p-[clamp(28px,3vw,50px)] backdrop-blur-xs md:min-h-[26rem]"
             style={`corner-shape: squircle; --reveal-delay: ${index * 90}ms;`}
             data-reveal
           >
@@ -69,7 +81,7 @@ const groups: { title: string; icon: IconName; items: string[] }[] = [
               <Icon name={group.icon} size={50} class="shrink-0" />
               {group.title}
             </h4>
-            <ul class="mt-12 flex flex-col gap-3">
+            <ul class="mt-8 flex flex-col gap-3 md:mt-12">
               {group.items.map((item) => (
                 <li class="flex items-start gap-3">
                   <Icon

@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import Button from "../ui/Button.astro";
+import { CONTACT_ANCHOR, PLANS_ANCHOR } from "../../data/nav.ts";
 import laptopFront from "../../assets/img/laptop-front.png";
 
 /**
@@ -17,40 +18,44 @@ import laptopFront from "../../assets/img/laptop-front.png";
 ---
 
 <section class="cta relative">
-  <div class="relative mx-auto px-10">
+  <div class="cta-frame relative mx-auto">
     <div class="cta-card on-blue relative bg-plop-blue text-center">
       {
         /*
           The break is on the sentence, not on a measure: two whole promises,
           one per line, is the shape the line was written for. Below the card's
           width each half wraps on its own and the pairing still reads.
+
+          The size is its own clamp rather than the H1 token: this heading sits
+          inside a padded box, not across the page, so at phone width the H1
+          ramp drives it to six ragged lines in a 260px column.
         */
       }
       <h2
-        class="mx-auto max-w-[25ch] text-[length:var(--text-h1)] mb-15"
+        class="mx-auto mb-8 max-w-[25ch] text-[clamp(2.25rem,5.5vw,5rem)] lg:mb-15"
         data-reveal
       >
         Você <span class="text-plop-lime">cuida do</span> seu negócio.<br /> A gente cuida do <span class="text-plop-lime">seu site</span>.
       </h2>
       <div
-        class="text-[length:var(--text-lead)] leading-[1.3] text-center max-w-[40ch] mx-auto"
+        class="mx-auto max-w-[40ch] text-center text-[length:var(--text-lead)] leading-[1.3]"
       >
         <p>
           Um investimento simples para manter sua empresa sempre online,
           atualizada e profissional.
         </p>
-        <p class="text-center mt-10 mb-20">
+        <p class="mb-10 mt-6 text-center lg:mb-20 lg:mt-10">
           Comece com <span class="text-plop-lime">R$ 1.500 + R$ 300/mês.</span>
         </p>
       </div>
       <div
-        class="mt-10 flex flex-wrap items-center justify-center gap-3"
+        class="mt-8 flex flex-wrap items-center justify-center gap-3 lg:mt-10"
         data-reveal
       >
-        <Button href="/contato/" size="lg" data-track="cta_primary_click">
+        <Button href={CONTACT_ANCHOR} size="lg" data-track="cta_primary_click">
           Quero meu site
         </Button>
-        <Button href="/planos/" variant="outline" size="lg" icon="arrow-right">
+        <Button href={PLANS_ANCHOR} variant="outline" size="lg" icon="arrow-up">
           Comparar planos
         </Button>
       </div>
@@ -106,6 +111,13 @@ import laptopFront from "../../assets/img/laptop-front.png";
     padding-bottom: var(--section-space);
   }
 
+  /* The frame the box sits in. On a phone its 40px used to stack on top of
+     the card's own inset and leave the heading 260px of a 390px screen; the
+     inset now shrinks with the screen instead of being a constant. */
+  .cta-frame {
+    padding-inline: clamp(12px, 4vw, 40px);
+  }
+
   .cta-card {
     border-radius: var(--radius-plop-xl);
     corner-shape: squircle;
@@ -116,7 +128,7 @@ import laptopFront from "../../assets/img/laptop-front.png";
     padding-top: calc(
       var(--laptop-h) * var(--laptop-dip) + clamp(40px, 5vw, 88px)
     );
-    padding-inline: clamp(24px, 5vw, 80px);
+    padding-inline: clamp(20px, 5vw, 80px);
     padding-bottom: clamp(44px, 6vw, 150px);
   }
 

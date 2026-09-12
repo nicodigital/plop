@@ -387,8 +387,15 @@ for (const width of [1440, 390]) {
       .querySelectorAll("section > :not([data-goo])")
       .forEach((el) => (el.style.visibility = "hidden"));
     document
-      .querySelectorAll(`header, footer, [class*="fixed"]`)
+      .querySelectorAll(`header, [class*="fixed"]`)
       .forEach((el) => (el.style.display = "none"));
+    // The footer carries a liquid ground of its own, so it cannot be removed
+    // outright the way the header and the dock are — that would leave this
+    // check unable to reach one of the three grounds on the page. Its copy is
+    // hidden the same way a section's is, and the ground stays measurable.
+    document
+      .querySelectorAll("footer .shell")
+      .forEach((el) => (el.style.visibility = "hidden"));
   });
 
   // Through throwaway elements, because reading the custom properties off
