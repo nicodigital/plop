@@ -12,7 +12,7 @@ export const SITE_NAME = "PLOP! Sites";
  * instead: a wa.me link to a number that does not exist is a dead CTA that
  * looks live, which is worse than not offering the channel yet.
  */
-export const WHATSAPP_NUMBER = "";
+export const WHATSAPP_NUMBER = "+5541999390088";
 
 export const WHATSAPP_MESSAGE = "Oi! Quero saber mais sobre os sites do PLOP!";
 
@@ -24,3 +24,8 @@ export const whatsappHref = (message: string = WHATSAPP_MESSAGE): string =>
     : "/contato/";
 
 export const CONTACT_EMAIL = "ola@plopsites.com.br";
+
+/** Same number as WhatsApp, formatted for display and for a `tel:` href. */
+export const PHONE_NUMBER = WHATSAPP_NUMBER;
+
+export const PHONE_DISPLAY = "+55 (41) 99939-0088";

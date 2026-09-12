@@ -37,10 +37,10 @@ const {
         PLANS.map((plan) => (
           <li
             class:list={[
-              "plan-card flex flex-col rounded-[var(--radius-plop-lg)] p-[clamp(24px,2.6vw,36px)]",
+              "plan-card flex flex-col rounded-[var(--radius-plop-xl)] p-[clamp(24px,2.6vw,36px)] [corner-shape:squircle]",
               plan.recommended
                 ? "bg-plop-ink text-white"
-                : "border-1 border-plop-blue/50 bg-white/50",
+                : "border-1 border-plop-blue/50 bg-white/50 backdrop-blur-xs [corner-shape:squircle]",
             ]}
             data-reveal
           >
@@ -54,7 +54,7 @@ const {
                 {plan.name}
               </h3>
               {plan.recommended && (
-                <span class="rounded-full bg-plop-lime px-3 py-1 text-small font-bold uppercase tracking-[0.08em] text-plop-ink">
+                <span class="rounded-full bg-plop-lime px-3 py-1 text-small font-bold tracking-[0.08em] text-plop-ink">
                   Mais escolhido
                 </span>
               )}

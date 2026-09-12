@@ -11,8 +11,8 @@ interface Props {
 
 const { id = "contato", plan } = Astro.props;
 const field =
-  "w-full rounded-[var(--radius-plop-sm)] border-2 border-plop-hairline bg-white px-4 py-3 text-plop-ink transition-colors duration-[var(--duration-fast)] placeholder:text-plop-on-white/60 focus:border-plop-blue focus:outline-none focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-plop-lime";
-const label = "block font-semibold text-ui text-plop-ink";
+  "w-full rounded-[var(--radius-plop-md)] [corner-shape:squircle] bg-white px-4 py-3 border-2 border-transparent text-plop-ink transition-colors duration-[var(--duration-fast)] placeholder:text-plop-on-white/60 focus:border-plop-blue-700 focus:outline-none focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-plop-lime";
+const label = "block font-semibold text-ui text-white";
 ---
 
 <form
@@ -119,7 +119,7 @@ const label = "block font-semibold text-ui text-plop-ink";
 
   <div class="flex flex-col gap-2">
     <label class={label} for={`${id}-mensagem`}>
-      O que você precisa <span class="font-normal text-plop-on-white">(opcional)</span>
+      O que você precisa <span class="font-normal">(opcional)</span>
     </label>
     <textarea class={field} id={`${id}-mensagem`} name="mensagem" rows="4"></textarea>
   </div>
@@ -131,10 +131,10 @@ const label = "block font-semibold text-ui text-plop-ink";
   </div>
 
   <div class="flex flex-wrap items-center gap-4 pt-1">
-    <Button type="submit" variant="solid-ink" size="lg" data-submit>
-      Enviar
+    <Button type="submit" variant="primary" size="lg" icon="send" data-submit>
+      <span>Enviar</span>
     </Button>
-    <p class="text-small text-plop-on-white" data-form-status role="status" aria-live="polite">
+    <p class="text-small text-white" data-form-status role="status" aria-live="polite">
       Resposta em até um dia útil.
     </p>
   </div>

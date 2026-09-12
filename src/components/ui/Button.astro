@@ -22,8 +22,10 @@ const {
   ...rest
 } = Astro.props;
 
+// The hover lift, its shadow colour and the press live in `.btn`
+// (src/styles/global.css); the variants only name the surface.
 const base =
-  "group inline-flex items-center justify-center gap-2.5 rounded-full font-display font-bold tracking-[-0.01em] no-underline transition-[background-color,color,border-color,transform] duration-[var(--duration-fast)] ease-[var(--ease-plop-out)] active:translate-y-px";
+  "btn group inline-flex items-center justify-center gap-2.5 rounded-full font-display font-bold tracking-[-0.01em] no-underline";
 
 const sizes = {
   md: "min-h-[48px] px-6 text-base",
@@ -31,22 +33,17 @@ const sizes = {
 };
 
 const variants = {
-  primary:
-    "bg-plop-lime text-plop-ink hover:bg-plop-lime-bright",
+  primary: "btn-lime bg-plop-lime text-plop-ink hover:bg-plop-lime-bright",
   outline:
-    "border-2 border-white/45 text-white hover:border-white hover:bg-white/10",
-  "solid-ink": "bg-plop-ink text-white hover:bg-plop-blue-800",
+    "btn--outline border-2 border-white/45 text-white hover:border-white hover:bg-white/10",
+  "solid-ink": "btn--solid-ink bg-plop-ink text-white hover:bg-plop-blue-800",
 };
 
 const classes = [base, sizes[size], variants[variant], className].join(" ");
 const Tag = href ? "a" : "button";
 ---
 
-<Tag
-  class={classes}
-  {...href ? { href } : { type }}
-  {...rest}
->
+<Tag class={classes} {...href ? { href } : { type }} {...rest}>
   <slot />
   <Icon
     name={icon}

@@ -6,6 +6,7 @@
    demo cannot ship, it stamps a "DEMO" glyph over "$" and "4". */
 @import "@fontsource-variable/quicksand/index.css";
 @import "@fontsource-variable/outfit/index.css";
+@import "components/scrollbars.css";
 
 @theme {
   /* The blue ramp. Every dark ground and every hairline on the site is a
@@ -96,7 +97,7 @@
 :root {
   --gutter: clamp(20px, 4vw, 64px);
   --section-space: clamp(80px, 10vw, 150px);
-  --duration-fast: 180ms;
+  --duration-fast: 250ms;
   --duration-normal: 320ms;
   --duration-slow: 600ms;
   /* One clock. Every reveal, rail swap and hover on the page is a
@@ -107,7 +108,6 @@
 
 @layer base {
   html {
-    scrollbar-color: var(--color-plop-blue) var(--color-plop-blue-50);
     -webkit-tap-highlight-color: color-mix(in srgb, var(--color-plop-lime) 35%, transparent);
   }
 
@@ -241,6 +241,56 @@ html.lenis body {
     letter-spacing: 0.4em;
     text-transform: uppercase;
     line-height: 1.4;
+  }
+
+  /* The lift. The one place the site carries a shadow: a hard offset block
+     that only exists while the pointer or the keyboard is on the control,
+     so the page at rest stays flat and tonal as the rest of the system is.
+     It is painted from the blue ramp — a black drop would read as a widget
+     borrowed from another product.
+
+     Feedback, so it runs on the fast layer, not on the beat. The press
+     undoes the lift exactly: the button travels back through the shadow it
+     cast and lands where it started. */
+  .btn {
+    box-shadow: 0 0 0 0 var(--btn-lift-shadow);
+    cursor: pointer;
+    transition:
+      background-color var(--duration-fast) var(--ease-plop-out),
+      border-color var(--duration-fast) var(--ease-plop-out),
+      color var(--duration-fast) var(--ease-plop-out),
+      transform var(--duration-fast) var(--ease-plop-out),
+      box-shadow var(--duration-fast) var(--ease-plop-out);
+  }
+
+  .btn:not(:disabled):is(:hover, :focus-visible) {
+    transform: translate(-2px, -4px);
+    box-shadow: 2px 5px 0 0 var(--btn-lift-shadow);
+  }
+
+  .btn:not(:disabled):active {
+    transform: translate(1px, 2px);
+    box-shadow: 0 0 0 0 var(--btn-lift-shadow);
+  }
+
+  /* Each variant casts onto the ground it actually sits on: the lime CTA
+     and the ghost button live on brand blue, so they drop the deepest step
+     of the ramp; the ink button lives on white and paper, where the same
+     deep step would read as a smudge, so it drops brand blue instead. */
+  .btn--primary {
+    --btn-lift-shadow: var(--color-plop-blue-900);
+  }
+
+  .btn--outline {
+    --btn-lift-shadow: var(--color-plop-blue-200);
+  }
+
+  .btn--solid-ink {
+    --btn-lift-shadow: color-mix(in srgb, var(--color-plop-blue-900) 80%, transparent) ;
+  }
+
+  .btn-lime{
+    --btn-lift-shadow: var(--color-plop-lime-deep);
   }
 }
 
@@ -387,3 +437,4 @@ html.lenis body {
     }
   }
 }
+

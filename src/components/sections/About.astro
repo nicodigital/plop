@@ -25,7 +25,7 @@ const groups: { title: string; icon: IconName; items: string[] }[] = [
   {
     title: "Serviço mensal",
     icon: "calendar",
-    items: ["Suporte técnico", "1 publicação mensal no blog"],
+    items: ["Suporte técnico quando precisar", "Manutenção e atualizações", "1 publicação mensal no blog"],
   },
 ];
 ---
@@ -40,20 +40,18 @@ const groups: { title: string; icon: IconName; items: string[] }[] = [
         Seu site não precisa parar <span class="text-plop-lime">depois de publicado.</span>
       </h2>
       <p
-        class="muted mx-auto mt-8 max-w-[58ch] text-[length:var(--text-lead)] leading-[1.3]"
+        class="muted mx-auto mt-8 max-w-[55ch] text-[length:var(--text-lead)] leading-[1.3]"
         data-reveal
       >
-        Criamos seu site e continuamos cuidando dele todos os meses. O plano
-        mensal inclui hospedagem, suporte técnico e a publicação de <strong
+      Criamos seu site e continuamos cuidando dele todos os meses.<br> O plano mensal inclui hospedagem, suporte técnico e a publicação<br> de <strong
           class="font-semibold text-white"
-          data-numeric>1 novo post todos os meses</strong
-        >, para que seu site continue ativo, atualizado e ganhando conteúdo ao
-        longo do tempo.
+          data-numeric>1 novo post mensal</strong
+        >, para que seu site siga ativo, atualizado e ganhando relevância em buscadores e inteligência artificial ao longo do tempo.
       </p>
     </div>
 
     <h3
-      class="mt-[clamp(56px,7vw,96px)] text-center text-[length:var(--text-h3)] text-white"
+      class="mt-[clamp(56px,7vw,96px)] text-center text-[length:var(--text-h4)] text-white"
       data-reveal
     >
       Você recebe
@@ -63,11 +61,11 @@ const groups: { title: string; icon: IconName; items: string[] }[] = [
       {
         groups.map((group, index) => (
           <li
-            class="flex flex-col justify-between rounded-[var(--radius-plop-lg)] bg-plop-ink/30 p-[clamp(28px,3vw,50px)] min-h-[26rem] border border-blue-400"
+            class="flex flex-col justify-between rounded-[var(--radius-plop-lg)] bg-plop-ink/30 p-[clamp(28px,3vw,50px)] min-h-[26rem] border border-blue-400 backdrop-blur-xs"
             style={`corner-shape: squircle; --reveal-delay: ${index * 90}ms;`}
             data-reveal
           >
-            <h4 class="flex flex-col gap-5 font-display text-h5 font-semibold text-plop-lime">
+            <h4 class="flex flex-col gap-5 font-display text-h4 font-semibold text-plop-lime">
               <Icon name={group.icon} size={50} class="shrink-0" />
               {group.title}
             </h4>
