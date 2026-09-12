@@ -1,0 +1,95 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageMasthead from "../components/layout/PageMasthead.astro";
+import ContactForm from "../components/ui/ContactForm.astro";
+import Icon from "../components/ui/Icon.astro";
+import { CONTACT_EMAIL, HAS_WHATSAPP, whatsappHref } from "../data/site.ts";
+
+// Static output: the plan arrives as a query string and is applied client-side.
+const steps = [
+  "Você conta o que o negócio faz e qual plano te interessa.",
+  "A gente responde com prazo, escopo e preço fechado.",
+  "Se fizer sentido, começamos. Se não, ficou a conversa.",
+];
+---
+
+<BaseLayout
+  title="Contato"
+  description="Conte sobre o seu negócio e receba prazo, escopo e preço fechado. Resposta em até um dia útil."
+>
+  <PageMasthead
+    title="Conte do seu negócio."
+    intro="Quanto mais concreto você for, mais útil a resposta. Não precisa ter nada pronto para escrever."
+  />
+
+  <section class="on-white bg-white py-[var(--section-space)]">
+    <div class="shell">
+      <div class="spine-grid">
+        <div>
+          <h2 class="text-[length:var(--text-h3)]">Como funciona daqui</h2>
+          <ol class="mt-7 flex flex-col">
+            {
+              steps.map((step, index) => (
+                <li class="flex gap-5 border-t border-plop-hairline py-5 last:border-b">
+                  <span
+                    class="shrink-0 font-display font-semibold text-plop-blue"
+                    data-numeric
+                    aria-hidden="true"
+                  >
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span class="muted">{step}</span>
+                </li>
+              ))
+            }
+          </ol>
+
+          <div class="mt-10 flex flex-col gap-4">
+            {
+              HAS_WHATSAPP && (
+                <a
+                  href={whatsappHref()}
+                  class="inline-flex min-h-[44px] items-center gap-3 font-display text-ui-lg font-semibold text-plop-ink no-underline transition-colors duration-[var(--duration-fast)] hover:text-plop-blue"
+                  data-track="whatsapp_click"
+                  rel="noopener"
+                >
+                  <Icon name="whatsapp" size={22} class="text-plop-blue" />
+                  Prefere WhatsApp? Chame agora
+                </a>
+              )
+            }
+            <a
+              href={`mailto:${CONTACT_EMAIL}`}
+              class="inline-flex min-h-[44px] items-center gap-3 font-display text-ui-lg font-semibold text-plop-ink no-underline transition-colors duration-[var(--duration-fast)] hover:text-plop-blue"
+            >
+              <Icon name="arrow-right" size={22} class="text-plop-blue" />
+              {CONTACT_EMAIL}
+            </a>
+          </div>
+        </div>
+
+        <div
+          class="rounded-[var(--radius-plop-xl)] border-2 border-plop-hairline p-[clamp(24px,4vw,44px)]"
+        >
+          <div class="relative">
+            <ContactForm id="pagina-contato" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  // Carries the plan chosen on a plan card into the form's select.
+  const plan = new URLSearchParams(window.location.search).get("plano");
+  if (plan) {
+    document
+      .querySelectorAll<HTMLSelectElement>('select[name="plano"]')
+      .forEach((select) => {
+        if (Array.from(select.options).some((option) => option.value === plan)) {
+          select.value = plan;
+        }
+      });
+  }
+</script>

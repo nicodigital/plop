@@ -1,0 +1,239 @@
+---
+import Button from "./Button.astro";
+import { PLANS } from "../../data/plans.ts";
+
+interface Props {
+  /** Distinguishes the footer instance from the /contato/ page instance. */
+  id?: string;
+  /** Pre-selects a plan when the visitor arrives from a plan card. */
+  plan?: string;
+}
+
+const { id = "contato", plan } = Astro.props;
+const field =
+  "w-full rounded-[var(--radius-plop-sm)] border-2 border-plop-hairline bg-white px-4 py-3 text-plop-ink transition-colors duration-[var(--duration-fast)] placeholder:text-plop-on-white/60 focus:border-plop-blue focus:outline-none focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-plop-lime";
+const label = "block font-semibold text-ui text-plop-ink";
+---
+
+<form
+  id={id}
+  class="flex flex-col gap-5"
+  method="post"
+  action="/api/contato"
+  novalidate
+  data-contact-form
+>
+  <div class="grid gap-5 sm:grid-cols-2">
+    <div class="flex flex-col gap-2">
+      <label class={label} for={`${id}-nome`}>Seu nome</label>
+      <input
+        class={field}
+        id={`${id}-nome`}
+        name="nome"
+        type="text"
+        autocomplete="name"
+        required
+        aria-describedby={`${id}-nome-erro`}
+      />
+      <p
+        class="hidden text-small font-semibold text-plop-pink"
+        id={`${id}-nome-erro`}
+        data-error-for="nome"
+      >
+      </p>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <label class={label} for={`${id}-negocio`}>Seu negócio</label>
+      <input
+        class={field}
+        id={`${id}-negocio`}
+        name="negocio"
+        type="text"
+        required
+        placeholder="Padaria, clínica, imobiliária…"
+        aria-describedby={`${id}-negocio-erro`}
+      />
+      <p
+        class="hidden text-small font-semibold text-plop-pink"
+        id={`${id}-negocio-erro`}
+        data-error-for="negocio"
+      >
+      </p>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <label class={label} for={`${id}-email`}>E-mail</label>
+      <input
+        class={field}
+        id={`${id}-email`}
+        name="email"
+        type="email"
+        autocomplete="email"
+        required
+        aria-describedby={`${id}-email-erro`}
+      />
+      <p
+        class="hidden text-small font-semibold text-plop-pink"
+        id={`${id}-email-erro`}
+        data-error-for="email"
+      >
+      </p>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <label class={label} for={`${id}-whatsapp`}>WhatsApp</label>
+      <input
+        class={field}
+        id={`${id}-whatsapp`}
+        name="whatsapp"
+        type="tel"
+        autocomplete="tel"
+        inputmode="tel"
+        required
+        placeholder="(11) 90000-0000"
+        aria-describedby={`${id}-whatsapp-erro`}
+      />
+      <p
+        class="hidden text-small font-semibold text-plop-pink"
+        id={`${id}-whatsapp-erro`}
+        data-error-for="whatsapp"
+      >
+      </p>
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <label class={label} for={`${id}-plano`}>Plano de interesse</label>
+    <select class={field} id={`${id}-plano`} name="plano">
+      <option value="">Ainda não sei</option>
+      {
+        PLANS.map((p) => (
+          <option value={p.slug} selected={plan === p.slug}>
+            {p.name}
+          </option>
+        ))
+      }
+    </select>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <label class={label} for={`${id}-mensagem`}>
+      O que você precisa <span class="font-normal text-plop-on-white">(opcional)</span>
+    </label>
+    <textarea class={field} id={`${id}-mensagem`} name="mensagem" rows="4"></textarea>
+  </div>
+
+  {/* Bot trap. Hidden from people and from assistive technology alike. */}
+  <div class="absolute left-[-9999px]" aria-hidden="true">
+    <label for={`${id}-site`}>Não preencha este campo</label>
+    <input id={`${id}-site`} name="site" type="text" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <div class="flex flex-wrap items-center gap-4 pt-1">
+    <Button type="submit" variant="solid-ink" size="lg" data-submit>
+      Enviar
+    </Button>
+    <p class="text-small text-plop-on-white" data-form-status role="status" aria-live="polite">
+      Resposta em até um dia útil.
+    </p>
+  </div>
+</form>
+
+<script>
+  type FieldName = "nome" | "negocio" | "email" | "whatsapp";
+
+  const RULES: Record<FieldName, { test: (v: string) => boolean; message: string }> = {
+    nome: {
+      test: (v) => v.trim().length >= 2,
+      message: "Escreva seu nome para sabermos com quem falamos.",
+    },
+    negocio: {
+      test: (v) => v.trim().length >= 2,
+      message: "Diga qual é o seu negócio.",
+    },
+    email: {
+      test: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()),
+      message: "Confira o e-mail: falta algo no endereço.",
+    },
+    whatsapp: {
+      test: (v) => v.replace(/\D/g, "").length >= 10,
+      message: "Informe o WhatsApp com DDD.",
+    },
+  };
+
+  document.querySelectorAll<HTMLFormElement>("[data-contact-form]").forEach((form) => {
+    const status = form.querySelector<HTMLElement>("[data-form-status]");
+    const submit = form.querySelector<HTMLButtonElement>("[data-submit]");
+    const defaultStatus = status?.textContent ?? "";
+
+    const showError = (name: FieldName, message: string) => {
+      const slot = form.querySelector<HTMLElement>(`[data-error-for="${name}"]`);
+      const input = form.elements.namedItem(name) as HTMLInputElement | null;
+      if (!slot || !input) return;
+      slot.textContent = message;
+      slot.classList.toggle("hidden", message === "");
+      input.setAttribute("aria-invalid", message ? "true" : "false");
+      input.classList.toggle("border-plop-pink", Boolean(message));
+    };
+
+    (Object.keys(RULES) as FieldName[]).forEach((name) => {
+      const input = form.elements.namedItem(name) as HTMLInputElement | null;
+      input?.addEventListener("blur", () => {
+        if (input.value.trim() === "") return;
+        showError(name, RULES[name].test(input.value) ? "" : RULES[name].message);
+      });
+    });
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      let firstInvalid: HTMLInputElement | null = null;
+      (Object.keys(RULES) as FieldName[]).forEach((name) => {
+        const input = form.elements.namedItem(name) as HTMLInputElement | null;
+        if (!input) return;
+        const ok = RULES[name].test(input.value);
+        showError(name, ok ? "" : RULES[name].message);
+        if (!ok && !firstInvalid) firstInvalid = input;
+      });
+
+      if (firstInvalid) {
+        (firstInvalid as HTMLInputElement).focus();
+        if (status) status.textContent = "Confira os campos marcados acima.";
+        return;
+      }
+
+      submit?.setAttribute("disabled", "true");
+      submit?.classList.add("opacity-60", "pointer-events-none");
+      if (status) status.textContent = "Enviando…";
+
+      try {
+        const response = await fetch(form.action, {
+          method: "POST",
+          headers: { Accept: "application/json" },
+          body: new FormData(form),
+        });
+
+        if (!response.ok) throw new Error(String(response.status));
+
+        form.reset();
+        if (status) {
+          status.textContent = "Recebido. Respondemos em até um dia útil.";
+        }
+        // Conversion counts only once the server has confirmed it.
+        window.dispatchEvent(new CustomEvent("plop:contact_submit"));
+      } catch {
+        if (status) {
+          status.textContent =
+            "Não conseguimos enviar agora. Tente de novo ou chame no WhatsApp.";
+        }
+      } finally {
+        submit?.removeAttribute("disabled");
+        submit?.classList.remove("opacity-60", "pointer-events-none");
+        window.setTimeout(() => {
+          if (status && status.textContent === defaultStatus) return;
+        }, 8000);
+      }
+    });
+  });
+</script>

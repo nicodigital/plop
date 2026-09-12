@@ -1,0 +1,111 @@
+---
+import Logo from "../ui/Logo.astro";
+import ContactForm from "../ui/ContactForm.astro";
+import { NAV_ITEMS } from "../../data/nav.ts";
+import { CONTACT_EMAIL, HAS_WHATSAPP, SITE_NAME, whatsappHref } from "../../data/site.ts";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="on-ink bg-plop-blue-deep">
+  <div class="shell py-[clamp(64px,9vw,120px)]">
+    <div class="spine-grid">
+      <div>
+        <h2 class="text-[length:var(--text-h2)]">
+          Vamos começar<br />
+          o seu.
+        </h2>
+        <p class="muted measure mt-6 text-[length:var(--text-lead)]">
+          Conte o que o seu negócio faz e qual plano te interessa. A resposta vem
+          com prazo, escopo e preço fechado — sem reunião obrigatória.
+        </p>
+
+        <dl class="mt-10 flex flex-col gap-4 border-t border-white/15 pt-8">
+          <div>
+            <dt class="muted text-small font-semibold uppercase tracking-[0.14em]">
+              {HAS_WHATSAPP ? "WhatsApp" : "Formulário"}
+            </dt>
+            <dd class="mt-1">
+              <a
+                href={whatsappHref()}
+                class="inline-flex min-h-[44px] items-center font-display text-ui-xl font-semibold text-white underline decoration-plop-lime decoration-2 underline-offset-4 transition-colors duration-[var(--duration-fast)] hover:text-plop-lime"
+                data-track="whatsapp_click"
+                rel="noopener"
+              >
+                {HAS_WHATSAPP ? "Falar agora" : "Preencher o formulário"}
+              </a>
+            </dd>
+          </div>
+          <div>
+            <dt class="muted text-small font-semibold uppercase tracking-[0.14em]">
+              E-mail
+            </dt>
+            <dd class="mt-1">
+              <a
+                href={`mailto:${CONTACT_EMAIL}`}
+                class="inline-flex min-h-[44px] items-center font-display text-ui-xl font-semibold text-white underline decoration-plop-lime decoration-2 underline-offset-4 transition-colors duration-[var(--duration-fast)] hover:text-plop-lime"
+              >
+                {CONTACT_EMAIL}
+              </a>
+            </dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="rounded-[var(--radius-plop-xl)] bg-white p-[clamp(24px,4vw,44px)]">
+        <h3 class="text-[length:var(--text-h3)] text-plop-ink">Fale com a gente</h3>
+        <p class="mt-2 text-plop-on-white">
+          Todos os campos, menos o último, são necessários para responder direito.
+        </p>
+        <div class="relative mt-7">
+          <ContactForm id="footer-contato" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="border-t border-white/15">
+    <div
+      class="shell flex flex-col gap-8 py-9 lg:flex-row lg:items-center lg:justify-between"
+    >
+      <div class="flex flex-col items-start gap-5">
+        <Logo width={200}  decorative />
+        <p class="muted max-w-[46ch] text-ui">
+          Sites profissionais para pequenos negócios. Construídos, publicados e
+          cuidados todo mês.
+        </p>
+      </div>
+
+      <nav aria-label="Rodapé">
+        <ul class="flex flex-wrap gap-x-6">
+          {
+            NAV_ITEMS.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  class="inline-flex min-h-[44px] items-center text-ui font-semibold text-plop-on-ink no-underline transition-colors duration-[var(--duration-fast)] hover:text-white"
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+          <li>
+            <a
+              href="/privacidade/"
+              class="inline-flex min-h-[44px] items-center text-ui font-semibold text-plop-on-ink no-underline transition-colors duration-[var(--duration-fast)] hover:text-white"
+            >
+              Privacidade
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="shell pb-9">
+      <p class="muted text-small">
+        © {year} {SITE_NAME}
+      </p>
+    </div>
+  </div>
+</footer>

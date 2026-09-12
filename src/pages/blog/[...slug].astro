@@ -1,0 +1,120 @@
+---
+import { getCollection, render } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import type { GetStaticPaths } from "astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Button from "../../components/ui/Button.astro";
+import Icon from "../../components/ui/Icon.astro";
+import { SITE_NAME, SITE_URL } from "../../data/site.ts";
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const posts = await getCollection("blog", ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+};
+
+interface Props {
+  post: CollectionEntry<"blog">;
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const dateFormat = new Intl.DateTimeFormat("pt-BR", {
+  day: "2-digit",
+  month: "long",
+  year: "numeric",
+});
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.publishedAt.toISOString(),
+  dateModified: (post.data.updatedAt ?? post.data.publishedAt).toISOString(),
+  inLanguage: "pt-BR",
+  author: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+  publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+  mainEntityOfPage: new URL(`/blog/${post.id}/`, SITE_URL).href,
+};
+
+const breadcrumbs = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Início", item: SITE_URL },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Blog",
+      item: new URL("/blog/", SITE_URL).href,
+    },
+    { "@type": "ListItem", position: 3, name: post.data.title },
+  ],
+};
+---
+
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  schema={[schema, breadcrumbs]}
+>
+  <article>
+    <header class="on-blue relative isolate overflow-hidden bg-plop-blue-deep">
+      <div
+        class="pointer-events-none absolute -right-[16%] -top-[76%] -z-10 size-[min(66vw,700px)] rounded-full bg-[radial-gradient(circle_at_42%_60%,color-mix(in_srgb,var(--color-plop-blue)_80%,transparent),transparent_70%)]"
+        aria-hidden="true"
+      >
+      </div>
+
+      <div class="shell pb-[clamp(44px,6vw,80px)] pt-[clamp(132px,16vh,184px)]">
+        <nav aria-label="Trilha">
+          <a
+            href="/blog/"
+            class="muted inline-flex min-h-[44px] items-center gap-2 text-ui font-semibold no-underline transition-colors duration-[var(--duration-fast)] hover:text-white"
+          >
+            <Icon name="chevron-left" size={18} />
+            Blog
+          </a>
+        </nav>
+
+        <h1 class="mt-4 max-w-[20ch] text-[length:var(--text-h1)]">
+          {post.data.title}
+        </h1>
+
+        <p class="muted mt-7 text-ui" data-numeric>
+          <time datetime={post.data.publishedAt.toISOString()}>
+            {dateFormat.format(post.data.publishedAt)}
+          </time>
+          {" · "}
+          {post.data.readingMinutes} min de leitura
+        </p>
+      </div>
+    </header>
+
+    <div class="on-white bg-white py-[clamp(56px,8vw,110px)]">
+      <div class="shell">
+        <div class="prose-plop">
+          <Content />
+        </div>
+
+        <aside
+          class="mt-[clamp(56px,7vw,96px)] max-w-[68ch] rounded-[var(--radius-plop-xl)] bg-plop-paper p-[clamp(28px,4vw,48px)]"
+        >
+          <h2 class="text-[length:var(--text-h3)]">
+            Quer isso resolvido sem ler mais nada?
+          </h2>
+          <p class="muted mt-3">
+            É exatamente o que a gente faz: site construído, publicado e cuidado
+            todo mês, com preço fechado.
+          </p>
+          <div class="mt-7 flex flex-wrap gap-3">
+            <Button href="/planos/" variant="solid-ink" data-track="blog_cta_click">
+              Ver planos
+            </Button>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </article>
+</BaseLayout>

@@ -1,0 +1,39 @@
+---
+import GooeyBackground from "../ui/GooeyBackground.astro";
+
+/**
+ * One liquid ground, pinned behind however many sections are slotted in.
+ *
+ * The point of the sticky layer is that the blue stretch of the page reads as
+ * a single body of liquid the content scrolls over, rather than as the same
+ * wallpaper starting again at every section boundary. It also costs one
+ * blurred filter for the whole run instead of one per section, and the filter
+ * is the most expensive thing on the page.
+ *
+ * The pinned layer sits in an absolutely positioned column that spans the
+ * whole stack, so it is still flush with the viewport on the last screenful.
+ * That column must NOT get `overflow-hidden`: a clipping ancestor becomes the
+ * sticky element's scrollport and silently turns the pin into a plain
+ * absolute. GooeyBackground clips itself instead.
+ *
+ * Sections slotted here must not carry their own background — that is what
+ * `ground` is for.
+ */
+interface Props {
+  /** Tailwind background utility for the flat colour under the liquid. */
+  ground?: string;
+  variant?: "a" | "b";
+}
+
+const { ground = "", variant = "a" } = Astro.props as Props;
+---
+
+<div class:list={["relative isolate", ground]}>
+  <div class="pointer-events-none absolute inset-0 -z-10">
+    <div class="sticky top-0 h-svh bg-gradient-to-br from-blue-700 to-blue-500">
+      <GooeyBackground variant={variant} />
+    </div>
+  </div>
+
+  <slot />
+</div>

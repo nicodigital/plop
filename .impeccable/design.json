@@ -1,0 +1,260 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-11T00:00:00Z",
+  "title": "Design System: PLOP! Sites",
+  "extensions": {
+    "colorMeta": {
+      "plop-blue": {
+        "role": "primary",
+        "displayName": "Azul PLOP",
+        "canonical": "#2563ff",
+        "tonalRamp": ["#0a1533", "#102254", "#143a9f", "#1b47c4", "#2563ff", "#6d92ff", "#bcceff", "#f4f7ff"]
+      },
+      "plop-blue-deep": {
+        "role": "primary",
+        "displayName": "Azul Profundo",
+        "canonical": "#1b47c4",
+        "tonalRamp": ["#070f26", "#0d1c47", "#122a6e", "#143a9f", "#1b47c4", "#3f6ae0", "#8aa7f5", "#dde5ff"]
+      },
+      "plop-blue-dim": {
+        "role": "primary",
+        "displayName": "Azul Apagado",
+        "canonical": "#143a9f",
+        "tonalRamp": ["#050c1f", "#0a173c", "#0f265f", "#143a9f", "#1c4cc8", "#4a76e6", "#93aef7", "#e0e8ff"]
+      },
+      "plop-lime": {
+        "role": "secondary",
+        "displayName": "Lima PLOP",
+        "canonical": "#c7ff00",
+        "tonalRamp": ["#202900", "#364500", "#4d6300", "#6f8f00", "#95bd00", "#c7ff00", "#d6ff3d", "#eeffa8"]
+      },
+      "plop-lime-bright": {
+        "role": "secondary",
+        "displayName": "Lima Brillante",
+        "canonical": "#d6ff3d",
+        "tonalRamp": ["#242d00", "#3b4a00", "#546800", "#769400", "#9cc400", "#c7ff00", "#d6ff3d", "#f1ffb3"]
+      },
+      "plop-pink": {
+        "role": "tertiary",
+        "displayName": "Rosa PLOP",
+        "canonical": "#ff4d84",
+        "tonalRamp": ["#3a0014", "#5c0021", "#850a35", "#b01a4d", "#d93366", "#ff4d84", "#ff8cae", "#ffd5e1"]
+      },
+      "plop-violet": {
+        "role": "tertiary",
+        "displayName": "Violeta PLOP (declarado, sin uso en el build)",
+        "canonical": "#8b6cf6",
+        "tonalRamp": ["#1b0f3d", "#2b1a5e", "#3d2782", "#5236a8", "#6c4cd0", "#8b6cf6", "#b39bfa", "#e3dbfe"]
+      },
+      "plop-white": {
+        "role": "neutral",
+        "displayName": "Blanco",
+        "canonical": "#ffffff",
+        "tonalRamp": ["#1a1a1a", "#333333", "#595959", "#808080", "#a6a6a6", "#cccccc", "#ebebeb", "#ffffff"]
+      },
+      "plop-paper": {
+        "role": "neutral",
+        "displayName": "Papel",
+        "canonical": "#f4f7ff",
+        "tonalRamp": ["#141a29", "#232c44", "#374361", "#4f5d80", "#8492b4", "#b9c5e0", "#dde4f5", "#f4f7ff"]
+      },
+      "plop-ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#0b0f1a",
+        "tonalRamp": ["#0b0f1a", "#161d2e", "#232d44", "#33405c", "#4c5b7a", "#7986a3", "#aeb8cd", "#e4e8f1"]
+      },
+      "plop-black": {
+        "role": "neutral",
+        "displayName": "Negro (declarado, sin uso en el build)",
+        "canonical": "#111111",
+        "tonalRamp": ["#111111", "#1f1f1f", "#2a2a2a", "#3d3d3d", "#5c5c5c", "#8a8a8a", "#bdbdbd", "#e8e8e8"]
+      },
+      "plop-graphite": {
+        "role": "neutral",
+        "displayName": "Grafito",
+        "canonical": "#1f1f1f",
+        "tonalRamp": ["#111111", "#1f1f1f", "#2a2a2a", "#3d3d3d", "#5c5c5c", "#8a8a8a", "#bdbdbd", "#e8e8e8"]
+      },
+      "plop-graphite-soft": {
+        "role": "neutral",
+        "displayName": "Grafito Suave (declarado, sin uso en el build)",
+        "canonical": "#2a2a2a",
+        "tonalRamp": ["#141414", "#222222", "#2a2a2a", "#414141", "#606060", "#8d8d8d", "#c0c0c0", "#ececec"]
+      },
+      "plop-on-blue": {
+        "role": "neutral",
+        "displayName": "Sobre Azul",
+        "canonical": "#bcceff",
+        "tonalRamp": ["#0d1730", "#16264f", "#1f3a78", "#2b52a6", "#4f7ad1", "#8aa9f0", "#bcceff", "#e8efff"]
+      },
+      "plop-on-ink": {
+        "role": "neutral",
+        "displayName": "Sobre Ink",
+        "canonical": "#a8b4cc",
+        "tonalRamp": ["#0e1218", "#1b212c", "#2b3446", "#3f4b63", "#5c6a86", "#8390a8", "#a8b4cc", "#dfe4ee"]
+      },
+      "plop-on-white": {
+        "role": "neutral",
+        "displayName": "Sobre Blanco",
+        "canonical": "#3d4a66",
+        "tonalRamp": ["#0d1119", "#1a2130", "#29344b", "#3d4a66", "#566a8f", "#8593b0", "#b4bed2", "#e5e9f1"]
+      },
+      "plop-hairline": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#d8dfef",
+        "tonalRamp": ["#12161f", "#212838", "#333d55", "#4c5872", "#71809f", "#a3b0c9", "#d8dfef", "#f2f5fb"]
+      }
+    },
+    "typographyMeta": {
+      "h1": { "displayName": "H1", "purpose": "Un solo H1 por página, en el héroe o el masthead. El max-width en ch va sobre el propio elemento." },
+      "h2": { "displayName": "H2", "purpose": "Entrada de sección; marca el descenso de la espina." },
+      "h3": { "displayName": "H3", "purpose": "Títulos de card, plan y slide." },
+      "lead": { "displayName": "Lead", "purpose": "Párrafo que sigue al H2, limitado a 62ch o 48ch." },
+      "body": { "displayName": "Body", "purpose": "Texto corrido, features de plan, metadatos." },
+      "small": { "displayName": "Small", "purpose": "Estados de formulario, notas y metadatos. Nunca bajo 14px para información funcional." },
+      "numeric": { "displayName": "Numeric", "purpose": "Precios con cifras tabulares; se leen por comparación entre columnas." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "beat", "value": "320ms", "purpose": "Reloj único del sitio. Apariciones y transiciones de riel corren en múltiplos (640ms)." },
+      { "name": "duration-fast", "value": "180ms", "purpose": "Capa rápida: hover, color de borde, feedback inmediato de estado." },
+      { "name": "duration-slow", "value": "600ms", "purpose": "Transiciones largas de superficie." },
+      { "name": "ease-plop-out", "value": "cubic-bezier(0.22, 1, 0.36, 1)", "purpose": "Salida líquida por defecto: entradas, hovers e iconos." },
+      { "name": "ease-plop-standard", "value": "cubic-bezier(0.4, 0, 0.2, 1)", "purpose": "Easing simétrico para cambios de estado." },
+      { "name": "reveal", "value": "opacity/translateY(18px) calc(var(--beat) * 2) var(--ease-plop-out)", "purpose": "Única animación de entrada, armada solo bajo .js-reveal y solo sin prefers-reduced-motion." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "plan-table", "value": "900px" },
+      { "name": "spine", "value": "1024px" },
+      { "name": "container-max", "value": "1440px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "La acción de la página. Lima sobre ink, cápsula, con flecha que avanza en hover.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\">Quero meu site<svg class=\"ds-btn-icon\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5\"/></svg></a>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 0 24px; border-radius: 999px; background: var(--color-plop-lime, #c7ff00); color: var(--color-plop-ink, #0b0f1a); font-family: Fredoka, system-ui, sans-serif; font-weight: 600; font-size: 1rem; letter-spacing: -0.01em; text-decoration: none; transition: background-color 180ms cubic-bezier(0.22,1,0.36,1), transform 180ms cubic-bezier(0.22,1,0.36,1); } .ds-btn-primary:hover { background: var(--color-plop-lime-bright, #d6ff3d); } .ds-btn-primary:hover .ds-btn-icon { transform: translateX(4px); } .ds-btn-primary:active { transform: translateY(1px); } .ds-btn-primary:focus-visible { outline: 3px solid var(--color-plop-lime, #c7ff00); outline-offset: 3px; } .ds-btn-icon { flex-shrink: 0; transition: transform 180ms cubic-bezier(0.22,1,0.36,1); }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Acción secundaria, solo sobre azul o ink. Borde fantasma, sin relleno en reposo.",
+      "html": "<a class=\"ds-btn-outline\" href=\"#\">Ver planos<svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 4v15m0 0 5.5-5.5M12 19l-5.5-5.5\"/></svg></a>",
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 0 24px; border-radius: 999px; border: 2px solid rgba(255,255,255,0.45); background: transparent; color: #fff; font-family: Fredoka, system-ui, sans-serif; font-weight: 600; font-size: 1rem; text-decoration: none; transition: border-color 180ms cubic-bezier(0.22,1,0.36,1), background-color 180ms cubic-bezier(0.22,1,0.36,1); } .ds-btn-outline:hover { border-color: #fff; background: rgba(255,255,255,0.1); } .ds-btn-outline:focus-visible { outline: 3px solid var(--color-plop-lime, #c7ff00); outline-offset: 3px; }"
+    },
+    {
+      "name": "Solid Ink Button",
+      "kind": "button",
+      "refersTo": "button-solid-ink",
+      "description": "La acción sobre fondos claros, donde el lima sería ilegible en texto pequeño.",
+      "html": "<button class=\"ds-btn-ink\" type=\"submit\">Enviar<svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5\"/></svg></button>",
+      "css": ".ds-btn-ink { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 56px; padding: 0 32px; border: none; border-radius: 999px; background: var(--color-plop-ink, #0b0f1a); color: #fff; font-family: Fredoka, system-ui, sans-serif; font-weight: 600; font-size: 1.0625rem; cursor: pointer; transition: background-color 180ms cubic-bezier(0.22,1,0.36,1); } .ds-btn-ink:hover { background: var(--color-plop-graphite, #1f1f1f); } .ds-btn-ink:active { transform: translateY(1px); } .ds-btn-ink:focus-visible { outline: 3px solid var(--color-plop-lime, #c7ff00); outline-offset: 3px; }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Campo de formulario con label visible; el foco suma color de borde y anillo lima.",
+      "html": "<div class=\"ds-field\"><label class=\"ds-field-label\" for=\"ds-nome\">Seu nome</label><input class=\"ds-field-input\" id=\"ds-nome\" type=\"text\" placeholder=\"Padaria, clínica, imobiliária…\"></div>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 8px; font-family: 'Nunito Sans Variable', system-ui, sans-serif; } .ds-field-label { font-size: 0.9375rem; font-weight: 600; color: var(--color-plop-ink, #0b0f1a); } .ds-field-input { width: 100%; padding: 12px 16px; border: 2px solid var(--color-plop-hairline, #d8dfef); border-radius: 12px; background: #fff; color: var(--color-plop-ink, #0b0f1a); font: inherit; caret-color: var(--color-plop-blue, #2563ff); transition: border-color 180ms cubic-bezier(0.22,1,0.36,1); } .ds-field-input::placeholder { color: rgba(61,74,102,0.6); } .ds-field-input:focus { border-color: var(--color-plop-blue, #2563ff); outline: none; } .ds-field-input:focus-visible { outline: 3px solid var(--color-plop-lime, #c7ff00); outline-offset: 2px; } .ds-field-input[aria-invalid='true'] { border-color: var(--color-plop-pink, #ff4d84); }"
+    },
+    {
+      "name": "Header Navigation",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Header transparente sobre el héroe azul; la página actual lleva barra lima, no solo color.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Principal\"><a class=\"ds-nav-link\" href=\"#\" aria-current=\"page\">Início<span class=\"ds-nav-bar\" aria-hidden=\"true\"></span></a><a class=\"ds-nav-link\" href=\"#\">Planos</a><a class=\"ds-nav-link\" href=\"#\">Projetos</a><a class=\"ds-nav-cta\" href=\"#\">Quero meu site</a></nav>",
+      "css": ".ds-nav { display: flex; align-items: center; gap: 4px; padding: 12px 16px; background: var(--color-plop-blue, #2563ff); border-radius: 999px; font-family: 'Nunito Sans Variable', system-ui, sans-serif; } .ds-nav-link { position: relative; display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border-radius: 999px; color: rgba(255,255,255,0.85); font-size: 0.9375rem; font-weight: 600; text-decoration: none; transition: color 180ms cubic-bezier(0.22,1,0.36,1); } .ds-nav-link:hover, .ds-nav-link[aria-current='page'] { color: #fff; } .ds-nav-bar { position: absolute; left: 16px; right: 16px; bottom: 9px; height: 2px; border-radius: 999px; background: var(--color-plop-lime, #c7ff00); } .ds-nav-cta { display: inline-flex; align-items: center; min-height: 44px; margin-left: 8px; padding: 0 20px; border-radius: 999px; background: var(--color-plop-lime, #c7ff00); color: var(--color-plop-ink, #0b0f1a); font-family: Fredoka, system-ui, sans-serif; font-size: 0.9375rem; font-weight: 600; text-decoration: none; transition: background-color 180ms cubic-bezier(0.22,1,0.36,1); } .ds-nav-cta:hover { background: var(--color-plop-lime-bright, #d6ff3d); } .ds-nav-link:focus-visible, .ds-nav-cta:focus-visible { outline: 3px solid var(--color-plop-lime, #c7ff00); outline-offset: 3px; }"
+    },
+    {
+      "name": "Recommended Plan Card",
+      "kind": "card",
+      "refersTo": "card-plan-recommended",
+      "description": "Card de plan destacada: superficie ink, precio de entrada en lima, badge lima. Nunca la card entera en lima.",
+      "html": "<article class=\"ds-plan\"><div class=\"ds-plan-head\"><h3 class=\"ds-plan-name\">Profissional</h3><span class=\"ds-plan-badge\">Mais escolhido</span></div><p class=\"ds-plan-audience\">Para quem precisa de site e blog.</p><div class=\"ds-plan-row\"><span class=\"ds-plan-price\">R$ 1.500</span><span class=\"ds-plan-note\">entrada, uma vez</span></div><div class=\"ds-plan-row\"><span class=\"ds-plan-monthly\">R$ 300<span class=\"ds-plan-per\">/mês</span></span><span class=\"ds-plan-note\">hospedagem, suporte e manutenção</span></div><a class=\"ds-plan-cta\" href=\"#\">Quero o Profissional</a></article>",
+      "css": ".ds-plan { display: flex; flex-direction: column; max-width: 360px; padding: 32px; border-radius: 28px; background: var(--color-plop-ink, #0b0f1a); color: #fff; font-family: 'Nunito Sans Variable', system-ui, sans-serif; } .ds-plan-head { display: flex; align-items: center; gap: 12px; } .ds-plan-name { margin: 0; font-family: Fredoka, system-ui, sans-serif; font-size: 1.625rem; font-weight: 600; letter-spacing: -0.035em; } .ds-plan-badge { padding: 4px 12px; border-radius: 999px; background: var(--color-plop-lime, #c7ff00); color: var(--color-plop-ink, #0b0f1a); font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; } .ds-plan-audience { margin: 12px 0 0; font-size: 0.9375rem; color: var(--color-plop-on-ink, #a8b4cc); } .ds-plan-row { margin-top: 28px; padding-top: 28px; border-top: 1px solid rgba(255,255,255,0.15); } .ds-plan-price { display: block; font-family: Fredoka, system-ui, sans-serif; font-size: clamp(2.5rem, 4vw, 3.25rem); font-weight: 700; line-height: 1; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; color: var(--color-plop-lime, #c7ff00); } .ds-plan-monthly { display: block; font-family: Fredoka, system-ui, sans-serif; font-size: 1.75rem; font-weight: 600; line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; } .ds-plan-per { font-size: 1.125rem; } .ds-plan-note { display: block; margin-top: 8px; font-size: 0.9375rem; color: var(--color-plop-on-ink, #a8b4cc); } .ds-plan-cta { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; margin-top: 32px; padding: 0 24px; border-radius: 999px; background: var(--color-plop-lime, #c7ff00); color: var(--color-plop-ink, #0b0f1a); font-family: Fredoka, system-ui, sans-serif; font-weight: 600; text-decoration: none; transition: background-color 180ms cubic-bezier(0.22,1,0.36,1); } .ds-plan-cta:hover { background: var(--color-plop-lime-bright, #d6ff3d); } .ds-plan-cta:focus-visible { outline: 3px solid var(--color-plop-lime, #c7ff00); outline-offset: 3px; }"
+    },
+    {
+      "name": "Plain Plan Card",
+      "kind": "card",
+      "refersTo": "card-plan",
+      "description": "Card de plan clara sobre papel: hairline de 2px, sin sombra, check azul en las features.",
+      "html": "<article class=\"ds-plan-light\"><h3 class=\"ds-plan-light-name\">Essencial</h3><p class=\"ds-plan-light-audience\">Uma página, direto ao ponto.</p><span class=\"ds-plan-light-price\">R$ 900</span><ul class=\"ds-plan-light-list\"><li><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4.5 12.5 9.5 17.5 19.5 6.5\"/></svg><span>Hospedagem inclusa</span></li></ul></article>",
+      "css": ".ds-plan-light { display: flex; flex-direction: column; max-width: 360px; padding: 32px; border: 2px solid var(--color-plop-hairline, #d8dfef); border-radius: 28px; background: #fff; color: var(--color-plop-ink, #0b0f1a); font-family: 'Nunito Sans Variable', system-ui, sans-serif; } .ds-plan-light-name { margin: 0; font-family: Fredoka, system-ui, sans-serif; font-size: 1.625rem; font-weight: 600; letter-spacing: -0.035em; } .ds-plan-light-audience { margin: 12px 0 0; font-size: 0.9375rem; color: var(--color-plop-on-white, #3d4a66); } .ds-plan-light-price { display: block; margin-top: 28px; padding-top: 28px; border-top: 1px solid var(--color-plop-hairline, #d8dfef); font-family: Fredoka, system-ui, sans-serif; font-size: clamp(2.5rem, 4vw, 3.25rem); font-weight: 700; line-height: 1; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; } .ds-plan-light-list { margin: 28px 0 0; padding: 28px 0 0; border-top: 1px solid var(--color-plop-hairline, #d8dfef); list-style: none; display: flex; flex-direction: column; gap: 12px; } .ds-plan-light-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 0.9375rem; } .ds-plan-light-list svg { flex-shrink: 0; margin-top: 4px; color: var(--color-plop-blue, #2563ff); }"
+    },
+    {
+      "name": "Slider Control",
+      "kind": "custom",
+      "refersTo": "slider-control",
+      "description": "Control circular fantasma del riel de proyectos, con etiqueta solo para lectores de pantalla.",
+      "html": "<div class=\"ds-slider-controls\"><button class=\"ds-slider-btn\" type=\"button\"><span class=\"ds-sr\">Projeto anterior</span><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M15 5l-7 7 7 7\"/></svg></button><button class=\"ds-slider-btn\" type=\"button\"><span class=\"ds-sr\">Próximo projeto</span><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M9 5l7 7-7 7\"/></svg></button></div>",
+      "css": ".ds-slider-controls { display: flex; gap: 12px; padding: 16px; background: var(--color-plop-blue-deep, #1b47c4); border-radius: 28px; } .ds-slider-btn { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; border: 2px solid rgba(255,255,255,0.45); border-radius: 999px; background: transparent; color: #fff; cursor: pointer; transition: border-color 180ms cubic-bezier(0.22,1,0.36,1), background-color 180ms cubic-bezier(0.22,1,0.36,1); } .ds-slider-btn:hover { border-color: #fff; background: rgba(255,255,255,0.1); } .ds-slider-btn:disabled { opacity: 0.4; } .ds-slider-btn:focus-visible { outline: 3px solid var(--color-plop-lime, #c7ff00); outline-offset: 3px; } .ds-sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }"
+    },
+    {
+      "name": "Project Slide",
+      "kind": "card",
+      "refersTo": "card-plan",
+      "description": "Slide del riel: media 956:472 con radio 28px sobre azul apagado, metadatos debajo sin chrome de card.",
+      "html": "<article class=\"ds-slide\"><div class=\"ds-slide-media\"></div><h3 class=\"ds-slide-title\">Padaria</h3><p class=\"ds-slide-desc\">Cardápio, horários e pedido no WhatsApp em uma página.</p></article>",
+      "css": ".ds-slide { display: flex; flex-direction: column; max-width: 480px; padding: 16px; background: var(--color-plop-blue-deep, #1b47c4); font-family: 'Nunito Sans Variable', system-ui, sans-serif; color: #fff; transition: opacity 640ms cubic-bezier(0.22,1,0.36,1), filter 640ms cubic-bezier(0.22,1,0.36,1); } .ds-slide-media { aspect-ratio: 956 / 472; width: 100%; border-radius: 28px; background: var(--color-plop-blue-dim, #143a9f); } .ds-slide-title { margin: 24px 0 8px; font-family: Fredoka, system-ui, sans-serif; font-size: 1.5rem; font-weight: 600; letter-spacing: -0.035em; } .ds-slide-desc { margin: 0; max-width: 46ch; font-size: 0.9375rem; color: var(--color-plop-on-blue, #bcceff); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "La espina editorial sobre azul saturado",
+    "overview": "PLOP se construyó como un solo argumento que desciende por una columna izquierda mientras la prueba cambia en un riel derecho. El azul de marca no es un acento: es la superficie. Sobre él descansan masas líquidas grandes y pocas, tipografía redondeada en tamaños grandes y una única cosa lima por pantalla, que siempre es la acción. La página rechaza deliberadamente la pila de landing de agencia (héroe, tira de logos, tres tarjetas con iconos, grilla de proyectos): en su lugar alterna azul, papel e ink para marcar ritmo, y rompe la espina una sola vez, cuando el slider de proyectos toma el ancho completo.\n\nLa densidad es baja y el aire es material de construcción. No hay una sola sombra en todo el build: la profundidad viene del tono (azul, azul profundo, ink), del radio grande y de una hairline fría. Nada brilla, nada flota sobre un blur y ningún gradiente mezcla más de una familia de azul. El movimiento es discreto y sirve solo para presentar contenido que ya existe en el HTML.\n\nRechazos visuales confirmados y sostenidos por el build: glassmorphism, neón oscuro, estética gamer o cyberpunk, gradientes arcoíris, sombras pesadas, interfaces saturadas y clichés de render 3D de \"tecnología futurista\".",
+    "keyCharacteristics": [
+      "Azul PLOP como superficie completa, no como acento.",
+      "Lima exclusivamente para la acción; su rareza es el mecanismo.",
+      "Cero sombras: la profundidad es tonal.",
+      "Texto secundario teñido del fondo, nunca gris.",
+      "Una espina 5fr/6fr que ninguna sección renegocia.",
+      "Contenido visible sin JavaScript; la animación solo se suma."
+    ],
+    "rules": [
+      { "name": "La Regla del Lima Único", "body": "El lima es la acción y nada más. En cualquier viewport debe existir como máximo un elemento lima que no sea foco ni selección; si hay dos cosas lima compitiendo, una de ellas no era una acción. Prueba: tapa el lima de la pantalla y el usuario ya no sabe qué hacer.", "section": "colors" },
+      { "name": "La Regla del Gris Prohibido", "body": "El texto secundario nunca es gris neutro: usa el tinte de su propio fondo (plop-on-blue, plop-on-ink, plop-on-white). Si aparece un gris neutro en el diff, es un error de sistema, no una decisión.", "section": "colors" },
+      { "name": "La Regla del Azul que Aguanta", "body": "El cuerpo de texto que se apoya en azul se apoya en plop-blue-deep o plop-blue-dim, nunca en plop-blue. El azul de marca es superficie de titular, no de párrafo. El scrim de legibilidad se construye con el azul profundo: oscurecer con negro mata la identidad.", "section": "colors" },
+      { "name": "La Regla del ch en el Heading", "body": "Un max-width en ch va sobre el elemento del titular, jamás sobre un contenedor cuyo font-size es 16px. El ch se mide contra la fuente del elemento donde vive: puesto en un wrapper, un max-w-[13ch] estranguló el H1 a 211px en producción. Si un titular se ve estrecho, busca el ch en el wrapper antes que cualquier otra cosa.", "section": "typography" },
+      { "name": "La Regla de la Cifra Medida", "body": "Todo precio, paso numerado o conteo lleva [data-numeric] (tabular-nums). Los números son valores medidos, no prosa.", "section": "typography" },
+      { "name": "La Regla de la Voz Única del Titular", "body": "Fredoka y Nunito no comparten el rol de heading. Un titular es Fredoka; un párrafo es Nunito Sans. No hay tercera familia, y el wordmark no depende de ninguna de las dos.", "section": "typography" },
+      { "name": "La Regla de la Espina", "body": "Toda sección nueva de contenido entra en .spine-grid dentro de .shell. Una sección puede romper la espina solo si esa ruptura es el momento memorable de la página, y solo hay uno.", "section": "layout" },
+      { "name": "La Regla Sin Sombra", "body": "Ninguna superficie proyecta sombra, en reposo ni en hover. Si un elemento necesita separarse, cambia de tono o de radio. Glows y blurs de fondo están fuera de este mundo.", "section": "elevation" },
+      { "name": "La Regla del Scrim Tonal", "body": "Cuando haga falta legibilidad sobre media, el velo se pinta en la familia azul (gradiente de plop-blue-deep a transparente, con color-mix), nunca en negro ni en blanco translúcido.", "section": "elevation" },
+      { "name": "La Regla del Beat", "body": "El sitio tiene un reloj: --beat: 320ms. Las apariciones y las transiciones de riel corren en múltiplos del beat (640ms); el feedback inmediato de estado (hover, color de borde, foco) corre en la capa rápida de 180ms. No se inventan duraciones fuera de estas dos.", "section": "components" },
+      { "name": "La Regla del Contenido Primero", "body": "Ningún contenido depende de JavaScript para existir. La animación, el slider y la validación son mejoras sobre un HTML que ya es correcto y legible.", "section": "components" }
+    ],
+    "dos": [
+      "Do usar el azul de marca como superficie completa y reservar el lima para la acción (La Regla del Lima Único).",
+      "Do apoyar el cuerpo de texto sobre plop-blue-deep o plop-blue-dim cuando el fondo es azul, para que el contraste supere 4.5:1.",
+      "Do teñir el texto secundario desde su propio fondo con .muted dentro de .on-blue / .on-ink / .on-white.",
+      "Do poner los max-width en ch sobre el propio titular, nunca sobre un wrapper de 16px.",
+      "Do montar toda sección nueva sobre .shell + .spine-grid y respetar --section-space.",
+      "Do marcar precios, pasos y conteos con [data-numeric].",
+      "Do mantener un único anillo de foco lima de 3px, visible sobre cualquier fondo.",
+      "Do dar a cada control interactivo al menos 44×48px de área táctil.",
+      "Do usar el SVG aprobado del wordmark, con su área de seguridad equivalente a la altura de la o.",
+      "Do mantener la iconografía en la familia autoral: 24px, trazo 2px, extremos redondos."
+    ],
+    "donts": [
+      "Don't añadir box-shadow, drop-shadow, glow ni backdrop-filter: el sistema es plano y la profundidad es tonal.",
+      "Don't oscurecer media con velos negros; el scrim se pinta en azul profundo.",
+      "Don't usar lima como fondo de áreas grandes ni como color de texto pequeño sobre blanco.",
+      "Don't introducir grises neutros para texto secundario.",
+      "Don't introducir violeta, rosa u otro acento sin una razón jerárquica; más de dos o tres acentos simultáneos rompen el mundo.",
+      "Don't mezclar familias de iconos, pesos de trazo ni glifos tipográficos usados como iconos.",
+      "Don't reconstruir el wordmark con una fuente, recolorearlo, inclinarlo ni añadirle efectos.",
+      "Don't usar glassmorphism, neón, estética gamer ni gradientes multicolor.",
+      "Don't animar elemento por elemento ni inventar duraciones fuera del beat de 320ms y la capa rápida de 180ms.",
+      "Don't ocultar contenido detrás de JavaScript ni depender de él para que el slider, el formulario o la revelación muestren información.",
+      "Don't reintroducir la secuencia de storytelling de cuatro escenas con la laptop ni ninguna animación de scroll por fotogramas: el héroe es video de fondo y la prueba es el slider."
+    ]
+  }
+}

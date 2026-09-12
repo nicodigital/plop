@@ -1,0 +1,38 @@
+---
+/**
+ * The approved vector wordmark. Never rebuilt from a font, never recoloured.
+ * Intrinsic ratio is 847 x 347. Give it either dimension and the other is
+ * derived, so the mark can never be stretched by passing both.
+ */
+const RATIO = 847 / 347;
+
+interface Props {
+  height?: number;
+  /** Alternative to height when a layout is measured across, not down. */
+  width?: number;
+  class?: string;
+  /** Decorative when the surrounding link already names the destination. */
+  decorative?: boolean;
+}
+
+const {
+  height: heightProp,
+  width: widthProp,
+  class: className = "",
+  decorative = false,
+} = Astro.props;
+
+const height = heightProp ?? (widthProp ? Math.round(widthProp / RATIO) : 50);
+const width = widthProp ?? Math.round(RATIO * height);
+---
+
+<img
+  src="/assets/img/logo.svg"
+  width={width}
+  height={height}
+  class={className}
+  alt={decorative ? "" : "PLOP! Sites"}
+  aria-hidden={decorative ? "true" : undefined}
+  decoding="async"
+  style={widthProp ? `width:${width}px;height:auto` : `height:${height}px;width:auto`}
+/>

@@ -1,0 +1,388 @@
+@import "tailwindcss";
+
+/* Both faces are variable: one file each covers every weight the page asks
+   for, so no synthesised bold and no second request. Cera Round Pro Black
+   remains the licensed face to swap in here when it arrives — the Fontspring
+   demo cannot ship, it stamps a "DEMO" glyph over "$" and "4". */
+@import "@fontsource-variable/quicksand/index.css";
+@import "@fontsource-variable/outfit/index.css";
+
+@theme {
+  /* The blue ramp. Every dark ground and every hairline on the site is a
+     step of this one scale, so the page's whole contrast story reads as
+     blue against white rather than as a neutral grey borrowed from
+     somewhere else. */
+  --color-plop-blue-50: #eef6ff;
+  --color-plop-blue-100: #daebff;
+  --color-plop-blue-200: #bddcff;
+  --color-plop-blue-300: #8fc7ff;
+  --color-plop-blue-400: #5aa8ff;
+  --color-plop-blue-500: #3486fd;
+  --color-plop-blue-600: #1e66f2;
+  --color-plop-blue-700: #005DFF;
+  --color-plop-blue-800: #1650df;
+  --color-plop-blue-900: #1948C7;
+  --color-plop-blue-950: #152656;
+
+  /* Brand anchors. Blue is the dominant ground; lime is action only. */
+  --color-plop-blue: #2563ff;
+  --color-plop-lime: #c7ff00;
+  --color-plop-lime-bright: #d6ff3d;
+  --color-plop-white: #ffffff;
+  --color-plop-violet: #8b6cf6;
+  --color-plop-pink: #ff4d84;
+
+  /* Semantic aliases onto the ramp. Components name the role, the ramp
+     holds the value, so a step can be re-tuned in one place. */
+
+  /* Section grounds where body copy sits on blue and still clears 4.5:1. */
+  --color-plop-blue-deep: var(--color-plop-blue-800);
+  --color-plop-blue-dim: var(--color-plop-blue-900);
+
+  /* The darkest ground, and the colour of body text on white. Deep blue
+     rather than near-black: 14.5:1 on white, and unmistakably of the
+     brand. Replaces the neutral ink and graphite of the first pass. */
+  --color-plop-ink: var(--color-plop-blue-900);
+
+  /* Resting ground, so two light sections in a row still read as a change
+     of rhythm. */
+  --color-plop-paper: var(--color-plop-blue-50);
+
+  /* Secondary text, tinted from each ground's own hue. Never grey.
+     on-ink was blue-300, which clears 4.5:1 on blue-900 (5.72) but not on
+     blue-800 (4.29) — and the footer and About now sit on blue-800, so
+     blue-300 was failing AA on 96 nodes. blue-200 clears both (5.41 and
+     7.21). The cost is that on-ink and on-blue now resolve to the same
+     tint; the alternative is putting those two surfaces back on blue-900. */
+  --color-plop-on-blue: var(--color-plop-blue-200);
+  --color-plop-on-ink: var(--color-plop-blue-200);
+  --color-plop-on-white: #3d4a66;
+  --color-plop-hairline: var(--color-plop-blue-200);
+
+  --font-display: "Quicksand Variable", system-ui, sans-serif;
+  --font-sans: "Outfit Variable", system-ui, -apple-system, sans-serif;
+
+  --text-display: clamp(3.25rem, 7vw, 6.5rem);
+  --text-h1: clamp(2.75rem, 6vw, 5.5rem);
+  --text-h2: clamp(2.125rem, 4.2vw, 3.75rem);
+  --text-h3: clamp(1.375rem, 2.2vw, 2rem);
+  --text-lead: clamp(1.125rem, 1.5vw, 1.375rem);
+
+  /* UI ramp: fixed steps for labels, captions, metadata and card titles,
+     separate from the fluid display ramp above. */
+  --text-h4: 1.625rem;
+  --text-h5: 1.375rem;
+  --text-ui-xl: 1.25rem;
+  --text-ui-lg: 1.125rem;
+  --text-article: 1.0625rem;
+  --text-base: 1rem;
+  --text-ui: 0.9375rem;
+  --text-small: 0.875rem;
+
+  --radius-plop-sm: 12px;
+  --radius-plop-md: 20px;
+  --radius-plop-lg: 28px;
+  --radius-plop-xl: 40px;
+
+  --ease-plop-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-plop-standard: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@theme inline {
+  --container-plop: 1440px;
+}
+
+:root {
+  --gutter: clamp(20px, 4vw, 64px);
+  --section-space: clamp(80px, 12vw, 180px);
+  --duration-fast: 180ms;
+  --duration-normal: 320ms;
+  --duration-slow: 600ms;
+  /* One clock. Every reveal, rail swap and hover on the page is a
+     multiple of this beat, so nothing drifts against anything else. */
+  --beat: 320ms;
+  color-scheme: light;
+}
+
+@layer base {
+  html {
+    scrollbar-color: var(--color-plop-blue) var(--color-plop-blue-50);
+    -webkit-tap-highlight-color: color-mix(in srgb, var(--color-plop-lime) 35%, transparent);
+  }
+
+  body {
+    background: var(--color-plop-white);
+    color: var(--color-plop-ink);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--color-plop-lime);
+    color: var(--color-plop-ink);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+
+  h1{
+    -webkit-text-stroke: 1px;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Prices, steps and counts read as measured values, not as prose. */
+  [data-numeric] {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+  }
+
+  a {
+    text-underline-offset: 0.22em;
+    text-decoration-thickness: from-font;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-plop-lime);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* Blue grounds need the ring to survive against lime-adjacent hues. */
+  .on-blue :focus-visible,
+  .on-ink :focus-visible {
+    outline-color: var(--color-plop-lime);
+  }
+
+  input,
+  textarea,
+  select {
+    caret-color: var(--color-plop-blue);
+    font: inherit;
+  }
+
+  img,
+  video {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* Lenis owns the scroll position while it runs. These are the only rules
+   it needs: the document must not be height-locked, and native
+   smooth-scroll must step aside so the two never animate the same jump. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+@layer components {
+  .shell {
+    width: 100%;
+    max-width: var(--container-plop);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  /* The spine: the argument column the whole page descends. Its width is
+     the page's one structural constant, so sections never re-negotiate it. */
+  .spine-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(32px, 5vw, 72px);
+  }
+
+  @media (min-width: 1024px) {
+    .spine-grid {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      align-items: stretch;
+      gap: clamp(48px, 6vw, 112px);
+    }
+  }
+
+  .measure {
+    max-width: 62ch;
+  }
+
+  .measure-tight {
+    max-width: 48ch;
+  }
+
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: var(--text-small);
+    font-weight: 600;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    line-height: 1.4;
+  }
+}
+
+@layer utilities {
+  .on-blue {
+    color: var(--color-plop-white);
+  }
+
+  .on-blue .muted {
+    color: var(--color-plop-on-blue);
+  }
+
+  .on-ink {
+    color: var(--color-plop-white);
+  }
+
+  .on-ink .muted {
+    color: var(--color-plop-on-ink);
+  }
+
+  .on-white .muted {
+    color: var(--color-plop-on-white);
+  }
+}
+
+/* One authored reveal, shared by every section, from an already-visible
+   default so content never depends on JavaScript to exist. The hidden state
+   lives behind .js-reveal, which only JavaScript sets, so a failed script
+   leaves every section on screen rather than blank.
+
+   This no longer answers prefers-reduced-motion, and neither does the video
+   or the smooth scroll: the site plays the same for everyone by the owner's
+   decision. The blanket `transition-duration: 0.01ms !important` that used
+   to sit here went with it — it was also flattening Swiper's slide
+   transition, which is why the slider felt broken rather than merely still.
+   To restore the old behaviour, wrap this block in
+   `@media (prefers-reduced-motion: no-preference)` and put the guard back in
+   the head script of BaseLayout.astro. */
+.js-reveal [data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity calc(var(--beat) * 2) var(--ease-plop-out),
+    transform calc(var(--beat) * 2) var(--ease-plop-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.js-reveal [data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* The article is the calmest surface on the site: one column, wide
+   measure, and the brand only in headings, links and rules. */
+.prose-plop {
+  max-width: 68ch;
+  font-size: var(--text-article);
+  line-height: 1.72;
+}
+
+.prose-plop > * + * {
+  margin-top: 1.5em;
+}
+
+.prose-plop h2 {
+  font-size: clamp(var(--text-h4), 3vw, 2.25rem);
+  line-height: 1.08;
+  margin-top: 2.2em;
+  margin-bottom: -0.4em;
+}
+
+.prose-plop h3 {
+  font-size: clamp(var(--text-ui-xl), 2vw, var(--text-h5));
+  margin-top: 1.9em;
+  margin-bottom: -0.5em;
+}
+
+.prose-plop strong {
+  font-weight: 700;
+}
+
+.prose-plop a {
+  color: var(--color-plop-blue);
+  text-decoration-color: var(--color-plop-lime);
+  text-decoration-thickness: 2px;
+  font-weight: 600;
+}
+
+.prose-plop a:hover {
+  text-decoration-color: var(--color-plop-blue);
+}
+
+.prose-plop ul,
+.prose-plop ol {
+  padding-left: 1.3em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7em;
+}
+
+.prose-plop ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.prose-plop ul > li {
+  position: relative;
+  padding-left: 1.6em;
+}
+
+.prose-plop ul > li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 0.55em;
+  height: 0.55em;
+  border-radius: 999px;
+  background: var(--color-plop-blue);
+}
+
+.prose-plop ol {
+  list-style: decimal;
+}
+
+.prose-plop ol > li::marker {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--color-plop-blue);
+}
+
+.card-swiper {
+  @apply relative m-0 aspect-[720/356] w-full overflow-hidden rounded-[var(--radius-plop-lg)] border border-white;
+  corner-shape:squircle;
+
+  video{
+    @apply mix-blend-luminosity grayscale opacity-50 contrast-125
+    transition-all duration-300 ease-in-out;
+  }
+
+  &:hover{
+    video{
+      @apply grayscale-0 opacity-100 contrast-100;
+    }
+  }
+}

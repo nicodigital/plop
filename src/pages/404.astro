@@ -1,0 +1,32 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Button from "../components/ui/Button.astro";
+---
+
+<BaseLayout
+  title="Página não encontrada"
+  description="Esta página não existe ou mudou de endereço."
+  noindex
+>
+  <section class="on-blue relative isolate flex min-h-[70svh] items-center overflow-hidden bg-plop-blue-deep">
+    <div
+      class="pointer-events-none absolute -right-[10%] -top-[52%] -z-10 size-[min(64vw,680px)] rounded-full bg-[radial-gradient(circle_at_44%_58%,color-mix(in_srgb,var(--color-plop-blue)_82%,transparent),transparent_70%)]"
+      aria-hidden="true"
+    >
+    </div>
+
+    <div class="shell py-[clamp(96px,14vh,160px)]">
+      <h1 class="max-w-[16ch] text-[length:var(--text-h1)]">
+        Essa página não existe.
+      </h1>
+      <p class="muted mt-5 text-ui font-semibold" data-numeric>Erro 404</p>
+      <p class="muted measure-tight mt-7 text-[length:var(--text-lead)]">
+        Ou mudou de endereço. De qualquer forma, o caminho de volta é curto.
+      </p>
+      <div class="mt-9 flex flex-wrap gap-3">
+        <Button href="/" size="lg">Voltar ao início</Button>
+        <Button href="/planos/" variant="outline" size="lg">Ver planos</Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

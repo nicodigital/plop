@@ -1,0 +1,74 @@
+---
+/**
+ * Authored icon set. One family, 24px grid, 2px stroke, round caps and
+ * joins, so nothing on the page mixes stroke weights or icon idioms.
+ * WhatsApp is the one solid glyph: it is a third-party mark, not a UI icon.
+ */
+export type IconName =
+  | "arrow-right"
+  | "arrow-down"
+  | "check"
+  | "plus"
+  | "menu"
+  | "close"
+  | "whatsapp"
+  | "chevron-left"
+  | "chevron-right"
+  | "play"
+  | "pause";
+
+interface Props {
+  name: IconName;
+  size?: number;
+  class?: string;
+}
+
+const { name, size = 24, class: className = "" } = Astro.props;
+
+const strokePaths: Partial<Record<IconName, string>> = {
+  "arrow-right": "M4 12h15m0 0-5.5-5.5M19 12l-5.5 5.5",
+  "arrow-down": "M12 4v15m0 0 5.5-5.5M12 19l-5.5-5.5",
+  check: "M4.5 12.5 9.5 17.5 19.5 6.5",
+  plus: "M12 5v14M5 12h14",
+  menu: "M4 7h16M4 12h16M4 17h16",
+  close: "M6 6l12 12M18 6L6 18",
+  "chevron-left": "M15 5l-7 7 7 7",
+  "chevron-right": "M9 5l7 7-7 7",
+  play: "M8 5.6v12.8L18.4 12 8 5.6Z",
+  pause: "M9.5 5.5v13M14.5 5.5v13",
+};
+
+const path = strokePaths[name];
+---
+
+{
+  name === "whatsapp" ? (
+    <svg
+      class={className}
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.96L2 22l5.25-1.38a9.86 9.86 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2Zm5.8 14.16c-.24.68-1.42 1.31-1.96 1.35-.5.04-.97.22-3.27-.68-2.75-1.08-4.5-3.9-4.63-4.08-.14-.18-1.11-1.48-1.11-2.82 0-1.34.7-2 .95-2.27.25-.27.54-.34.72-.34.18 0 .36 0 .52.01.17.01.39-.06.61.47.23.54.77 1.88.84 2.02.07.13.11.29.02.47-.09.18-.13.29-.27.45-.13.15-.28.34-.4.46-.13.13-.27.28-.12.54.15.27.67 1.1 1.43 1.79.98.87 1.8 1.14 2.06 1.27.25.13.4.11.55-.07.14-.18.63-.74.8-.99.16-.25.33-.21.55-.13.23.09 1.44.68 1.69.8.25.13.41.19.47.29.06.11.06.63-.18 1.31Z" />
+    </svg>
+  ) : (
+    <svg
+      class={className}
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d={path} />
+    </svg>
+  )
+}

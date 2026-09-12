@@ -1,0 +1,122 @@
+---
+import Logo from "../ui/Logo.astro";
+import Icon from "../ui/Icon.astro";
+import { NAV_ITEMS, PRIMARY_CTA } from "../../data/nav.ts";
+
+const pathname = Astro.url.pathname;
+const isCurrent = (href: string) =>
+  href === "/" ? pathname === "/" : pathname.startsWith(href);
+---
+
+<header class="on-blue absolute inset-x-0 top-0 z-50">
+  <div class="shell flex items-center justify-between gap-6 py-5 lg:py-7">
+    <a
+      href="/"
+      class="inline-flex min-h-[44px] shrink-0 items-center rounded-lg transition-opacity duration-[var(--duration-fast)] hover:opacity-85"
+      aria-label="PLOP! Sites — início"
+    >
+      <Logo height={65} decorative />
+    </a>
+
+    <nav class="hidden lg:block" aria-label="Principal">
+      <ul class="flex items-center gap-1">
+        {
+          NAV_ITEMS.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                aria-current={isCurrent(item.href) ? "page" : undefined}
+                class="relative inline-flex min-h-[44px] items-center rounded-full px-4 text-ui font-semibold text-white/85 no-underline transition-colors duration-[var(--duration-fast)] hover:text-white aria-[current=page]:text-white"
+              >
+                {item.label}
+                {isCurrent(item.href) && (
+                  <span
+                    class="absolute inset-x-4 bottom-[9px] h-[2px] rounded-full bg-plop-lime"
+                    aria-hidden="true"
+                  />
+                )}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="flex items-center gap-3">
+      <a
+        href={PRIMARY_CTA.href}
+        class="hidden min-h-[44px] items-center rounded-full bg-plop-lime px-5 font-display text-ui font-semibold text-plop-ink no-underline transition-colors duration-[var(--duration-fast)] hover:bg-plop-lime-bright sm:inline-flex"
+      >
+        {PRIMARY_CTA.label}
+      </a>
+
+      <button
+        type="button"
+        id="nav-toggle"
+        class="inline-flex size-11 items-center justify-center rounded-full border-2 border-white/45 text-white transition-colors duration-[var(--duration-fast)] hover:border-white lg:hidden"
+        aria-expanded="false"
+        aria-controls="nav-drawer"
+      >
+        <span class="sr-only">Abrir menu</span>
+        <Icon name="menu" size={22} />
+      </button>
+    </div>
+  </div>
+
+  <div
+    id="nav-drawer"
+    class="shell hidden pb-6 lg:hidden"
+    data-nav-drawer
+  >
+    <nav aria-label="Principal, mobile">
+      <ul class="flex flex-col gap-1 border-t border-white/20 pt-4">
+        {
+          NAV_ITEMS.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                aria-current={isCurrent(item.href) ? "page" : undefined}
+                class="flex min-h-[52px] items-center rounded-[var(--radius-plop-sm)] px-3 font-display text-ui-xl font-semibold text-white/85 no-underline transition-colors duration-[var(--duration-fast)] hover:bg-white/10 hover:text-white aria-[current=page]:text-plop-lime"
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+        <li class="pt-2 sm:hidden">
+          <a
+            href={PRIMARY_CTA.href}
+            class="flex min-h-[52px] items-center justify-center rounded-full bg-plop-lime px-5 font-display font-semibold text-plop-ink no-underline"
+          >
+            {PRIMARY_CTA.label}
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const toggle = document.getElementById("nav-toggle");
+  const drawer = document.querySelector<HTMLElement>("[data-nav-drawer]");
+
+  if (toggle && drawer) {
+    const setOpen = (open: boolean) => {
+      drawer.classList.toggle("hidden", !open);
+      toggle.setAttribute("aria-expanded", String(open));
+      const label = toggle.querySelector(".sr-only");
+      if (label) label.textContent = open ? "Fechar menu" : "Abrir menu";
+    };
+
+    toggle.addEventListener("click", () => {
+      setOpen(toggle.getAttribute("aria-expanded") !== "true");
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && toggle.getAttribute("aria-expanded") === "true") {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+  }
+</script>

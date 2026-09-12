@@ -1,0 +1,53 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageMasthead from "../components/layout/PageMasthead.astro";
+import ProjectsSlider from "../components/sections/ProjectsSlider.astro";
+import FinalCta from "../components/sections/FinalCta.astro";
+import GooeyStack from "../components/layout/GooeyStack.astro";
+import { PROJECTS } from "../data/projects.ts";
+---
+
+<BaseLayout
+  title="Projetos"
+  description="Sites reais entregues e no ar, apresentados por setor: arquitetura, farmacêutica, cibersegurança, audiovisual e mais."
+>
+  <PageMasthead
+    title="Trabalho entregue, no ar."
+    intro="Cada projeto aqui é um site real de um cliente real. Mostramos o trabalho por setor — o nome de quem contratou fica com quem contratou."
+  />
+
+  <GooeyStack>
+    <ProjectsSlider
+      heading="Role cada um."
+      intro="Os vídeos percorrem o site como um visitante percorreria."
+    />
+  </GooeyStack>
+
+  <section class="on-white bg-white py-[var(--section-space)]">
+    <div class="shell">
+      <h2 class="max-w-[22ch] text-[length:var(--text-h2)]" data-reveal>
+        Os setores que já passaram por aqui.
+      </h2>
+
+      <ul class="mt-[clamp(36px,4vw,60px)] grid gap-x-10 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          PROJECTS.map((project) => (
+            <li class="border-t border-plop-hairline py-6" data-reveal>
+              <h3 class="font-display text-ui-xl font-semibold text-plop-ink">
+                {project.sector}
+              </h3>
+              <p class="muted mt-2 text-ui">{project.description}</p>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="muted mt-10 max-w-[58ch] text-ui">
+        Seu setor não está nesta lista? Isso não é um problema: a estrutura de um
+        bom site muda menos do que parece entre um ramo e outro.
+      </p>
+    </div>
+  </section>
+
+  <FinalCta />
+</BaseLayout>

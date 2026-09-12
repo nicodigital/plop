@@ -1,0 +1,232 @@
+---
+import Icon from "../ui/Icon.astro";
+import { PLANS, formatBRL } from "../../data/plans.ts";
+
+/**
+ * The signature of the page: the argument descends the spine on the left
+ * while the rail on the right swaps to the evidence for the step in view.
+ * Both columns are real content — on narrow screens they simply interleave,
+ * so nothing here depends on the sticky behaviour existing.
+ */
+const steps = [
+  {
+    title: "Escolha um plano",
+    body: "Três tamanhos, preço fechado e mensalidade clara. Nada de orçamento sob consulta.",
+  },
+  {
+    title: "Personalize seu site",
+    body: "Você manda logo, textos e fotos. A gente monta, mostra e ajusta antes de publicar.",
+  },
+  {
+    title: "Publique e cresça",
+    body: "O site entra no ar e continua cuidado: hospedagem, suporte, manutenção e conteúdo.",
+  },
+];
+
+const monthly = [
+  "Hospedagem e domínio no ar",
+  "Suporte técnico quando precisar",
+  "Manutenção e atualizações",
+  "1 conteúdo publicado por mês",
+];
+
+const briefing = ["Seu logo", "Textos e fotos", "Contato e horários", "Redes sociais"];
+---
+
+<section class="on-blue relative py-[var(--section-space)]" data-how-section>
+  <div class="shell">
+    <div class="spine-grid">
+      <!-- The spine -->
+      <div>
+        <h2 class="text-[length:var(--text-h2)]" data-reveal>
+          Do seu jeito.<br />Em poucos passos.
+        </h2>
+        <p class="muted measure mt-6 text-[length:var(--text-lead)]" data-reveal>
+          Você não precisa entender de tecnologia, escolher servidor nem instalar
+          nada. O trabalho é nosso; a decisão é sua.
+        </p>
+
+        <ol class="mt-[clamp(40px,5vw,64px)]">
+          {
+            steps.map((step, index) => (
+              <li
+                class="group border-t border-white/20 py-[clamp(28px,3.7vw,50px)] transition-colors duration-[calc(var(--beat)*1.5)] ease-[var(--ease-plop-out)] last:border-b data-[active=true]:border-plop-lime"
+                data-step={index}
+              >
+                <div class="flex gap-5">
+                  <span
+                    class="mt-1 shrink-0 font-display text-ui-lg font-semibold text-plop-on-blue transition-colors duration-[calc(var(--beat)*1.5)] ease-[var(--ease-plop-out)] group-data-[active=true]:text-plop-lime"
+                    data-numeric
+                    aria-hidden="true"
+                  >
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <div>
+                    <h3 class="text-[length:var(--text-h3)] group-data-[active=true]:text-plop-lime">{step.title}</h3>
+                    <p class="muted measure mt-3">{step.body}</p>
+
+                    {/* The rail's content, inline, for narrow screens. */}
+                    <div class="mt-6 lg:hidden">
+                      <slot name={`panel-${index}`} />
+                      {index === 0 && (
+                        <ul class="flex flex-col gap-2 rounded-[var(--radius-plop-md)] bg-plop-ink p-5">
+                          {PLANS.map((plan) => (
+                            <li class="on-ink flex items-baseline justify-between gap-4 text-white">
+                              <span class="font-display font-semibold">{plan.name}</span>
+                              <span class="font-display font-semibold text-plop-lime" data-numeric>
+                                {plan.setupFrom ? "a partir de " : ""}
+                                {formatBRL(plan.setup)}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                      {index === 1 && (
+                        <ul class="flex flex-wrap gap-2">
+                          {briefing.map((item) => (
+                            <li class="rounded-full border-2 border-white/35 px-4 py-2 text-ui font-semibold text-white">
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                      {index === 2 && (
+                        <ul class="flex flex-col gap-3">
+                          {monthly.map((item) => (
+                            <li class="flex items-start gap-3">
+                              <Icon name="check" size={20} class="mt-0.5 shrink-0 text-plop-lime" />
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+
+      <!-- The rail -->
+      <div class="hidden lg:block">
+        <div class="sticky top-[max(96px,12vh)]">
+          <div
+            class="relative min-h-[500px] overflow-hidden rounded-[var(--radius-plop-xl)] bg-blue-800 p-[clamp(28px,3vw,44px)]" style="corner-shape:squircle;"
+          >
+            <div
+              class="on-ink absolute inset-0 flex flex-col justify-center p-[clamp(28px,3vw,44px)] transition-opacity duration-[calc(var(--beat)*1.5)] ease-[var(--ease-plop-out)]"
+              data-panel="0"
+            >
+              <h3 class="font-display text-h5 font-semibold text-plop-lime">Preço fechado</h3>
+              <ul class="mt-7 flex flex-col">
+                {
+                  PLANS.map((plan) => (
+                    <li class="flex items-baseline justify-between gap-6 border-b border-white/15 py-4 last:border-0">
+                      <span class="font-display text-h5 font-semibold text-white">
+                        {plan.name}
+                      </span>
+                      <span class="text-right">
+                        <span
+                          class="block font-display text-h5 font-semibold text-plop-lime"
+                          data-numeric
+                        >
+                          {plan.setupFrom ? "a partir de " : ""}
+                          {formatBRL(plan.setup)}
+                        </span>
+                        <span class="block text-ui text-plop-on-ink" data-numeric>
+                          + {formatBRL(plan.monthly)}/mês
+                        </span>
+                      </span>
+                    </li>
+                  ))
+                }
+              </ul>
+            </div>
+
+            <div
+              class="on-ink absolute inset-0 flex flex-col justify-center p-[clamp(28px,3vw,44px)] opacity-0 transition-opacity duration-[calc(var(--beat)*1.5)] ease-[var(--ease-plop-out)]"
+              data-panel="1"
+            >
+              <h3 class="font-display text-h5 font-semibold text-plop-lime">Você manda</h3>
+              <ul class="mt-7 flex flex-col gap-3">
+                {
+                  briefing.map((item) => (
+                    <li class="flex items-center gap-4 rounded-[var(--radius-plop-md)] bg-plop-blue-800 px-5 py-4">
+                      <Icon name="check" size={22} class="shrink-0 text-white/70" />
+                      <span class="font-display text-ui-lg font-semibold text-white">
+                        {item}
+                      </span>
+                    </li>
+                  ))
+                }
+              </ul>
+              <p class="mt-7 text-plop-on-ink">
+                Não tem tudo pronto? A gente ajuda a organizar o que falta.
+              </p>
+            </div>
+
+            <div
+              class="on-ink absolute inset-0 flex flex-col justify-center p-[clamp(28px,3vw,44px)] opacity-0 transition-opacity duration-[calc(var(--beat)*1.5)] ease-[var(--ease-plop-out)]"
+              data-panel="2"
+            >
+              <h3 class="font-display text-h5 font-semibold text-plop-lime">Todo mês, sem você pedir</h3>
+              <ul class="mt-7 flex flex-col gap-4">
+                {
+                  monthly.map((item) => (
+                    <li class="flex items-start gap-4">
+                      <Icon name="check" size={22} class="mt-1 shrink-0 text-white/70" />
+                      <span class="text-article text-white">{item}</span>
+                    </li>
+                  ))
+                }
+              </ul>
+              <p class="mt-8 border-t border-white/15 pt-6 font-display text-ui-xl font-semibold text-white">
+                Você cuida do seu negócio.<br />A gente cuida do seu site.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const section = document.querySelector<HTMLElement>("[data-how-section]");
+
+  if (section && window.matchMedia("(min-width: 1024px)").matches) {
+    const steps = Array.from(section.querySelectorAll<HTMLElement>("[data-step]"));
+    const panels = Array.from(section.querySelectorAll<HTMLElement>("[data-panel]"));
+
+    const show = (index: number) => {
+      panels.forEach((panel) => {
+        const active = panel.dataset.panel === String(index);
+        panel.style.opacity = active ? "1" : "0";
+        panel.style.pointerEvents = active ? "auto" : "none";
+      });
+      steps.forEach((step) => {
+        const active = step.dataset.step === String(index);
+        // Emphasis moves the marker, not the prose: dimming real body copy
+        // pushes it under 4.5:1 while it is still on screen being read.
+        step.dataset.active = String(active);
+      });
+    };
+
+    show(0);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (!visible) return;
+        const index = Number((visible.target as HTMLElement).dataset.step);
+        if (!Number.isNaN(index)) show(index);
+      },
+      { rootMargin: "-38% 0px -38% 0px", threshold: [0.1, 0.5, 1] },
+    );
+
+    steps.forEach((step) => observer.observe(step));
+  }
+</script>

@@ -1,0 +1,255 @@
+---
+/**
+ * The liquid ground under the blue stretch of the page.
+ *
+ * Circles drift on their own clocks through the `#plop-goo` filter — a heavy
+ * blur followed by an alpha ramp — so circles that overlap fuse into one mass
+ * instead of reading as separate discs. The filter itself lives once in
+ * BaseLayout, because an SVG `id` may only be defined once per document.
+ *
+ * Usually you want GooeyStack, not this: one ground pinned behind several
+ * sections reads as a single body of liquid the page scrolls over, where one
+ * ground per section reads as the same wallpaper repeated. Use this directly
+ * only for a section that stands alone, as FinalCta does.
+ *
+ * CONTRAST CEILING. Secondary copy on these grounds is `--color-plop-on-blue`
+ * (blue-200, L=0.692), which needs the ground at L<=0.115 to clear 4.5:1. The
+ * blobs are blue-700 at 50% over blue-800, which lands at L=0.100 — the
+ * lightest step with real headroom. blue-600 at the same alpha reaches 0.122
+ * and drops that text to 4.32:1. So the ramp stops at 700 unless the muted
+ * text on these sections moves to white first. `scripts/a11y.mjs` measures the
+ * rendered pixels against that ceiling and will say so if it is crossed.
+ */
+interface Props {
+  /**
+   * Rotates the whole composition, for two grounds that would otherwise be
+   * recognisably the same drawing.
+   */
+  variant?: "a" | "b";
+}
+
+const { variant = "a" } = Astro.props as Props;
+
+const TRANSFORMS = { a: "none", b: "rotate(180deg)" } as const;
+const DELAYS = { a: "0s", b: "-7s" } as const;
+
+const style = `--goo-turn:${TRANSFORMS[variant]};--goo-delay:${DELAYS[variant]}`;
+---
+
+<div class="goo" style={style} aria-hidden="true" data-goo>
+  <div class="goo-body">
+    <span class="blob blob--xl at-1"></span>
+    <span class="blob blob--lg at-2"></span>
+    <span class="blob blob--md at-3"></span>
+    <span class="blob blob--sm at-4"></span>
+    <span class="blob blob--xs at-5"></span>
+  </div>
+</div>
+
+<style>
+  .goo {
+    position: absolute;
+    inset: 0;
+    z-index: -10;
+    overflow: hidden;
+    pointer-events: none;
+    /* One unit for every size and every travel distance below, so the whole
+       composition scales as one thing and stops growing on ultrawide. */
+    --goo-unit: min(1vmax, 15px);
+    --goo-blob: white;
+    /* The alpha lives here and not in the colour: the goo filter's ramp
+       (22 -9) drives every alpha to 0 or 1, so a translucent blob comes out
+       of the filter fully opaque. Fading the whole layer afterwards is the
+       only place 50% survives. */
+    --goo-alpha: 0.1;
+  }
+
+  .goo-body {
+    position: absolute;
+    inset: 0;
+    transform: var(--goo-turn);
+    filter: url(#plop-goo);
+    opacity: var(--goo-alpha);
+  }
+
+  .blob {
+    position: absolute;
+    display: block;
+    border-radius: 50%;
+    /* background: var(--goo-blob); */
+    background: radial-gradient(ellipse at center,  rgba(255,255,255,1) 0%,rgba(255,255,255,0.5) 100%);
+    will-change: transform;
+  }
+
+  /* Only what is on screen is worth a frame: a blurred full-viewport filter is
+     the most expensive thing on this page. */
+  [data-goo][data-visible] {
+    --goo-state: running;
+  }
+
+  /* The pause control in ProjectsSlider is the site's single motion switch,
+     and these grounds are part of what it has to stop (WCAG SC 2.2.2). */
+  :root[data-motion-paused] [data-goo] {
+    --goo-state: paused;
+  }
+
+  .blob--xl {
+    width: calc(46 * var(--goo-unit));
+    height: calc(46 * var(--goo-unit));
+    animation: goo-float-a 14s ease-in-out infinite;
+  }
+  .blob--lg {
+    width: calc(34 * var(--goo-unit));
+    height: calc(34 * var(--goo-unit));
+    animation: goo-float-b 12s ease-in-out infinite;
+  }
+  .blob--md {
+    width: calc(22 * var(--goo-unit));
+    height: calc(22 * var(--goo-unit));
+    animation: goo-float-c 11s ease-in-out infinite;
+  }
+  .blob--sm {
+    width: calc(9 * var(--goo-unit));
+    height: calc(9 * var(--goo-unit));
+    animation: goo-bob-a 7s ease-in-out infinite;
+  }
+  .blob--xs {
+    width: calc(6 * var(--goo-unit));
+    height: calc(6 * var(--goo-unit));
+    animation: goo-bob-b 6s ease-in-out infinite;
+  }
+
+  /* After the shorthands above, never before: `animation:` resets every
+     longhand it does not name, so declaring these first lets each size rule
+     silently put the delay back to 0 and the state back to running. */
+  .blob {
+    animation-delay: var(--goo-delay);
+    animation-play-state: var(--goo-state, paused);
+  }
+
+  .at-1 {
+    top: calc(-14 * var(--goo-unit));
+    left: calc(-10 * var(--goo-unit));
+  }
+  .at-2 {
+    bottom: calc(-18 * var(--goo-unit));
+    right: calc(-12 * var(--goo-unit));
+  }
+  .at-3 {
+    top: 55%;
+    left: calc(-8 * var(--goo-unit));
+  }
+  .at-4 {
+    top: 28%;
+    left: 14%;
+  }
+  .at-5 {
+    top: 48%;
+    right: 22%;
+  }
+
+  /* Two of the five sit inside the copy column on a phone, where they buy no
+     shape and cost a larger filter region. The mass at the edges is the part
+     that reads. */
+  @media (max-width: 767px) {
+    .at-4,
+    .at-5 {
+      display: none;
+    }
+  }
+
+  @keyframes goo-float-a {
+    0%,
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+    33% {
+      transform: translate(calc(9 * var(--goo-unit)), calc(-7 * var(--goo-unit)))
+        scale(1.08);
+    }
+    66% {
+      transform: translate(calc(-5 * var(--goo-unit)), calc(8 * var(--goo-unit)))
+        scale(0.94);
+    }
+  }
+
+  @keyframes goo-float-b {
+    0%,
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+    50% {
+      transform: translate(calc(-10 * var(--goo-unit)), calc(-8 * var(--goo-unit)))
+        scale(1.1);
+    }
+  }
+
+  @keyframes goo-float-c {
+    0%,
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+    40% {
+      transform: translate(calc(7 * var(--goo-unit)), calc(6 * var(--goo-unit)))
+        scale(0.92);
+    }
+    70% {
+      transform: translate(calc(-6 * var(--goo-unit)), calc(-5 * var(--goo-unit)))
+        scale(1.06);
+    }
+  }
+
+  @keyframes goo-bob-a {
+    0%,
+    100% {
+      transform: translate(0, 0);
+    }
+    50% {
+      transform: translate(calc(3 * var(--goo-unit)), calc(-12 * var(--goo-unit)));
+    }
+  }
+
+  @keyframes goo-bob-b {
+    0%,
+    100% {
+      transform: translate(0, 0);
+    }
+    50% {
+      transform: translate(calc(-4 * var(--goo-unit)), calc(10 * var(--goo-unit)));
+    }
+  }
+</style>
+
+<script>
+  // Astro bundles a component script once per page, so this one call wires
+  // every instance on the page.
+  const grounds = document.querySelectorAll<HTMLElement>("[data-goo]");
+
+  if (grounds.length) {
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) entry.target.setAttribute("data-visible", "");
+            else entry.target.removeAttribute("data-visible");
+          });
+        },
+        { rootMargin: "10% 0px" },
+      );
+      grounds.forEach((ground) => observer.observe(ground));
+    } else {
+      // No observer, no gating: a still background would read as a bug.
+      grounds.forEach((ground) => ground.setAttribute("data-visible", ""));
+    }
+
+    // A backgrounded tab should not be painting blurred filters.
+    document.addEventListener("visibilitychange", () => {
+      grounds.forEach((ground) => {
+        // Removing the override hands control back to the rules above, which
+        // know whether this particular ground is on screen and unpaused.
+        if (document.hidden) ground.style.setProperty("--goo-state", "paused");
+        else ground.style.removeProperty("--goo-state");
+      });
+    });
+  }
+</script>

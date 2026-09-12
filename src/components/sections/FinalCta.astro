@@ -1,0 +1,31 @@
+---
+import Button from "../ui/Button.astro";
+import GooeyBackground from "../ui/GooeyBackground.astro";
+---
+
+{/*
+  The two static masses that used to sit here are gone: the same job, done by
+  the same liquid ground the three sections above it now share.
+*/}
+<section class="on-blue relative isolate overflow-hidden bg-plop-blue">
+  <GooeyBackground variant="b" />
+
+  <div class="shell py-[var(--section-space)]">
+    <div class="max-w-[36rem]">
+      <h2 class="max-w-[14ch] text-[length:var(--text-h1)]" data-reveal>
+        Seu site pronto.<br />
+        E cuidado todos<br />
+        os meses.
+      </h2>
+    </div>
+
+    <div class="mt-10 flex flex-wrap items-center gap-3" data-reveal>
+      <Button href="/contato/" size="lg" data-track="cta_primary_click">
+        Quero meu site
+      </Button>
+      <Button href="/planos/" variant="outline" size="lg" icon="arrow-right">
+        Comparar planos
+      </Button>
+    </div>
+  </div>
+</section>

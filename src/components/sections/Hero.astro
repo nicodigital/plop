@@ -1,0 +1,106 @@
+---
+import Button from "../ui/Button.astro";
+---
+
+<section class="on-blue relative isolate overflow-hidden">
+  {/*
+    Decorative background. It carries no information: every word, price and
+    action in this viewport is real HTML in the spine beside it.
+  */}
+  <div class="absolute inset-0 -z-20" aria-hidden="true">
+    <video
+      class="size-full object-cover object-[68%_bottom] lg:object-[76%_85%]"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+      poster="/assets/video/hero-laptop-poster.webp"
+      data-hero-video
+    >
+      <source src="/assets/video/hero-laptop-alpha.webm" type="video/webm" />
+      <source src="/assets/video/hero-laptop-alpha.mp4" type="video/mp4" />
+    </video>
+  </div>
+
+  {/*
+    Readability scrim in the brand blue itself, not black: the spine keeps
+    its contrast without the identity going grey. In portrait the copy runs
+    from 22% to 78% of the hero and the laptop sits under it, so the scrim
+    stays solid past the last line and only then opens onto the machine —
+    a frame of bright screen behind the trust row costs more than the extra
+    inch of laptop is worth. In landscape the copy is beside the laptop
+    instead of over it, so the scrim sweeps across rather than down.
+  */}
+  <div
+    class="shell relative flex min-h-[max(600px,100svh)] flex-col justify-center pb-24 pt-[clamp(124px,15vh,168px)] lg:pb-[clamp(48px,7vw,88px)]"
+  >
+    <div class="max-w-[42rem] lg:max-w-[54%]">
+      <p class="eyebrow text-plop-lime">
+        Sites profissionais para pequenos negócios
+      </p>
+
+      <h1 class="mt-5 max-w-[20ch] text-[length:var(--text-h1)]">
+        Seu site pronto <br>
+        <span class="text-plop-lime"> melhor! </span>
+      </h1>
+
+      <p class="muted mt-7 max-w-[34ch] text-[length:var(--text-lead)] leading-[1.3]">
+        Sites modernos, rápidos e fáceis de gerenciar. Design de alto desempenho
+        com um preço que faz sentido.
+      </p>
+
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        <Button href="/contato/" size="lg" data-track="cta_primary_click">
+          Quero meu site
+        </Button>
+        <Button href="/planos/" variant="outline" size="lg" icon="arrow-down">
+          Ver planos
+        </Button>
+      </div>
+
+      {/* Separators are drawn, not listed, so a wrap never strands one. */}
+      <ul
+        class="muted mt-9 flex flex-wrap gap-x-6 gap-y-1 text-ui font-semibold"
+      >
+        <li class="before:mr-6 before:text-plop-on-blue/55 before:content-['·'] first:before:hidden">
+          No ar em semanas
+        </li>
+        <li class="before:mr-6 before:text-plop-on-blue/55 before:content-['·'] first:before:hidden">
+          Hospedagem inclusa
+        </li>
+        <li class="before:mr-6 before:text-plop-on-blue/55 before:content-['·'] first:before:hidden">
+          Cuidado todo mês
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<script>
+  // A background video is decoration; it must never spend battery or
+  // bandwidth while it is off screen or while the tab is in the background.
+  // It no longer stands down for prefers-reduced-motion: that call belongs
+  // to the owner of the site, and it was made.
+  const video = document.querySelector<HTMLVideoElement>("[data-hero-video]");
+
+  if (video) {
+    void video.play().catch(() => {});
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) void video.play().catch(() => {});
+          else video.pause();
+        });
+      },
+      { threshold: 0.05 },
+    );
+    observer.observe(video);
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) video.pause();
+      else void video.play().catch(() => {});
+    });
+  }
+</script>

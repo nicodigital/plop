@@ -1,0 +1,344 @@
+---
+import Icon from "../ui/Icon.astro";
+import { PROJECTS } from "../../data/projects.ts";
+
+interface Props {
+  /** The home uses the short intro; /projetos/ supplies its own heading. */
+  heading?: string;
+  intro?: string;
+  headingLevel?: "h2" | "h1";
+}
+
+const {
+  heading = "Sites e negócios que <span class='text-plop-lime'>não se parecem.</span>",
+  intro = "Projetos reais, entregues e no ar. Mostramos por setor:<br> os nomes dos clientes ficam com eles.",
+  headingLevel: Heading = "h2",
+} = Astro.props;
+
+/**
+ * Two bands, five projects each. One band reads as a queue; two bands
+ * travelling at different speeds read as a body of work — there is always
+ * something entering and something leaving, and the eye never settles into
+ * the rhythm of a single strip.
+ */
+const ROWS = [PROJECTS.slice(0, 5), PROJECTS.slice(5)];
+
+/** The lower band covers more ground in the same time, so it runs faster. */
+const ROW_SPEED = [9000, 6800];
+---
+
+{/*
+  The rail at its widest. For the whole page the argument obeys a column;
+  here it takes the full viewport once, and that break is what keeps the
+  spine from reading as a two-column template.
+*/}
+<section
+  class="on-blue relative flex flex-col justify-center py-[var(--section-space)] lg:min-h-svh lg:py-[clamp(72px,8vh,120px)]"
+>
+  <div class="shell">
+    <div class="max-w-[44rem] mx-auto">
+      <Heading class="text-[length:var(--text-h2)] text-center" data-reveal>
+        <Fragment set:html={heading} />
+      </Heading>
+      <p class="muted mt-6 text-[length:var(--text-lead)] leading-[1.3] text-center" data-reveal>
+        <Fragment set:html={intro} />
+      </p>
+
+      {/*
+        The site does not defer to prefers-reduced-motion by the owner's
+        decision, so this control is the whole of its answer to WCAG SC 2.2.2:
+        it is the only way to stop the bands, the tile videos and the liquid
+        grounds, all of which run without end. Removing it takes the page out
+        of AA conformance — scripts/a11y.mjs fails if it is not here.
+      */}
+      <button
+        type="button"
+        class="mt-8 inline-flex min-h-[44px] items-center gap-2.5 rounded-full border-2 border-white/35 px-5 font-display text-ui font-semibold text-white transition-colors duration-[var(--duration-fast)] hover:border-plop-lime hover:text-plop-lime"
+        aria-pressed="false"
+        data-projects-playback
+      >
+        <span class="contents" data-projects-icon-pause>
+          <Icon name="pause" size={18} />
+        </span>
+        <span class="contents" data-projects-icon-play hidden>
+          <Icon name="play" size={18} />
+        </span>
+        <span data-projects-playback-label>Pausar</span>
+      </button>
+    </div>
+  </div>
+
+  {/*
+    Full-bleed breakout: the bands escape whatever column contains them and
+    span the viewport, so the tiles are cut by the screen and not by a
+    container edge.
+  */}
+  <div
+    class="relative left-1/2 mt-[clamp(32px,4vw,56px)] flex w-screen -translate-x-1/2 flex-col gap-8 overflow-hidden"
+  >
+    {
+      ROWS.map((row, rowIndex) => (
+        <div
+          class="swiper w-full"
+          role="group"
+          aria-roledescription="carrossel"
+          aria-label={`Projetos entregues, faixa ${rowIndex + 1} de ${ROWS.length}`}
+          data-projects-swiper
+          data-row={rowIndex}
+          data-speed={ROW_SPEED[rowIndex]}
+        >
+          <ul class="swiper-wrapper !list-none">
+            {row.map((project) => (
+              <li class="swiper-slide !h-auto">
+                <article class="flex h-full flex-col">
+                  <figure class="card-swiper">
+                    <video
+                      class="size-full object-cover"
+                      muted
+                      loop
+                      playsinline
+                      preload="none"
+                      poster={`/assets/portfolio/project-${project.slug}-poster.webp`}
+                      width="720"
+                      height="356"
+                      aria-hidden="true"
+                      tabindex="-1"
+                      data-project-video
+                    >
+                      <source
+                        src={`/assets/portfolio/project-${project.slug}.webm`}
+                        type="video/webm"
+                      />
+                      <source
+                        src={`/assets/portfolio/project-${project.slug}.mp4`}
+                        type="video/mp4"
+                      />
+                    </video>
+                  </figure>
+
+                  <div class="flex flex-1 flex-col gap-1.5 px-1 pt-5">
+                    <h3 class="font-display text-ui-xl font-semibold text-white">
+                      {project.sector}
+                    </h3>
+                    <p class="muted max-w-[46ch] text-ui">{project.description}</p>
+                  </div>
+                </article>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  /* Tile width is set here rather than through slidesPerView, because a
+     marquee needs a fixed tile the viewport can cut at any width — not a
+     fraction of the screen that reflows as the screen changes. */
+  [data-projects-swiper] .swiper-slide {
+    width: min(82vw, 400px);
+  }
+
+  @media (min-width: 768px) {
+    [data-projects-swiper] .swiper-slide {
+      width: 44vw;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    [data-projects-swiper] .swiper-slide {
+      width: min(40vw, 800px);
+    }
+  }
+
+  /* Constant speed. Swiper's default ease would make a continuous band
+     breathe in and out, which reads as a stutter rather than as travel. */
+  [data-projects-swiper] .swiper-wrapper {
+    transition-timing-function: linear;
+  }
+
+  /* The bands are grabbable, and say so. */
+  [data-projects-swiper] {
+    cursor: grab;
+  }
+
+  [data-projects-swiper]:active {
+    cursor: grabbing;
+  }
+</style>
+
+<script>
+  import Swiper from "swiper";
+  import { Autoplay, FreeMode } from "swiper/modules";
+  import "swiper/css";
+  import "swiper/css/free-mode";
+
+  const hosts = Array.from(document.querySelectorAll<HTMLElement>("[data-projects-swiper]"));
+
+  if (hosts.length) {
+    // The bands move for everyone; this is the visitor's switch, and it is
+    // the only thing that decides. It holds the travel and the video
+    // together, because on screen they are one motion.
+    let wantsPlay = true;
+
+    /** At most this many tiles decode at once, however many are on screen. */
+    const MAX_DECODING = 4;
+
+    const bands = hosts.map((host, index) => {
+      const swiper = new Swiper(host, {
+        modules: [Autoplay, FreeMode],
+        slidesPerView: "auto",
+        spaceBetween: 24,
+        loop: true,
+        // Delay zero plus a long duration is what turns Swiper's paging into
+        // a continuous crawl: always mid-transition, never resting. The two
+        // bands differ here, which is the whole point of there being two.
+        speed: Number(host.dataset.speed ?? 8000),
+        autoplay: { delay: 0, disableOnInteraction: false, pauseOnMouseEnter: false },
+        freeMode: { enabled: true, momentum: false },
+        allowTouchMove: true,
+        grabCursor: false,
+        // The lower band starts further along so the two never line up into
+        // a grid, which would undo the point of separate speeds.
+        initialSlide: index * 2,
+        breakpoints: { 768: { spaceBetween: 32 } },
+      });
+
+      /**
+       * Stopping autoplay only stops the next step being scheduled; the
+       * transition already under way keeps running, so the band drifts on
+       * for several seconds after the visitor asks it to stop. Freezing
+       * means pinning the wrapper to wherever it currently is.
+       */
+      const freeze = () => {
+        const current = new DOMMatrix(getComputedStyle(swiper.wrapperEl).transform).m41;
+        swiper.autoplay.stop();
+        swiper.setTransition(0);
+        swiper.setTranslate(current);
+      };
+
+      const start = () => {
+        // Freezing interrupts the transition without it ever firing
+        // transitionend, so Swiper still believes it is mid-animation and
+        // silently refuses every further step. Clearing that is what makes
+        // resume work; without it the band stays pinned for good.
+        swiper.animating = false;
+        swiper.autoplay.stop();
+        swiper.autoplay.start();
+        // Delay zero schedules the next step off the end of the current
+        // transition. A frozen wrapper has none, so the first step is manual.
+        swiper.slideNext(swiper.params.speed as number);
+      };
+
+      return { host, swiper, freeze, start };
+    });
+
+    /**
+     * Two bands means twice as many tiles on screen, and a tile is a video.
+     * Playback therefore follows the screen and then a budget: the tiles
+     * nearest the middle of the viewport decode, the rest hold their poster.
+     * At the edges they are cut off anyway, so the ceiling costs nothing to
+     * look at and saves a phone several megabytes.
+     */
+    const videos = hosts.flatMap((host) =>
+      Array.from(host.querySelectorAll<HTMLVideoElement>("[data-project-video]")),
+    );
+    const onScreen = new Set<HTMLVideoElement>();
+
+    const sync = () => {
+      const centre = window.innerWidth / 2;
+      const budget = [...onScreen]
+        .map((video) => {
+          const box = video.getBoundingClientRect();
+          return { video, distance: Math.abs(box.left + box.width / 2 - centre) };
+        })
+        .sort((a, b) => a.distance - b.distance)
+        .slice(0, MAX_DECODING)
+        .map((entry) => entry.video);
+
+      const allowed = new Set(wantsPlay && !document.hidden ? budget : []);
+
+      videos.forEach((video) => {
+        if (allowed.has(video)) {
+          if (video.preload === "none") video.preload = "auto";
+          void video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      });
+    };
+
+    // Nothing decodes until a tile is genuinely on screen. Loading both
+    // bands up front would cost a phone several megabytes for work it may
+    // never scroll to, which is the opposite of what this site sells.
+    const tileObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const video = entry.target as HTMLVideoElement;
+          if (entry.isIntersecting) onScreen.add(video);
+          else onScreen.delete(video);
+        });
+        sync();
+      },
+      { threshold: 0.25 },
+    );
+    videos.forEach((video) => tileObserver.observe(video));
+
+    // The budget is decided by horizontal position, which the travel keeps
+    // changing, so it has to be re-decided as the bands move rather than
+    // only when a tile crosses the edge of the screen.
+    let rebudget: number | undefined;
+    const scheduleRebudget = () => {
+      window.clearInterval(rebudget);
+      rebudget = window.setInterval(sync, 1200);
+    };
+
+    const playback = document.querySelector<HTMLButtonElement>("[data-projects-playback]");
+    if (playback) {
+      const label = playback.querySelector<HTMLElement>("[data-projects-playback-label]");
+      const iconPause = playback.querySelector<HTMLElement>("[data-projects-icon-pause]");
+      const iconPlay = playback.querySelector<HTMLElement>("[data-projects-icon-play]");
+
+      playback.addEventListener("click", () => {
+        wantsPlay = !wantsPlay;
+        playback.setAttribute("aria-pressed", String(!wantsPlay));
+        if (label) label.textContent = wantsPlay ? "Pausar" : "Reproduzir";
+        if (iconPause) iconPause.hidden = !wantsPlay;
+        if (iconPlay) iconPlay.hidden = wantsPlay;
+        bands.forEach((band) => (wantsPlay ? band.start() : band.freeze()));
+        // The liquid grounds under this and three other sections read as part
+        // of the same motion, so one switch has to hold all of it.
+        document.documentElement.toggleAttribute("data-motion-paused", !wantsPlay);
+        sync();
+      });
+    }
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) videos.forEach((video) => video.pause());
+      else sync();
+    });
+
+    // The bands stop travelling while they are off screen, so an idle tab is
+    // not burning a compositor thread on something nobody can see.
+    const sectionObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const band = bands.find((candidate) => candidate.host === entry.target);
+          if (!band) return;
+          if (entry.isIntersecting && wantsPlay) {
+            band.start();
+            scheduleRebudget();
+          } else {
+            band.freeze();
+            window.clearInterval(rebudget);
+          }
+        });
+      },
+      { threshold: 0 },
+    );
+    bands.forEach((band) => sectionObserver.observe(band.host));
+
+    window.dispatchEvent(new CustomEvent("plop:project_view"));
+  }
+</script>

@@ -1,0 +1,84 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageMasthead from "../../components/layout/PageMasthead.astro";
+import FinalCta from "../../components/sections/FinalCta.astro";
+import Icon from "../../components/ui/Icon.astro";
+
+const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime(),
+);
+
+const dateFormat = new Intl.DateTimeFormat("pt-BR", {
+  day: "2-digit",
+  month: "long",
+  year: "numeric",
+});
+---
+
+<BaseLayout
+  title="Blog"
+  description="Textos diretos sobre sites, performance e presença digital para quem toca um negócio pequeno."
+>
+  <PageMasthead
+    title="O que a gente aprende fazendo."
+    intro="Sem jargão e sem curso. Coisas que ajudam a decidir sobre o seu site, mesmo que você não contrate a gente."
+  />
+
+  <section class="on-white bg-white py-[var(--section-space)]">
+    <div class="shell">
+      {
+        posts.length === 0 ? (
+          <div class="max-w-[46ch] rounded-[var(--radius-plop-xl)] border-2 border-plop-hairline p-[clamp(28px,4vw,48px)]">
+            <h2 class="text-[length:var(--text-h3)]">Ainda não publicamos nada aqui.</h2>
+            <p class="muted mt-4">
+              O primeiro texto está a caminho. Enquanto isso, se você tem uma
+              dúvida sobre o seu site, mande — a resposta costuma virar post.
+            </p>
+            <a
+              href="/contato/"
+              class="mt-6 inline-flex min-h-[44px] items-center gap-2 font-display font-semibold text-plop-blue underline decoration-2 underline-offset-4"
+            >
+              Mandar a dúvida
+              <Icon name="arrow-right" size={18} />
+            </a>
+          </div>
+        ) : (
+          <ul class="flex flex-col">
+            {posts.map((post) => (
+              <li class="border-t border-plop-hairline last:border-b" data-reveal>
+                <a
+                  href={`/blog/${post.id}/`}
+                  class="group grid gap-x-10 gap-y-3 py-[clamp(28px,3.5vw,48px)] no-underline lg:grid-cols-[minmax(0,7fr)_minmax(0,4fr)] lg:items-baseline"
+                >
+                  <div>
+                    <h2 class="font-display text-[clamp(1.5rem,2.6vw,2.125rem)] font-semibold leading-[1.08] tracking-[-0.035em] text-plop-ink transition-colors duration-[var(--duration-fast)] group-hover:text-plop-blue">
+                      {post.data.title}
+                    </h2>
+                    <p class="muted measure mt-3">{post.data.description}</p>
+                  </div>
+                  <div class="flex items-center gap-4 lg:justify-end">
+                    <span class="muted text-small" data-numeric>
+                      <time datetime={post.data.publishedAt.toISOString()}>
+                        {dateFormat.format(post.data.publishedAt)}
+                      </time>
+                      {" · "}
+                      {post.data.readingMinutes} min
+                    </span>
+                    <Icon
+                      name="arrow-right"
+                      size={20}
+                      class="shrink-0 text-plop-blue transition-transform duration-[var(--duration-fast)] ease-[var(--ease-plop-out)] group-hover:translate-x-1"
+                    />
+                  </div>
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+  </section>
+
+  <FinalCta />
+</BaseLayout>

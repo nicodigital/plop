@@ -1,0 +1,44 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/sections/Hero.astro";
+import ProjectsSlider from "../components/sections/ProjectsSlider.astro";
+import About from "../components/sections/About.astro";
+import HowItWorks from "../components/sections/HowItWorks.astro";
+import Plans from "../components/sections/Plans.astro";
+import Faq from "../components/sections/Faq.astro";
+import FinalCta from "../components/sections/FinalCta.astro";
+import GooeyStack from "../components/layout/GooeyStack.astro";
+import { FAQ } from "../data/faq.ts";
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQ.map((item) => ({
+    "@type": "Question",
+    name: item.question,
+    acceptedAnswer: { "@type": "Answer", text: item.answer },
+  })),
+};
+---
+
+<BaseLayout
+  title="Sites profissionais para pequenos negócios"
+  description="Sites modernos, rápidos e fáceis de gerenciar. Entrada a partir de R$ 900 e mensalidade com hospedagem, suporte e manutenção incluídos."
+  schema={faqSchema}
+>
+{/*
+    One liquid ground for the whole blue stretch: pinned behind the three
+    sections so they read as one body the page scrolls over, not as three
+    restarts of the same wallpaper. It also buys one blurred filter for the
+    run instead of three.
+    */}
+  <GooeyStack>
+    <Hero />
+    <ProjectsSlider />
+    <About />
+    <HowItWorks />
+  </GooeyStack>
+  <Plans />
+  <Faq />
+  <FinalCta />
+</BaseLayout>

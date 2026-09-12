@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Fondo animado — Gooey blobs (solo CSS + SVG filter)</title>
+<style>
+  :root{
+    --bg-base: #0d5ce0;
+    --bg-light: #1f74ff;
+    --blob-color: #2f7dff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    background: radial-gradient(circle at 50% 40%, var(--bg-light), var(--bg-base) 70%);
+  }
+
+  .goo-filter { position: absolute; width: 0; height: 0; }
+
+  .scene {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* Ambas capas comparten exactamente la misma posición/tamaño/animación
+     para que el brillo quede perfectamente calzado sobre la forma goo */
+  .goo-layer, .shade-layer {
+    position: absolute;
+    inset: 0;
+  }
+
+  .goo-layer { filter: url(#goo); }
+  .shade-layer { mix-blend-mode: screen; }
+
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    will-change: transform;
+  }
+
+  .blob.solid { background: var(--blob-color); }
+
+  .blob.shade {
+    background: radial-gradient(circle at 32% 28%,
+                rgba(255,255,255,0.85) 0%,
+                rgba(255,255,255,0.25) 22%,
+                rgba(255,255,255,0) 55%);
+  }
+
+  .blob--xl { width: 46vmax; height: 46vmax; animation: float-a 14s ease-in-out infinite; }
+  .blob--lg { width: 34vmax; height: 34vmax; animation: float-b 12s ease-in-out infinite; }
+  .blob--md { width: 22vmax; height: 22vmax; animation: float-c 11s ease-in-out infinite; }
+  .blob--sm { width: 9vmax;  height: 9vmax;  animation: bob-a 7s ease-in-out infinite; }
+  .blob--xs { width: 6vmax;  height: 6vmax;  animation: bob-b 6s ease-in-out infinite; }
+
+  .b1 { top: -14vmax; left: -10vmax; }
+  .b2 { bottom: -18vmax; right: -12vmax; }
+  .b3 { top: 55%; left: -8vmax; }
+  .b4 { top: 10%; right: -6vmax; }
+  .b5 { top: 28%; left: 14%; }
+  .b6 { top: 48%; right: 22%; }
+  .b7 { bottom: 20%; left: 30%; }
+
+  @keyframes float-a {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33%      { transform: translate(9vmax, -7vmax) scale(1.08); }
+    66%      { transform: translate(-5vmax, 8vmax) scale(0.94); }
+  }
+  @keyframes float-b {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50%      { transform: translate(-10vmax, -8vmax) scale(1.1); }
+  }
+  @keyframes float-c {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    40%      { transform: translate(7vmax, 6vmax) scale(0.92); }
+    70%      { transform: translate(-6vmax, -5vmax) scale(1.06); }
+  }
+  @keyframes bob-a {
+    0%, 100% { transform: translate(0, 0); }
+    50%      { transform: translate(3vmax, -12vmax); }
+  }
+  @keyframes bob-b {
+    0%, 100% { transform: translate(0, 0); }
+    50%      { transform: translate(-4vmax, 10vmax); }
+  }
+
+  /* Accesibilidad: en vez de matar la animación, la hacemos mucho más lenta
+     y sutil para quienes tienen "reducir movimiento" activado en su SO */
+  @media (prefers-reduced-motion: reduce) {
+    .blob--xl, .blob--lg, .blob--md { animation-duration: 60s; }
+    .blob--sm, .blob--xs { animation-duration: 40s; }
+  }
+</style>
+</head>
+<body>
+
+  <svg class="goo-filter">
+    <filter id="goo">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="16" result="blur" />
+      <feColorMatrix in="blur" mode="matrix"
+        values="1 0 0 0 0
+                0 1 0 0 0
+                0 0 1 0 0
+                0 0 0 22 -9" result="goo" />
+    </filter>
+  </svg>
+
+  <div class="scene">
+    <div class="goo-layer">
+      <div class="blob solid blob--xl b1"></div>
+      <div class="blob solid blob--lg b2"></div>
+      <div class="blob solid blob--md b3"></div>
+      <div class="blob solid blob--sm b5"></div>
+      <div class="blob solid blob--xs b6"></div>
+      <div class="blob solid blob--sm b7"></div>
+    </div>
+    <div class="shade-layer">
+      <div class="blob shade blob--xl b1"></div>
+      <div class="blob shade blob--lg b2"></div>
+      <div class="blob shade blob--md b3"></div>
+      <div class="blob shade blob--sm b5"></div>
+      <div class="blob shade blob--xs b6"></div>
+      <div class="blob shade blob--sm b7"></div>
+    </div>
+  </div>
+
+</body>
+</html>

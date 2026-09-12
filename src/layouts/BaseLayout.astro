@@ -1,0 +1,141 @@
+---
+import "../styles/global.css";
+import Header from "../components/layout/Header.astro";
+import Footer from "../components/layout/Footer.astro";
+import WhatsAppDock from "../components/layout/WhatsAppDock.astro";
+import { SITE_NAME, SITE_URL } from "../data/site.ts";
+
+interface Props {
+  title: string;
+  description: string;
+  /** Absolute or root-relative OG image. Falls back to the hero poster. */
+  image?: string;
+  /** Emitted as JSON-LD alongside the site-wide Organization graph. */
+  schema?: Record<string, unknown> | Record<string, unknown>[];
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description,
+  image = "/assets/video/hero-laptop-poster.webp",
+  schema,
+  noindex = false,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, SITE_URL).href;
+const ogImage = new URL(image, SITE_URL).href;
+const fullTitle = title === SITE_NAME ? title : `${title} — ${SITE_NAME}`;
+
+const organization = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  name: SITE_NAME,
+  url: SITE_URL,
+  description:
+    "Desenvolvimento de sites profissionais para pequenos negócios, com hospedagem, suporte e manutenção mensal.",
+  areaServed: "BR",
+  serviceType: "Desenvolvimento de sites",
+};
+
+const website = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: SITE_NAME,
+  url: SITE_URL,
+  inLanguage: "pt-BR",
+};
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex,nofollow" />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <meta name="theme-color" content="#2563FF" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <script is:inline>
+      // Without JavaScript nothing is ever hidden; this flag is what arms
+      // the reveal, and it is set before first paint to avoid a flash.
+      // It used to be withheld under prefers-reduced-motion; the site now
+      // animates the same for everyone. reveal.ts still removes the flag if
+      // IntersectionObserver is missing, so content can never get stranded.
+      document.documentElement.classList.add("js-reveal");
+    </script>
+
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(organization)}
+    />
+    <script type="application/ld+json" set:html={JSON.stringify(website)} />
+    {
+      (Array.isArray(schema) ? schema : schema ? [schema] : []).map((entry) => (
+        <script type="application/ld+json" set:html={JSON.stringify(entry)} />
+      ))
+    }
+  </head>
+
+  <body>
+    <a
+      href="#conteudo"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-plop-lime focus:px-5 focus:py-3 focus:font-display focus:font-semibold focus:text-plop-ink"
+    >
+      Pular para o conteúdo
+    </a>
+
+    {/*
+      The goo filter for GooeyBackground. It lives here and not in the
+      component because an SVG id may only be defined once per document and
+      the component is used four times on this page. Blur the shapes, then
+      steepen alpha hard (22x - 9) so the soft edges snap back to a hard one:
+      where two blurred circles overlap the alpha clears the threshold and
+      they fuse; where only one fades out it falls away. That threshold is the
+      whole effect — dropping the multiplier gives back a plain blur.
+    */}
+    <svg width="0" height="0" aria-hidden="true" focusable="false" class="absolute">
+      <filter id="plop-goo">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="16" result="blur" />
+        <feColorMatrix
+          in="blur"
+          mode="matrix"
+          values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -9"
+        />
+      </filter>
+    </svg>
+
+    <Header />
+
+    <main id="conteudo">
+      <slot />
+    </main>
+
+    <Footer />
+    <WhatsAppDock />
+
+    <script>
+      import { initReveal } from "../scripts/reveal.ts";
+      import { initAnalytics } from "../scripts/analytics.ts";
+      import { initSmoothScroll } from "../scripts/smooth-scroll.ts";
+
+      initReveal();
+      initAnalytics();
+      initSmoothScroll();
+    </script>
+  </body>
+</html>

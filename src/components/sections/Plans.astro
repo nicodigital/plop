@@ -1,0 +1,209 @@
+---
+import Icon from "../ui/Icon.astro";
+import Button from "../ui/Button.astro";
+import { PLANS, formatBRL } from "../../data/plans.ts";
+
+interface Props {
+  heading?: string;
+  intro?: string;
+  headingLevel?: "h1" | "h2";
+}
+
+const {
+  heading = "Preço fechado. Sem consulta.",
+  intro = "Uma entrada para construir e uma mensalidade para manter no ar e cuidado. Os dois números estão aqui.",
+  headingLevel: Heading = "h2",
+} = Astro.props;
+---
+
+<section
+  class="on-white bg-plop-paper py-[var(--section-space)]"
+  id="planos"
+  data-plans-section
+>
+  <div class="shell">
+    <div class="max-w-[40rem]">
+      <Heading class="max-w-[15ch] text-[length:var(--text-h2)]" data-reveal>{heading}</Heading>
+      <p class="muted measure mt-6 text-[length:var(--text-lead)]" data-reveal>{intro}</p>
+    </div>
+
+    {/*
+      Rows are shared across the three cards, so name, audience, entry price
+      and monthly fee each sit at one height down the whole table. A price is
+      read by comparison; it must not move between columns.
+    */}
+    <ul class="plan-table mt-[clamp(40px,5vw,72px)]">
+      {
+        PLANS.map((plan) => (
+          <li
+            class:list={[
+              "plan-card flex flex-col rounded-[var(--radius-plop-lg)] p-[clamp(24px,2.6vw,36px)]",
+              plan.recommended
+                ? "bg-plop-ink text-white"
+                : "border-2 border-plop-hairline bg-white",
+            ]}
+            data-reveal
+          >
+            <div class="flex items-center gap-3">
+              <h3
+                class:list={[
+                  "font-display text-h4 font-semibold",
+                  plan.recommended ? "text-white" : "text-plop-ink",
+                ]}
+              >
+                {plan.name}
+              </h3>
+              {plan.recommended && (
+                <span class="rounded-full bg-plop-lime px-3 py-1 text-small font-bold uppercase tracking-[0.08em] text-plop-ink">
+                  Mais escolhido
+                </span>
+              )}
+            </div>
+
+            <p
+              class:list={[
+                "mt-3 text-ui",
+                plan.recommended ? "text-plop-on-ink" : "text-plop-on-white",
+              ]}
+            >
+              {plan.audience}
+            </p>
+
+            <div
+              class:list={[
+                "mt-7 border-t pt-7",
+                plan.recommended ? "border-white/15" : "border-plop-hairline",
+              ]}
+            >
+              {plan.setupFrom && (
+                <span
+                  class:list={[
+                    "block text-small font-semibold",
+                    plan.recommended ? "text-plop-on-ink" : "text-plop-on-white",
+                  ]}
+                >
+                  a partir de
+                </span>
+              )}
+              <span
+                class:list={[
+                  "block font-display text-[clamp(2.5rem,4vw,3.25rem)] font-bold leading-none tracking-[-0.04em]",
+                  plan.recommended ? "text-plop-lime" : "text-plop-ink",
+                ]}
+                data-numeric
+              >
+                {formatBRL(plan.setup)}
+              </span>
+              <span
+                class:list={[
+                  "mt-2 block text-ui",
+                  plan.recommended ? "text-plop-on-ink" : "text-plop-on-white",
+                ]}
+              >
+                entrada, uma vez
+              </span>
+            </div>
+
+            <div
+              class:list={[
+                "mt-6 border-t pt-6",
+                plan.recommended ? "border-white/15" : "border-plop-hairline",
+              ]}
+            >
+              <span
+                class:list={[
+                  "block font-display text-h4 font-semibold leading-none tracking-[-0.03em]",
+                  plan.recommended ? "text-white" : "text-plop-ink",
+                ]}
+                data-numeric
+              >
+                {formatBRL(plan.monthly)}
+                <span class="text-ui-lg font-semibold">/mês</span>
+              </span>
+              <span
+                class:list={[
+                  "mt-2 block text-ui",
+                  plan.recommended ? "text-plop-on-ink" : "text-plop-on-white",
+                ]}
+              >
+                hospedagem, suporte e manutenção
+              </span>
+            </div>
+
+            <ul
+              class:list={[
+                "mt-7 flex flex-col gap-3 border-t pt-7",
+                plan.recommended ? "border-white/15" : "border-plop-hairline",
+              ]}
+            >
+              {plan.features.map((feature) => (
+                <li class="flex items-start gap-3">
+                  <Icon
+                    name="check"
+                    size={20}
+                    class:list={[
+                      "mt-1 shrink-0",
+                      plan.recommended ? "text-plop-lime" : "text-plop-blue",
+                    ]}
+                  />
+                  <span
+                    class:list={[
+                      "text-ui",
+                      plan.recommended ? "text-white" : "text-plop-ink",
+                    ]}
+                  >
+                    {feature}
+                  </span>
+                </li>
+              ))}
+            </ul>
+
+            <div class="mt-8 flex pt-1">
+              <Button
+                href={`/contato/?plano=${plan.slug}`}
+                variant={plan.recommended ? "primary" : "solid-ink"}
+                class="w-full"
+                data-track="plan_select"
+                data-track-value={plan.slug}
+              >
+                Quero o {plan.name}
+              </Button>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="muted mt-8 max-w-[62ch] text-ui">
+      O domínio fica no seu nome. Se um dia você quiser levar o site para outro
+      lugar, ele vai com você.
+    </p>
+  </div>
+</section>
+
+<style>
+  .plan-table {
+    display: grid;
+    gap: clamp(16px, 2vw, 24px);
+    list-style: none;
+  }
+
+  @media (min-width: 900px) {
+    .plan-table {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      /* name · audience · entry · monthly · features · action */
+      grid-template-rows: auto auto auto auto 1fr auto;
+    }
+
+    .plan-card {
+      grid-row: span 6;
+    }
+
+    @supports (grid-template-rows: subgrid) {
+      .plan-card {
+        display: grid;
+        grid-template-rows: subgrid;
+      }
+    }
+  }
+</style>

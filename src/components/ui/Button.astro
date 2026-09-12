@@ -1,0 +1,56 @@
+---
+import Icon from "./Icon.astro";
+import type { IconName } from "./Icon.astro";
+
+interface Props {
+  href?: string;
+  type?: "button" | "submit";
+  variant?: "primary" | "outline" | "solid-ink";
+  size?: "md" | "lg";
+  icon?: IconName;
+  class?: string;
+  [key: string]: unknown;
+}
+
+const {
+  href,
+  type = "button",
+  variant = "primary",
+  size = "md",
+  icon = "arrow-right",
+  class: className = "",
+  ...rest
+} = Astro.props;
+
+const base =
+  "group inline-flex items-center justify-center gap-2.5 rounded-full font-display font-bold tracking-[-0.01em] no-underline transition-[background-color,color,border-color,transform] duration-[var(--duration-fast)] ease-[var(--ease-plop-out)] active:translate-y-px";
+
+const sizes = {
+  md: "min-h-[48px] px-6 text-base",
+  lg: "min-h-[56px] px-8 text-article",
+};
+
+const variants = {
+  primary:
+    "bg-plop-lime text-plop-ink hover:bg-plop-lime-bright",
+  outline:
+    "border-2 border-white/45 text-white hover:border-white hover:bg-white/10",
+  "solid-ink": "bg-plop-ink text-white hover:bg-plop-blue-800",
+};
+
+const classes = [base, sizes[size], variants[variant], className].join(" ");
+const Tag = href ? "a" : "button";
+---
+
+<Tag
+  class={classes}
+  {...href ? { href } : { type }}
+  {...rest}
+>
+  <slot />
+  <Icon
+    name={icon}
+    size={20}
+    class="shrink-0 transition-transform duration-[var(--duration-fast)] ease-[var(--ease-plop-out)] group-hover:translate-x-1"
+  />
+</Tag>
