@@ -24,7 +24,7 @@ export const PLANS: Plan[] = [
     slug: "essencial",
     name: "Essencial",
     audience: "Para quem precisa existir no Google e no WhatsApp, sem mais nada.",
-    setup: 900,
+    setup: 1000,
     monthly: 200,
     priceConfirmed: false,
     features: [

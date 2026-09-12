@@ -91,7 +91,7 @@ const label = "block font-semibold text-ui text-white";
         autocomplete="tel"
         inputmode="tel"
         required
-        placeholder="(11) 90000-0000"
+        placeholder="(41) 99999-9999"
         aria-describedby={`${id}-whatsapp-erro`}
       />
       <p
@@ -101,20 +101,6 @@ const label = "block font-semibold text-ui text-white";
       >
       </p>
     </div>
-  </div>
-
-  <div class="flex flex-col gap-2">
-    <label class={label} for={`${id}-plano`}>Plano de interesse</label>
-    <select class={field} id={`${id}-plano`} name="plano">
-      <option value="">Ainda não sei</option>
-      {
-        PLANS.map((p) => (
-          <option value={p.slug} selected={plan === p.slug}>
-            {p.name}
-          </option>
-        ))
-      }
-    </select>
   </div>
 
   <div class="flex flex-col gap-2">
