@@ -135,13 +135,25 @@ import laptopFront from "../../assets/img/laptop-front.png";
     padding-bottom: clamp(44px, 6vw, 150px);
   }
 
+  /* Two transforms, two elements. This box only places the laptop and never
+     animates: an entrance keyframe here would overwrite the centring and the
+     dip, and while it ran the transform would make this the containing block
+     of anything absolute inside it. The entrance lives on the wrapper in
+     between, which is in normal flow and whose transform is therefore free. */
   .cta-laptop {
     position: absolute;
     top: 0;
     left: 50%;
     width: var(--laptop-w);
-    height: auto;
     transform: translate(-50%, calc(var(--laptop-dip) * 100% - 100%));
     pointer-events: none;
+  }
+
+  /* The percentages above are read off this box own height, so the image has
+     to fill the wrapper exactly or the reserved room stops matching. */
+  .cta-laptop-img {
+    display: block;
+    width: 100%;
+    height: auto;
   }
 </style>

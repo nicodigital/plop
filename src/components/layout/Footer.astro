@@ -3,7 +3,6 @@ import GooeyStack from "./GooeyStack.astro";
 import Logo from "../ui/Logo.astro";
 import ContactForm from "../ui/ContactForm.astro";
 import Icon from "../ui/Icon.astro";
-import { NAV_ITEMS } from "../../data/nav.ts";
 import { CONTACT_EMAIL, HAS_WHATSAPP, PHONE_DISPLAY, PHONE_NUMBER, SITE_NAME, whatsappHref } from "../../data/site.ts";
 
 const year = new Date().getFullYear();
@@ -82,7 +81,7 @@ const year = new Date().getFullYear();
         class="shell flex flex-col gap-8 py-9 lg:flex-row lg:items-center lg:justify-between"
       >
         <div class="flex flex-col items-start gap-5">
-          <Logo width={200}  decorative />
+          <Logo width={200}  decorative class="xg:w-[12rem]" />
           <p class="muted max-w-[36ch] text-ui">
             Sites profissionais para pequenos negócios. Construídos, publicados e
             cuidados todo mês.

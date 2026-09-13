@@ -1,0 +1,78 @@
+/* The article is the calmest surface on the site: one column, wide
+   measure, and the brand only in headings, links and rules. */
+.prose-plop {
+  max-width: 68ch;
+  font-size: var(--text-article);
+  line-height: 1.72;
+}
+
+.prose-plop > * + * {
+  margin-top: 1.5em;
+}
+
+.prose-plop h2 {
+  font-size: clamp(var(--text-h4), 3vw, 2.25rem);
+  line-height: 1.08;
+  margin-top: 2.2em;
+  margin-bottom: -0.4em;
+}
+
+.prose-plop h3 {
+  font-size: clamp(var(--text-ui-xl), 2vw, var(--text-h5));
+  margin-top: 1.9em;
+  margin-bottom: -0.5em;
+}
+
+.prose-plop strong {
+  font-weight: 700;
+}
+
+.prose-plop a {
+  color: var(--color-plop-blue);
+  text-decoration-color: var(--color-plop-lime);
+  text-decoration-thickness: 2px;
+  font-weight: 600;
+}
+
+.prose-plop a:hover {
+  text-decoration-color: var(--color-plop-blue);
+}
+
+.prose-plop ul,
+.prose-plop ol {
+  padding-left: 1.3em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7em;
+}
+
+.prose-plop ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.prose-plop ul > li {
+  position: relative;
+  padding-left: 1.6em;
+}
+
+.prose-plop ul > li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 0.55em;
+  height: 0.55em;
+  border-radius: 999px;
+  background: var(--color-plop-blue);
+}
+
+.prose-plop ol {
+  list-style: decimal;
+}
+
+.prose-plop ol > li::marker {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--color-plop-blue);
+}

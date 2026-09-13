@@ -1,0 +1,78 @@
+/* The type scale, and the only file that decides how it responds to width.
+
+   These rules sit outside any cascade layer on purpose. Tailwind emits its
+   theme tokens inside `@layer theme`, and an unlayered declaration beats a
+   layered one whatever the specificity, so every value below wins over the
+   token of the same name — for the generated utilities (`text-h2`, `text-ui`)
+   and for the arbitrary-value form (`text-[length:var(--text-h2)]`) alike.
+
+   `--text-html` is the root font size every rem on the page resolves
+   against: type, spacing, radii, all of it. It is the browser default at
+   every step for now, so nothing has moved; changing one step rescales the
+   whole page at that width, which is the point of the knob. */
+html {
+  --text-html: 16px;
+  font-size: var(--text-html);
+
+  /* Fluid display ramp: headline sizes that interpolate with the viewport. */
+  --text-display: clamp(3.25rem, 7vw, 6.5rem);
+  --text-h1: clamp(2.75rem, 4.5vw, 5.5rem);
+  --text-h2: clamp(2.125rem, 4vw, 3.75rem);
+  --text-h3: clamp(1.375rem, 2.2vw, 2rem);
+  --text-lead: clamp(1.125rem, 1.2vw, 1.375rem);
+
+  /* UI ramp: fixed steps for labels, captions, metadata and card titles,
+     separate from the fluid display ramp above. */
+  --text-h4: 1.625rem;
+  --text-h5: 1.375rem;
+  --text-ui-xl: 1.25rem;
+  --text-ui-lg: 1.125rem;
+  --text-article: 1.0625rem;
+  --text-base: 1rem;
+  --text-ui: 0.9375rem;
+  --text-small: 0.875rem;
+
+  /* Per-breakpoint tuning. Ascending order, so a wider step always lands
+     after the narrower one it refines. Redeclare only the tokens that
+     actually change at each width — anything left out keeps the value above. */
+
+  @variant xs {
+    --text-html: 16px;
+  }
+
+  @variant sm {
+    --text-html: 16px;
+  }
+
+  @variant md {
+    --text-html: 16px;
+  }
+
+  @variant xg {
+    --text-html: 14px;
+  }
+
+  @variant lg {
+    --text-html: 15px;
+  }
+
+  @variant xl {
+    --text-html: 14px;
+  }
+
+  @variant 2xl {
+    --text-html: 16px;
+  }
+
+  @variant 3xl {
+    --text-html: 16px;
+  }
+
+  @variant 4xl {
+    --text-html: 16px;
+  }
+
+  @variant 5xl {
+    --text-html: 16px;
+  }
+}

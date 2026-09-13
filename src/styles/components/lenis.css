@@ -1,0 +1,19 @@
+/* Lenis owns the scroll position while it runs. These are the only rules
+   it needs: the document must not be height-locked, and native
+   smooth-scroll must step aside so the two never animate the same jump. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}

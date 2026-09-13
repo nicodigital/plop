@@ -1,0 +1,23 @@
+.card-swiper {
+  @apply relative m-0 aspect-[720/356] w-full overflow-hidden rounded-[var(--radius-plop-lg)] border-[2px] border-blue-400;
+  corner-shape:squircle;
+
+  video {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  /* The tiles rest desaturated and come up in colour under the pointer, so
+     the band reads as one surface until the visitor picks a project out of
+     it. That trade only works where a pointer exists: on a touch screen
+     nothing can ever hover, so the whole portfolio — the page's only proof —
+     would stay dimmed for good. There the tiles simply run in full colour. */
+  @media (hover: hover) and (pointer: fine) {
+    video {
+      @apply mix-blend-luminosity grayscale opacity-50 contrast-125;
+    }
+
+    &:hover video {
+      @apply grayscale-0 opacity-100 contrast-100;
+    }
+  }
+}

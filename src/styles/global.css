@@ -6,8 +6,18 @@
    demo cannot ship, it stamps a "DEMO" glyph over "$" and "4". */
 @import "@fontsource-variable/quicksand/index.css";
 @import "@fontsource-variable/outfit/index.css";
+
+/* Component styles. Everything past this point in the file is tokens, base
+   element styles and global utilities; anything with its own selector family
+   lives in its own file under components/. */
+@import "components/typography.css";
 @import "components/scrollbars.css";
 @import "components/animations.css";
+@import "components/lenis.css";
+@import "components/layout.css";
+@import "components/buttons.css";
+@import "components/prose.css";
+@import "components/card-swiper.css";
 
 @theme {
   /* The blue ramp. Every dark ground and every hairline on the site is a
@@ -65,22 +75,20 @@
   --font-display: "Quicksand Variable", system-ui, sans-serif;
   --font-sans: "Outfit Variable", system-ui, -apple-system, sans-serif;
 
-  --text-display: clamp(3.25rem, 7vw, 6.5rem);
-  --text-h1: clamp(2.75rem, 6vw, 5.5rem);
-  --text-h2: clamp(2.125rem, 4.2vw, 3.75rem);
-  --text-h3: clamp(1.375rem, 2.2vw, 2rem);
-  --text-lead: clamp(1.125rem, 1.5vw, 1.375rem);
-
-  /* UI ramp: fixed steps for labels, captions, metadata and card titles,
-     separate from the fluid display ramp above. */
-  --text-h4: 1.625rem;
-  --text-h5: 1.375rem;
-  --text-ui-xl: 1.25rem;
-  --text-ui-lg: 1.125rem;
-  --text-article: 1.0625rem;
-  --text-base: 1rem;
-  --text-ui: 0.9375rem;
-  --text-small: 0.875rem;
+  /* Breakpoints. Tailwind ships sm/md/lg/xl/2xl; the extra steps are the
+     widths this layout actually changes at — xg for the tablet-to-laptop
+     gap, and 3xl upwards for large desktops. 2xl is pulled in to 1440px so
+     it lines up with the shell's own max width. */
+  --breakpoint-xs: 375px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-xg: 992px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1440px;
+  --breakpoint-3xl: 1680px;
+  --breakpoint-4xl: 1920px;
+  --breakpoint-5xl: 2560px;
 
   --radius-plop-sm: 12px;
   --radius-plop-md: 20px;
@@ -93,7 +101,38 @@
 
 @theme inline {
   --container-plop: 1440px;
+
+  /* The type scale itself lives in components/typography.css, which is where
+     every step is tuned per breakpoint. Registering the names here is what
+     makes Tailwind emit the utilities (text-h2, text-ui, …); `inline` is what
+     makes each utility read the live variable instead of baking a value in at
+     build time, so the breakpoint overrides reach them. */
+  --text-display: var(--text-display);
+  --text-h1: var(--text-h1);
+  --text-h2: var(--text-h2);
+  --text-h3: var(--text-h3);
+  --text-lead: var(--text-lead);
+  --text-h4: var(--text-h4);
+  --text-h5: var(--text-h5);
+  --text-ui-xl: var(--text-ui-xl);
+  --text-ui-lg: var(--text-ui-lg);
+  --text-article: var(--text-article);
+  --text-base: var(--text-base);
+  --text-ui: var(--text-ui);
+  --text-small: var(--text-small);
 }
+
+@variant xg {
+    --container-plop: 80%;
+  }
+
+  @variant lg {
+    --container-plop: 90%;
+  }
+
+  @variant 2xl {
+    --container-plop: 1440px;
+  }
 
 :root {
   --gutter: clamp(20px, 4vw, 64px);
@@ -183,118 +222,6 @@
   }
 }
 
-/* Lenis owns the scroll position while it runs. These are the only rules
-   it needs: the document must not be height-locked, and native
-   smooth-scroll must step aside so the two never animate the same jump. */
-html.lenis,
-html.lenis body {
-  height: auto;
-}
-
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-
-.lenis.lenis-stopped {
-  overflow: hidden;
-}
-
-.lenis.lenis-smooth [data-lenis-prevent] {
-  overscroll-behavior: contain;
-}
-
-@layer components {
-  .shell {
-    width: 100%;
-    max-width: var(--container-plop);
-    margin-inline: auto;
-    padding-inline: var(--gutter);
-  }
-
-  /* The spine: the argument column the whole page descends. Its width is
-     the page's one structural constant, so sections never re-negotiate it. */
-  .spine-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: clamp(32px, 5vw, 72px);
-  }
-
-  @media (min-width: 1024px) {
-    .spine-grid {
-      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
-      align-items: stretch;
-      gap: clamp(48px, 6vw, 112px);
-    }
-  }
-
-  .measure {
-    max-width: 62ch;
-  }
-
-  .measure-tight {
-    max-width: 48ch;
-  }
-
-  .eyebrow {
-    font-family: var(--font-sans);
-    font-size: var(--text-small);
-    font-weight: 600;
-    letter-spacing: 0.4em;
-    text-transform: uppercase;
-    line-height: 1.4;
-  }
-
-  /* The lift. The one place the site carries a shadow: a hard offset block
-     that only exists while the pointer or the keyboard is on the control,
-     so the page at rest stays flat and tonal as the rest of the system is.
-     It is painted from the blue ramp — a black drop would read as a widget
-     borrowed from another product.
-
-     Feedback, so it runs on the fast layer, not on the beat. The press
-     undoes the lift exactly: the button travels back through the shadow it
-     cast and lands where it started. */
-  .btn {
-    box-shadow: 0 0 0 0 var(--btn-lift-shadow);
-    cursor: pointer;
-    transition:
-      background-color var(--duration-fast) var(--ease-plop-out),
-      border-color var(--duration-fast) var(--ease-plop-out),
-      color var(--duration-fast) var(--ease-plop-out),
-      transform var(--duration-fast) var(--ease-plop-out),
-      box-shadow var(--duration-fast) var(--ease-plop-out);
-  }
-
-  .btn:not(:disabled):is(:hover, :focus-visible) {
-    transform: translate(-2px, -4px);
-    box-shadow: 2px 5px 0 0 var(--btn-lift-shadow);
-  }
-
-  .btn:not(:disabled):active {
-    transform: translate(1px, 2px);
-    box-shadow: 0 0 0 0 var(--btn-lift-shadow);
-  }
-
-  /* Each variant casts onto the ground it actually sits on: the lime CTA
-     and the ghost button live on brand blue, so they drop the deepest step
-     of the ramp; the ink button lives on white and paper, where the same
-     deep step would read as a smudge, so it drops brand blue instead. */
-  .btn--primary {
-    --btn-lift-shadow: var(--color-plop-blue-900);
-  }
-
-  .btn--outline {
-    --btn-lift-shadow: var(--color-white);
-  }
-
-  .btn--solid-ink {
-    --btn-lift-shadow: color-mix(in srgb, var(--color-plop-blue-900) 80%, transparent) ;
-  }
-
-  .btn-lime{
-    --btn-lift-shadow: var(--color-plop-lime-deep);
-  }
-}
-
 @layer utilities {
   /* A hard break inside a sentence is composition for a wide measure, not
      punctuation: it is there to shape two or three lines into a block. Below
@@ -328,107 +255,3 @@ html.lenis body {
     color: var(--color-plop-on-white);
   }
 }
-
-/* The article is the calmest surface on the site: one column, wide
-   measure, and the brand only in headings, links and rules. */
-.prose-plop {
-  max-width: 68ch;
-  font-size: var(--text-article);
-  line-height: 1.72;
-}
-
-.prose-plop > * + * {
-  margin-top: 1.5em;
-}
-
-.prose-plop h2 {
-  font-size: clamp(var(--text-h4), 3vw, 2.25rem);
-  line-height: 1.08;
-  margin-top: 2.2em;
-  margin-bottom: -0.4em;
-}
-
-.prose-plop h3 {
-  font-size: clamp(var(--text-ui-xl), 2vw, var(--text-h5));
-  margin-top: 1.9em;
-  margin-bottom: -0.5em;
-}
-
-.prose-plop strong {
-  font-weight: 700;
-}
-
-.prose-plop a {
-  color: var(--color-plop-blue);
-  text-decoration-color: var(--color-plop-lime);
-  text-decoration-thickness: 2px;
-  font-weight: 600;
-}
-
-.prose-plop a:hover {
-  text-decoration-color: var(--color-plop-blue);
-}
-
-.prose-plop ul,
-.prose-plop ol {
-  padding-left: 1.3em;
-  display: flex;
-  flex-direction: column;
-  gap: 0.7em;
-}
-
-.prose-plop ul {
-  list-style: none;
-  padding-left: 0;
-}
-
-.prose-plop ul > li {
-  position: relative;
-  padding-left: 1.6em;
-}
-
-.prose-plop ul > li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.72em;
-  width: 0.55em;
-  height: 0.55em;
-  border-radius: 999px;
-  background: var(--color-plop-blue);
-}
-
-.prose-plop ol {
-  list-style: decimal;
-}
-
-.prose-plop ol > li::marker {
-  font-family: var(--font-display);
-  font-weight: 600;
-  color: var(--color-plop-blue);
-}
-
-.card-swiper {
-  @apply relative m-0 aspect-[720/356] w-full overflow-hidden rounded-[var(--radius-plop-lg)] border-[2px] border-blue-400;
-  corner-shape:squircle;
-
-  video {
-    @apply transition-all duration-300 ease-in-out;
-  }
-
-  /* The tiles rest desaturated and come up in colour under the pointer, so
-     the band reads as one surface until the visitor picks a project out of
-     it. That trade only works where a pointer exists: on a touch screen
-     nothing can ever hover, so the whole portfolio — the page's only proof —
-     would stay dimmed for good. There the tiles simply run in full colour. */
-  @media (hover: hover) and (pointer: fine) {
-    video {
-      @apply mix-blend-luminosity grayscale opacity-50 contrast-125;
-    }
-
-    &:hover video {
-      @apply grayscale-0 opacity-100 contrast-100;
-    }
-  }
-}
-
