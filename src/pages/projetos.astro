@@ -25,14 +25,14 @@ import { PROJECTS } from "../data/projects.ts";
 
   <section class="on-white bg-white py-[var(--section-space)]">
     <div class="shell">
-      <h2 class="max-w-[22ch] text-[length:var(--text-h2)]" data-reveal>
+      <h2 class="max-w-[22ch] text-[length:var(--text-h2)]">
         Os setores que já passaram por aqui.
       </h2>
 
       <ul class="mt-[clamp(36px,4vw,60px)] grid gap-x-10 sm:grid-cols-2 lg:grid-cols-3">
         {
           PROJECTS.map((project) => (
-            <li class="border-t border-plop-hairline py-6" data-reveal>
+            <li class="border-t border-plop-hairline py-6">
               <h3 class="font-display text-ui-xl font-semibold text-plop-ink">
                 {project.sector}
               </h3>

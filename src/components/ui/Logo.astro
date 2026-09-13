@@ -1,10 +1,25 @@
 ---
+import logoSource from "../../assets/img/logo.svg?raw";
+
 /**
  * The approved vector wordmark. Never rebuilt from a font, never recoloured.
- * Intrinsic ratio is 847 x 347. Give it either dimension and the other is
- * derived, so the mark can never be stretched by passing both.
+ *
+ * The asset is inlined at build time so the mark paints with the first paint of
+ * the document instead of waiting on a second request. We keep only its artwork
+ * and re-wrap it in our own <svg>, so sizing and accessibility stay owned by the
+ * component and survive a future replacement of the file.
  */
-const RATIO = 847 / 347;
+const viewBox = logoSource.match(/viewBox="([^"]+)"/)?.[1] ?? "0 0 847 366";
+const [, , boxWidth, boxHeight] = viewBox.split(/\s+/).map(Number);
+const artwork = logoSource
+  .replace(/^[\s\S]*?<svg[^>]*>/, "")
+  .replace(/<\/svg>\s*$/, "");
+
+/**
+ * Intrinsic ratio comes from the asset itself. Give either dimension and the
+ * other is derived, so the mark can never be stretched by passing both.
+ */
+const RATIO = boxWidth / boxHeight;
 
 interface Props {
   height?: number;
@@ -13,7 +28,7 @@ interface Props {
   /**
    * Sizing classes take over from the intrinsic style, so the mark can be
    * responsive. `width`/`height` stay on the element either way: they are
-   * what reserves its room before the SVG arrives.
+   * what reserves its room before CSS applies.
    */
   class?: string;
   /** Decorative when the surrounding link already names the destination. */
@@ -31,17 +46,21 @@ const height = heightProp ?? (widthProp ? Math.round(widthProp / RATIO) : 50);
 const width = widthProp ?? Math.round(RATIO * height);
 ---
 
-<img
-  src="/assets/img/logo.svg"
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox={viewBox}
   width={width}
   height={height}
-  class={className}
-  alt={decorative ? "" : "PLOP! Sites"}
+  fill="none"
+  class={className || undefined}
+  role={decorative ? undefined : "img"}
+  aria-label={decorative ? undefined : "PLOP! Sites"}
   aria-hidden={decorative ? "true" : undefined}
-  decoding="async"
+  focusable="false"
   style={className
     ? undefined
     : widthProp
       ? `width:${width}px;height:auto`
       : `height:${height}px;width:auto`}
+  set:html={artwork}
 />

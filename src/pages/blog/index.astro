@@ -47,7 +47,7 @@ const dateFormat = new Intl.DateTimeFormat("pt-BR", {
         ) : (
           <ul class="flex flex-col">
             {posts.map((post) => (
-              <li class="border-t border-plop-hairline last:border-b" data-reveal>
+              <li class="border-t border-plop-hairline last:border-b">
                 <a
                   href={`/blog/${post.id}/`}
                   class="group grid gap-x-10 gap-y-3 py-[clamp(28px,3.5vw,48px)] no-underline lg:grid-cols-[minmax(0,7fr)_minmax(0,4fr)] lg:items-baseline"

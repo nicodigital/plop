@@ -35,9 +35,13 @@ const groups: { title: string; icon: IconName; items: string[] }[] = [
     <div class="mx-auto max-w-[56rem] text-center">
       <h2
         class="mx-auto max-w-[20ch] text-[length:var(--text-h2)]"
-        data-reveal
       >
-        Seu site não precisa parar <span class="text-plop-lime">depois de publicado.</span>
+        <span class="anim" data-anim="bottom" data-delay="200" >
+          Seu site não precisa parar
+        </span> 
+        <span class="text-plop-lime anim" data-anim="bottom" data-delay="400" >
+          depois de publicado.
+        </span>
       </h2>
       {/*
         The line breaks are a desktop composition, not punctuation: on a phone
@@ -46,8 +50,7 @@ const groups: { title: string; icon: IconName; items: string[] }[] = [
         wherever the measure is narrow.
       */}
       <p
-        class="muted balanced-breaks mx-auto mt-8 max-w-[55ch] text-[length:var(--text-lead)] leading-[1.3]"
-        data-reveal
+        class="muted balanced-breaks mx-auto mt-8 max-w-[55ch] text-[length:var(--text-lead)] leading-[1.3] anim" data-anim="bottom" data-delay="600"
       >
         Criamos seu site e continuamos cuidando dele todos os meses.<br /> O plano
         mensal inclui hospedagem, suporte técnico e a publicação<br /> de <strong
@@ -60,7 +63,6 @@ const groups: { title: string; icon: IconName; items: string[] }[] = [
 
     <h3
       class="mt-[clamp(56px,7vw,96px)] text-center text-[length:var(--text-h4)] text-white"
-      data-reveal
     >
       Você recebe
     </h3>
@@ -73,9 +75,10 @@ const groups: { title: string; icon: IconName; items: string[] }[] = [
            where the columns do. */
         groups.map((group, index) => (
           <li
-            class="flex flex-col justify-between rounded-[var(--radius-plop-lg)] border border-blue-400 bg-plop-ink/30 p-[clamp(28px,3vw,50px)] backdrop-blur-xs md:min-h-[26rem]"
-            style={`corner-shape: squircle; --reveal-delay: ${index * 90}ms;`}
-            data-reveal
+            class="anim flex flex-col justify-between rounded-[var(--radius-plop-lg)] border border-blue-400 bg-plop-ink/30 p-[clamp(28px,3vw,50px)] backdrop-blur-xs md:min-h-[26rem]"
+            style="corner-shape: squircle;"
+            data-anim="bottom"
+            data-delay={index * 200}
           >
             <h4 class="flex flex-col gap-5 font-display text-h4 font-semibold text-plop-lime">
               <Icon name={group.icon} size={50} class="shrink-0" />

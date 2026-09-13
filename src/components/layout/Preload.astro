@@ -1,0 +1,28 @@
+---
+/**
+ * Head preloads. Only assets that hold up the first paint belong here.
+ *
+ * Both variable faces are reached through `global.css`, so the browser
+ * discovers them only after it has fetched and parsed the stylesheet — the
+ * font request starts a round trip late, `font-display: swap` paints the
+ * fallback in the meantime, and the swap is the shift seen on a cold load.
+ * Preloading starts both files alongside the stylesheet instead of after it.
+ *
+ * Only the `latin` subsets are preloaded: Brazilian Portuguese sits entirely
+ * inside U+0000–00FF, so latin-ext and vietnamese stay behind their
+ * unicode-range and are never requested by this site's copy.
+ *
+ * The `?url` imports resolve to the very same hashed files the stylesheet's
+ * url() emits, so the preload and the @font-face can never disagree.
+ */
+import quicksandLatin from "@fontsource-variable/quicksand/files/quicksand-latin-wght-normal.woff2?url";
+import outfitLatin from "@fontsource-variable/outfit/files/outfit-latin-wght-normal.woff2?url";
+
+const fonts = [quicksandLatin, outfitLatin];
+---
+
+{
+  fonts.map((href) => (
+    <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />
+  ))
+}

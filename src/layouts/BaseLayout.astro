@@ -3,6 +3,7 @@ import "../styles/global.css";
 import Header from "../components/layout/Header.astro";
 import Footer from "../components/layout/Footer.astro";
 import WhatsAppDock from "../components/layout/WhatsAppDock.astro";
+import Preload from "../components/layout/Preload.astro";
 import { SITE_NAME, SITE_URL } from "../data/site.ts";
 
 interface Props {
@@ -69,15 +70,7 @@ const website = {
     <meta name="theme-color" content="#2563FF" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
-
-    <script is:inline>
-      // Without JavaScript nothing is ever hidden; this flag is what arms
-      // the reveal, and it is set before first paint to avoid a flash.
-      // It used to be withheld under prefers-reduced-motion; the site now
-      // animates the same for everyone. reveal.ts still removes the flag if
-      // IntersectionObserver is missing, so content can never get stranded.
-      document.documentElement.classList.add("js-reveal");
-    </script>
+    <Preload />
 
     <script
       type="application/ld+json"
@@ -129,11 +122,11 @@ const website = {
     <WhatsAppDock />
 
     <script>
-      import { initReveal } from "../scripts/reveal.ts";
+      import animations from "../scripts/animations.js";
       import { initAnalytics } from "../scripts/analytics.ts";
       import { initSmoothScroll } from "../scripts/smooth-scroll.ts";
 
-      initReveal();
+      animations();
       initAnalytics();
       initSmoothScroll();
     </script>

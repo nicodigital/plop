@@ -1,7 +1,8 @@
 ---
 import Logo from "../ui/Logo.astro";
 import Icon from "../ui/Icon.astro";
-import { NAV_ITEMS, PRIMARY_CTA } from "../../data/nav.ts";
+import Button from "../ui/Button.astro";
+import { NAV_ITEMS, PRIMARY_CTA, CONTACT_ANCHOR } from "../../data/nav.ts";
 
 const pathname = Astro.url.pathname;
 
@@ -48,12 +49,9 @@ const isCurrentPage = (item: (typeof NAV_ITEMS)[number]) =>
     </nav>
 
     <div class="flex items-center gap-3">
-      <a
-        href={PRIMARY_CTA.href}
-        class="hidden min-h-[44px] items-center rounded-full bg-plop-lime px-5 font-display text-ui font-semibold text-plop-ink no-underline transition-colors duration-[var(--duration-fast)] hover:bg-plop-lime-bright sm:inline-flex"
-      >
-        {PRIMARY_CTA.label}
-      </a>
+      <Button href={CONTACT_ANCHOR} size="lg" data-track="cta_primary_click">
+          Quero meu site
+        </Button>
 
       <button
         type="button"

@@ -7,6 +7,7 @@
 @import "@fontsource-variable/quicksand/index.css";
 @import "@fontsource-variable/outfit/index.css";
 @import "components/scrollbars.css";
+@import "components/animations.css";
 
 @theme {
   /* The blue ramp. Every dark ground and every hairline on the site is a
@@ -326,33 +327,6 @@ html.lenis body {
   .on-white .muted {
     color: var(--color-plop-on-white);
   }
-}
-
-/* One authored reveal, shared by every section, from an already-visible
-   default so content never depends on JavaScript to exist. The hidden state
-   lives behind .js-reveal, which only JavaScript sets, so a failed script
-   leaves every section on screen rather than blank.
-
-   This no longer answers prefers-reduced-motion, and neither does the video
-   or the smooth scroll: the site plays the same for everyone by the owner's
-   decision. The blanket `transition-duration: 0.01ms !important` that used
-   to sit here went with it — it was also flattening Swiper's slide
-   transition, which is why the slider felt broken rather than merely still.
-   To restore the old behaviour, wrap this block in
-   `@media (prefers-reduced-motion: no-preference)` and put the guard back in
-   the head script of BaseLayout.astro. */
-.js-reveal [data-reveal] {
-  opacity: 0;
-  transform: translateY(18px);
-  transition:
-    opacity calc(var(--beat) * 2) var(--ease-plop-out),
-    transform calc(var(--beat) * 2) var(--ease-plop-out);
-  transition-delay: var(--reveal-delay, 0ms);
-}
-
-.js-reveal [data-reveal].is-revealed {
-  opacity: 1;
-  transform: none;
 }
 
 /* The article is the calmest surface on the site: one column, wide

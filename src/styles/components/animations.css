@@ -1,0 +1,116 @@
+/* ============================================================================
+   ANIMATIONS.CSS - Sistema de Animaciones
+   ============================================================================
+   
+   Este archivo contiene todas las animaciones del sitio, organizadas en:
+   
+   1. ANIMACIONES CON INTERSECTIONOBSERVER (.anim)
+      - Controladas por JavaScript (animations.js)
+      - Se ejecutan al entrar en el viewport (~40% visible)
+      - Al salir del todo se quita .anim-on (salvo data-once="true")
+      - Uso: class="anim" data-anim="bottom|top|left|right|fade"
+      - Atributos opcionales:
+        * data-delay="500"     → Retraso en ms antes de ejecutar
+        * data-speed="0.5"     → Duración de la animación en segundos
+        * data-once="true"     → Solo ejecutar una vez; no se quita .anim-on
+        * data-mobile="false"  → Desactivar en móvil
+   
+   2. KEYFRAMES UTILIZADOS POR INTERSECTIONOBSERVER
+      - Incluye keyframes de entrada y clip usados por .anim + .anim-on
+   
+   ============================================================================ */
+
+
+/* ============================================================================
+   0. ACCESIBILIDAD - prefers-reduced-motion
+   ============================================================================
+   Red de seguridad: si el usuario pide menos movimiento, el contenido .anim
+   debe quedar visible y sin animación (nunca atrapado en opacity:0). */
+/* @media (prefers-reduced-motion: reduce) {
+  .anim[data-anim] {
+    opacity: 1 !important;
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+} */
+
+
+/* ============================================================================
+   1. ANIMACIONES CON INTERSECTIONOBSERVER - Base
+   ============================================================================ */
+
+/* Estado inicial: elementos ocultos hasta que se activen.
+   Sin transition de opacity: al quitar .anim-on fuera de pantalla
+   el reset es inmediato, y no pelea con los keyframes al re-entrar. */
+.anim[data-anim]:not([data-anim^="clip"]) {
+  opacity: 0;
+
+  /* Estado activo: cuando el elemento entra en viewport */
+  &.anim-on {
+    opacity: 1;
+    animation-duration: 0.8s;
+    animation-timing-function: ease;
+    animation-fill-mode: both;
+  }
+}
+
+/* Fix para spans: necesitan display inline-flex para animarse correctamente */
+span[data-anim] {
+  @apply inline-flex gap-1;
+}
+
+/* Desactivar animaciones en móvil cuando se especifica data-mobile="false" */
+@media (max-width: 992px) {
+  .anim[data-anim][data-mobile="false"] {
+    opacity: 1;
+  }
+}
+
+
+/* ============================================================================
+   1.1 SELECTORES DE ANIMACIÓN - Entrada (anim-on)
+   ============================================================================ */
+
+/* Bottom: aparece desde abajo */
+.anim[data-anim="bottom"].anim-on {
+  animation-name: AnimBottom;
+}
+
+/* Top: aparece desde arriba */
+.anim[data-anim="top"].anim-on {
+  animation-name: AnimTop;
+}
+
+/* Left: aparece desde la izquierda */
+.anim[data-anim="left"].anim-on {
+  animation-name: AnimLeft;
+}
+
+/* Right: aparece desde la derecha */
+.anim[data-anim="right"].anim-on {
+  animation-name: AnimRight;
+}
+
+/* Fade: solo opacidad */
+.anim[data-anim="fade"].anim-on {
+  animation-name: AnimFade;
+}
+
+
+/* ============================================================================
+   KEYFRAMES - Animaciones de Entrada
+   ============================================================================ */
+
+@keyframes AnimBottom {
+  0% {
+    opacity: 0;
+    transform: translateY(1.3rem);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+

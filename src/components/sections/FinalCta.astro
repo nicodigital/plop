@@ -19,7 +19,7 @@ import laptopFront from "../../assets/img/laptop-front.png";
 
 <section class="cta relative">
   <div class="cta-frame relative mx-auto">
-    <div class="cta-card on-blue relative bg-plop-blue text-center">
+    <div class="cta-card on-blue relative bg-plop-blue text-center anim" data-anim="bottom" data-delay="400">
       {
         /*
           The break is on the sentence, not on a measure: two whole promises,
@@ -33,7 +33,6 @@ import laptopFront from "../../assets/img/laptop-front.png";
       }
       <h2
         class="mx-auto mb-8 max-w-[25ch] text-[clamp(2.25rem,5.5vw,5rem)] lg:mb-15"
-        data-reveal
       >
         Você <span class="text-plop-lime">cuida do</span> seu negócio.<br /> A gente cuida do <span class="text-plop-lime">seu site</span>.
       </h2>
@@ -50,7 +49,6 @@ import laptopFront from "../../assets/img/laptop-front.png";
       </div>
       <div
         class="mt-8 flex flex-wrap items-center justify-center gap-3 lg:mt-10"
-        data-reveal
       >
         <Button href={CONTACT_ANCHOR} size="lg" data-track="cta_primary_click">
           Quero meu site
@@ -76,18 +74,23 @@ import laptopFront from "../../assets/img/laptop-front.png";
         the blue with no plate behind it), so the output stays WebP.
       */
     }
-    <Image
-      class="cta-laptop"
-      src={laptopFront}
-      widths={[560, 1120, laptopFront.width]}
-      sizes="(min-width: 1280px) 66%, (min-width: 640px) 45vw, 400px"
-      format="webp"
-      quality={82}
-      alt=""
-      aria-hidden="true"
-      loading="lazy"
-      decoding="async"
-    />
+    <div class="cta-laptop">
+      <div class="anim anim-img" data-anim="bottom" >
+        <Image
+          class="cta-laptop-img"
+          src={laptopFront}
+          widths={[560, 1120, laptopFront.width]}
+          sizes="(min-width: 1280px) 66%, (min-width: 640px) 45vw, 400px"
+          format="webp"
+          quality={82}
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          decoding="async"
+          fetchpriority="low"
+        />
+      </div>
+    </div>
   </div>
 </section>
 
