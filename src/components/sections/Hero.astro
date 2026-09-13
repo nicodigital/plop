@@ -22,12 +22,16 @@ import { CONTACT_ANCHOR, PLANS_ANCHOR } from "../../data/nav.ts";
       </p>
 
       <div class="mt-6 flex flex-wrap items-center gap-3 lg:mt-8">
-        <Button href={CONTACT_ANCHOR} size="lg" data-track="cta_primary_click" class="anim" data-anim="bottom" data-delay="1400">
+        <div class="anim" data-anim="bottom" data-delay="1400" >
+        <Button href={CONTACT_ANCHOR} size="lg" data-track="cta_primary_click">
           Quero meu site
         </Button>
-        <Button href={PLANS_ANCHOR} variant="outline" size="lg" icon="arrow-down" class="anim" data-anim="bottom" data-delay="1600">
+        </div>
+        <div class="anim" data-anim="bottom" data-delay="1600">
+        <Button href={PLANS_ANCHOR} variant="outline" size="lg" icon="arrow-down">
           Ver planos
         </Button>
+        </div>
       </div>
 
       {/* Separators are drawn, not listed, so a wrap never strands one. */}

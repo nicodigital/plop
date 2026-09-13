@@ -283,7 +283,7 @@ html.lenis body {
   }
 
   .btn--outline {
-    --btn-lift-shadow: var(--color-plop-blue-200);
+    --btn-lift-shadow: var(--color-white);
   }
 
   .btn--solid-ink {
