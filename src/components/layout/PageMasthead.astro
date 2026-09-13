@@ -2,6 +2,10 @@
 /**
  * Inner-page opening. The header sits absolute over it, so every route
  * begins on the brand blue and the wordmark keeps its approved variant.
+ *
+ * The blue itself is not ours: every caller slots this into a GooeyStack, so
+ * the liquid ground is shared with whatever section follows instead of being
+ * a flat panel that stops at our own bottom edge.
  */
 interface Props {
   title: string;
@@ -11,20 +15,16 @@ interface Props {
 const { title, intro } = Astro.props;
 ---
 
-<section class="on-blue relative isolate overflow-hidden bg-plop-blue-deep">
+<section class="on-blue">
   <div
-    class="pointer-events-none absolute -right-[12%] -top-[70%] -z-10 size-[min(70vw,760px)] rounded-full bg-[radial-gradient(circle_at_40%_58%,color-mix(in_srgb,var(--color-plop-blue)_85%,transparent),transparent_68%)]"
-    aria-hidden="true"
-  >
-  </div>
-
-  <div
-    class="shell pb-[clamp(48px,7vw,88px)] pt-[clamp(132px,16vh,184px)]"
+    class="shell pb-[clamp(48px,7vw,88px)] pt-[clamp(160px,20vh,300px)]"
   >
     <h1 class="max-w-[18ch] text-[length:var(--text-h1)]">{title}</h1>
     {
       intro && (
-        <p class="muted measure mt-7 text-[length:var(--text-lead)]">{intro}</p>
+        <p class="muted measure mt-7 text-[length:var(--text-lead)] max-w-[40ch]">
+          {intro}
+        </p>
       )
     }
   </div>

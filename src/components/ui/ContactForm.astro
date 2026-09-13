@@ -1,12 +1,9 @@
 ---
 import Button from "./Button.astro";
-import { PLANS } from "../../data/plans.ts";
 
 interface Props {
   /** Distinguishes the footer instance from the /contato/ page instance. */
   id?: string;
-  /** Pre-selects a plan when the visitor arrives from a plan card. */
-  plan?: string;
 }
 
 const { id = "contato", plan } = Astro.props;

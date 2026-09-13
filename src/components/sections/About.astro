@@ -1,6 +1,8 @@
 ---
 import Icon, { type IconName } from "../ui/Icon.astro";
-
+import Button from "../ui/Button.astro";
+import Modal from "../ui/Modal.astro";
+import { CONTACT_ANCHOR } from "../../data/nav.ts";
 /**
  * What the monthly plan delivers, grouped into three claims instead of one
  * flat list of seven: the site, what keeps it fast and online, and what keeps
@@ -105,5 +107,50 @@ const groups: { title: string; icon: IconName; items: string[] }[] = [
         ))
       }
     </ul>
+
+    {/*
+      The monthly post is the one item above that a shop owner reads as a
+      cost rather than as a benefit, so the argument for it gets room of its
+      own — in a sheet, not in a paragraph that would push the three cards
+      further down the page.
+    */}
+    <div class="mt-20 flex justify-center">
+      <Button size="lg" icon="question" data-modal-open="blog-importa">
+        Por que um blog é importante
+      </Button>
+    </div>
   </div>
+
+  <Modal id="blog-importa" title="Por que um blog é importante">
+    <div class="prose-plop">
+      <p>
+        <strong>Um site parado envelhece.</strong> Quando nada muda, os buscadores
+        têm pouco motivo para voltar e quem visita não encontra nada novo. Cada publicação
+        é um sinal de que o negócio está ativo — e mais uma porta por onde alguém
+        pode chegar até você.
+      </p>
+      <p>
+        <strong>Cada post responde a uma pergunta real.</strong> Seus clientes pesquisam
+        antes de decidir: quanto custa, quanto demora, como funciona, se vale a pena.
+        Quando a resposta está no seu site, quem chega já chega mais perto de fechar
+        — e conversando com você, não com o concorrente.
+      </p>
+      <p>
+        <strong>Agora quem lê também é a inteligência artificial.</strong> ChatGPT,
+        Gemini e o próprio Google montam respostas a partir do que encontram publicado.
+        Para o seu negócio aparecer nelas, é preciso ter conteúdo em texto, claro e
+        no seu próprio domínio. Uma página de vendas sozinha raramente dá conta disso.
+      </p>
+      <p>
+        <strong>E a parte trabalhosa fica com a gente.</strong> O plano mensal inclui
+        <strong data-numeric>1 publicação por mês</strong>: pauta, redação e publicação.
+        Você não precisa escrever nada nem lembrar de atualizar o site — só seguir
+        cuidando do seu negócio.
+      </p>
+    </div>
+
+    <Button slot="actions" href={CONTACT_ANCHOR} variant="solid-ink" size="lg" data-track="cta_primary_click">
+      Quero meu site
+    </Button>
+  </Modal>
 </section>

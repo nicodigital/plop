@@ -1,0 +1,236 @@
+/* The modal. A native `<dialog>`, so the top layer, the focus trap, the
+   inert page behind it and Escape all come from the browser rather than from
+   a script — the only JavaScript is what opens it.
+
+   Two boxes, not one: the `<dialog>` fills the viewport and centres, the
+   panel is the sheet. That split is what lets a click on the empty space
+   around the sheet close it (`event.target === dialog`), which a merged box
+   could not tell apart from a click on the sheet's own padding.
+
+   No `prefers-reduced-motion` branch, per the site-wide decision recorded in
+   DESIGN.md. */
+
+@layer components {
+  .modal {
+    --modal-inset: clamp(16px, 4vw, 40px);
+    --modal-pad: clamp(24px, 3.5vw, 44px);
+    /* Sized to the reading measure, not to the viewport: the body is
+       `.prose-plop` at 68ch, and a sheet wider than that would hang 70px of
+       empty paper off the right of every paragraph. */
+    --modal-width: 42rem;
+
+    position: fixed;
+    inset: 0;
+    width: auto;
+    height: auto;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: var(--modal-inset);
+    border: 0;
+    background: transparent;
+    overflow: hidden;
+    place-items: center;
+    color: var(--color-plop-ink);
+
+    /* `display` and `overlay` have to ease discretely or the sheet is gone
+       from the top layer on the first frame of the exit and nothing is left
+       to animate. */
+    transition:
+      display var(--beat) allow-discrete,
+      overlay var(--beat) allow-discrete;
+  }
+
+  /* Scoped to `[open]`: an unscoped `display` would override the UA rule that
+     keeps a closed dialog hidden. */
+  .modal[open] {
+    display: grid;
+  }
+
+  /* The scrim is painted from the deepest step of the blue ramp. A black veil
+     over this page would read as someone else's overlay. */
+  .modal::backdrop {
+    background: color-mix(in srgb, var(--color-plop-blue-950) 82%, transparent);
+    opacity: 0;
+    transition:
+      opacity var(--beat) var(--ease-plop-out),
+      display var(--beat) allow-discrete,
+      overlay var(--beat) allow-discrete;
+  }
+
+  .modal[open]::backdrop {
+    opacity: 1;
+  }
+
+  @starting-style {
+    .modal[open]::backdrop {
+      opacity: 0;
+    }
+  }
+
+  /* ---------------------------------------------------------------- panel */
+
+  .modal__panel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: min(100%, var(--modal-width));
+    max-height: 100%;
+    overflow: hidden;
+    border-radius: var(--radius-plop-xl);
+    corner-shape: squircle;
+    background: var(--color-plop-white);
+
+    opacity: 0;
+    translate: 0 14px;
+    scale: 0.985;
+    transition:
+      opacity var(--beat) var(--ease-plop-out),
+      translate var(--beat) var(--ease-plop-out),
+      scale var(--beat) var(--ease-plop-out);
+  }
+
+  .modal[open] .modal__panel {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+  }
+
+  @starting-style {
+    .modal[open] .modal__panel {
+      opacity: 0;
+      translate: 0 14px;
+      scale: 0.985;
+    }
+  }
+
+  /* The sheet is not flat white: one wash, inside the blue family, so the
+     surface has a direction the way the reference card does — without a
+     second hue and without glass. `z-index: -1` keeps it behind the copy;
+     an absolutely positioned pseudo-element would otherwise paint over it. */
+  .modal__panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: radial-gradient(
+      130% 100% at 6% -10%,
+      var(--color-plop-paper) 0%,
+      transparent 64%
+    );
+  }
+
+  /* ----------------------------------------------------------------- head */
+
+  .modal__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: clamp(16px, 2vw, 28px);
+    padding: var(--modal-pad) var(--modal-pad) clamp(16px, 2vw, 24px);
+
+    /* The hairline is the cut line, so it only exists once there is something
+       cut: the script sets `data-scrolled` when the body has moved. */
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--duration-fast) var(--ease-plop-out);
+  }
+
+  .modal__panel[data-scrolled] .modal__head {
+    border-bottom-color: var(--color-plop-hairline);
+  }
+
+  .modal__title {
+    max-width: 26ch;
+    font-size: var(--text-h4);
+    color: var(--color-plop-ink);
+  }
+
+  /* Focus lands on the title so the dialog opens on what it is for, not on
+     the way out of it. It is not a control, so it shows no ring. */
+  .modal__title:focus,
+  .modal__title:focus-visible {
+    outline: none;
+  }
+
+  .modal__close {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    background: var(--color-plop-paper);
+    color: var(--color-plop-ink);
+    cursor: pointer;
+    transition:
+      background-color var(--duration-fast) var(--ease-plop-out),
+      color var(--duration-fast) var(--ease-plop-out);
+  }
+
+  .modal__close:hover {
+    background: var(--color-plop-ink);
+    color: var(--color-plop-white);
+  }
+
+  /* ----------------------------------------------------------------- body */
+
+  .modal__body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    /* The page behind is already frozen; this stops the gesture reaching it
+       at all once the inner scroll runs out. */
+    overscroll-behavior: contain;
+    padding: clamp(16px, 2vw, 24px) var(--modal-pad) var(--modal-pad);
+
+    /* The page's scrollbar is blue-400 on blue-700 — correct against the blue
+       grounds it was drawn for, far too loud on a white sheet. */
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-plop-blue-300) transparent;
+  }
+
+  .modal__body::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .modal__body::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .modal__body::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: var(--color-plop-blue-300);
+  }
+
+  .modal__body::-webkit-scrollbar-thumb:hover {
+    background: var(--color-plop-blue);
+  }
+
+  /* -------------------------------------------------------------- actions */
+
+  .modal__actions {
+    flex: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: clamp(16px, 2vw, 24px) var(--modal-pad) var(--modal-pad);
+    border-top: 1px solid var(--color-plop-hairline);
+  }
+
+  /* One action fills the row, the way the reference sheet closes on a single
+     full-width pill. Two or more share it and size themselves. */
+  .modal__actions > :only-child {
+    width: 100%;
+  }
+}
+
+@layer utilities {
+  /* Lenis freezes the document with `overflow: hidden`, which takes the
+     scrollbar away and lets the whole page slide sideways under the scrim.
+     The gutter it measured goes back as padding, so nothing moves. */
+  html.has-modal {
+    padding-right: var(--modal-gutter, 0px);
+  }
+}

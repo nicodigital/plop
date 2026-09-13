@@ -18,6 +18,9 @@
 @import "components/buttons.css";
 @import "components/prose.css";
 @import "components/card-swiper.css";
+@import "components/modal.css";
+@import "components/post-card.css";
+@import "components/post.css";
 
 @theme {
   /* The blue ramp. Every dark ground and every hairline on the site is a
@@ -100,7 +103,11 @@
 }
 
 @theme inline {
-  --container-plop: 1440px;
+  /* Same self-referential trick as the type scale below: registering the name
+     emits the utility (max-w-plop, w-plop) while `inline` makes it read the
+     live variable, so the per-breakpoint overrides in :root reach it. The
+     actual values live in :root. */
+  --container-plop: var(--container-plop);
 
   /* The type scale itself lives in components/typography.css, which is where
      every step is tuned per breakpoint. Registering the names here is what
@@ -122,19 +129,11 @@
   --text-small: var(--text-small);
 }
 
-@variant xg {
-    --container-plop: 80%;
-  }
-
-  @variant lg {
-    --container-plop: 90%;
-  }
-
-  @variant 2xl {
-    --container-plop: 1440px;
-  }
-
 :root {
+  /* The shell's max width. Ascending order: each step only refines the one
+     above it, and anything left out keeps the previous value. */
+  --container-plop: 1440px;
+
   --gutter: clamp(20px, 4vw, 64px);
   --section-space: clamp(80px, 10vw, 150px);
   --duration-fast: 250ms;
@@ -144,6 +143,20 @@
      multiple of this beat, so nothing drifts against anything else. */
   --beat: 320ms;
   color-scheme: light;
+
+  /* Nested rules last: a plain declaration written after a nested rule is a
+     "mixed declaration", which browsers and bundlers treat inconsistently. */
+  @variant xg {
+    --container-plop: 80%;
+  }
+
+  @variant lg {
+    --container-plop: 93%;
+  }
+
+  @variant 2xl {
+    --container-plop: 1440px;
+  }
 }
 
 @layer base {
@@ -155,8 +168,8 @@
     background: var(--color-plop-white);
     color: var(--color-plop-ink);
     font-family: var(--font-sans);
-    font-size: 1rem;
-    line-height: 1.6;
+    font-size: var(--text-base);
+    line-height: 1.4;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }

@@ -13,6 +13,8 @@ Every raster and video shipped in `public/` and where it came from.
 | `public/assets/portfolio/project-*.webm` | `assets/portfolio/*.webm` — scroll captures of delivered client sites (956×472, 30fps, VP9, no audio) | Trimmed to 10s from t=0.5, downscaled to 720px wide, re-encoded VP9 CRF 36 by `scripts/encode-portfolio.sh`. The bands never render a tile wider than 560 CSS px, and a tile is watched for a few seconds before it drifts off, so the 956px/13-38s sources were paying for pixels and minutes nobody sees. 8.5 MB → 3.1 MB across the ten files. |
 | `public/assets/portfolio/project-*.mp4` | same | Same trim and scale, H.264 CRF 28, faststart, for browsers without VP9 |
 | `public/assets/portfolio/project-*-poster.webp` | same | Frame at t=1s, 720px wide, WebP q72 |
+| `src/assets/img/blog/*.webp` (6 covers) | `scripts/blog-covers.mjs` — original art authored for this build, not derived from any third-party image | Drawn as SVG (blue ramp ground, the GooeyBackground blur/alpha-ramp fused into one liquid mass, a lime accent, one stroked motif per post), rendered by headless Chromium at 1600×900 and encoded WebP q82 → 14–21 KB each. Deterministic: rerunning the script reproduces the same files. |
+| `_astro/<post-slug>.*.webp` (built) | the six covers above | Built by `astro:assets` from `PostCard` and the article: WebP q82 at 640 px for the cards (≈4–7 KB) and 1400 / 1600 px for the article. Nothing is hand-encoded, so the widths and hashes follow the masters. |
 
 Source masters stay in `assets/` and are not part of the production bundle.
 

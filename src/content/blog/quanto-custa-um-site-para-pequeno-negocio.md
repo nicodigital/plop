@@ -3,6 +3,9 @@ title: "Quanto custa um site para pequeno negócio (e por que ninguém te diz)"
 description: "Entrada, mensalidade, domínio, hospedagem. O que cada item significa e o que muda o preço de verdade."
 publishedAt: 2026-08-14
 readingMinutes: 6
+category: negocio
+cover: ../../assets/img/blog/quanto-custa-um-site-para-pequeno-negocio.webp
+coverAlt: "Ilustração de três barras empilhadas de larguras diferentes ao lado de um disco."
 ---
 
 Pergunte a três pessoas quanto custa um site e você vai receber três respostas

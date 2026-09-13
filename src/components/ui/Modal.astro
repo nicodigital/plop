@@ -1,0 +1,79 @@
+---
+import Icon from "./Icon.astro";
+
+/**
+ * Reusable modal sheet, built on a native `<dialog>`.
+ *
+ * Anything on the page opens it by naming its id — no wiring per instance:
+ *
+ *   <Button data-modal-open="blog-importa">Por que um blog importa</Button>
+ *
+ *   <Modal id="blog-importa" title="Por que um blog importa">
+ *     <div class="prose-plop">…</div>
+ *     <Button slot="actions" href="/#contato">Quero meu site</Button>
+ *   </Modal>
+ *
+ * The content is server-rendered inside the dialog, so it ships in the HTML
+ * and is crawlable; only the opening is JavaScript. Long copy scrolls inside
+ * the sheet rather than growing it past the viewport.
+ */
+
+interface Props {
+  /** The id triggers point at with `data-modal-open`. */
+  id: string;
+  /** Names the dialog for assistive tech and heads the sheet. */
+  title: string;
+  /** Sheet max width. Defaults to the reading width used here. */
+  width?: string;
+  class?: string;
+}
+
+const { id, title, width, class: className = "" } = Astro.props;
+const titleId = `${id}-title`;
+const hasActions = Astro.slots.has("actions");
+---
+
+<dialog
+  id={id}
+  class:list={["modal", className]}
+  aria-labelledby={titleId}
+  style={width ? `--modal-width: ${width}` : undefined}
+>
+  <div class="modal__panel">
+    <div class="modal__head">
+      {/*
+        Focus lands here on open, so the dialog announces what it is for
+        rather than the way out of it. Escape and the close button are both
+        one key or one tab away.
+      */}
+      <h2 class="modal__title" id={titleId} tabindex="-1" autofocus>{title}</h2>
+
+      <button type="button" class="modal__close" data-modal-close>
+        <span class="sr-only">Fechar</span>
+        <Icon name="close" size={22} />
+      </button>
+    </div>
+
+    {/*
+      `data-lenis-prevent` keeps the smooth-scroll module off this box: the
+      page is frozen while the sheet is open, and the wheel belongs to the
+      copy the visitor is reading.
+    */}
+    <div class="modal__body" data-modal-scroll data-lenis-prevent>
+      <slot />
+    </div>
+
+    {
+      hasActions && (
+        <div class="modal__actions">
+          <slot name="actions" />
+        </div>
+      )
+    }
+  </div>
+</dialog>
+
+<script>
+  import { initModals } from "../../scripts/modal.ts";
+  initModals();
+</script>

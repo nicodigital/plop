@@ -49,9 +49,12 @@ const isCurrentPage = (item: (typeof NAV_ITEMS)[number]) =>
     </nav>
 
     <div class="flex items-center gap-3">
-      <Button href={CONTACT_ANCHOR} size="lg" data-track="cta_primary_click">
-          Quero meu site
+
+      <div class="hidden xg:block" >
+        <Button href={CONTACT_ANCHOR} size="lg" data-track="cta_primary_click">
+            Quero meu site
         </Button>
+      </div>
 
       <button
         type="button"

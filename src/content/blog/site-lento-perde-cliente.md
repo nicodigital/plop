@@ -3,6 +3,9 @@ title: "Site lento perde cliente antes de mostrar o preço"
 description: "O que acontece nos três primeiros segundos, por que o Google mede isso e o que deixa um site pesado."
 publishedAt: 2026-08-28
 readingMinutes: 5
+category: performance
+cover: ../../assets/img/blog/site-lento-perde-cliente.webp
+coverAlt: "Ilustração de um velocímetro com o ponteiro ainda longe do topo da escala."
 ---
 
 Quem abre um site no celular, na rua, com sinal ruim, não espera. Fecha e volta

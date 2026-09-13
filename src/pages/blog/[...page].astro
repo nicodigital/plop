@@ -1,0 +1,152 @@
+---
+/**
+ * The blog listing, paginated.
+ *
+ * A rest parameter so page one keeps the bare `/blog/` URL and the rest are
+ * `/blog/2/`. It shares the directory with `[slug].astro`: both routes are
+ * prerendered from explicit path lists, so nothing is ever ambiguous.
+ */
+import type { GetStaticPaths, Page } from "astro";
+import type { CollectionEntry } from "astro:content";
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageMasthead from "../../components/layout/PageMasthead.astro";
+import FinalCta from "../../components/sections/FinalCta.astro";
+import GooeyStack from "../../components/layout/GooeyStack.astro";
+import PostCard from "../../components/ui/PostCard.astro";
+import Icon from "../../components/ui/Icon.astro";
+import { POSTS_PER_PAGE } from "../../data/blog.ts";
+
+export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+  const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
+    (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime(),
+  );
+
+  return paginate(posts, { pageSize: POSTS_PER_PAGE });
+};
+
+interface Props {
+  page: Page<CollectionEntry<"blog">>;
+}
+
+const { page } = Astro.props;
+
+/** `trailingSlash: "always"`, so every href the paginator hands us gets one. */
+const withSlash = (url: string | undefined) =>
+  url ? (url.endsWith("/") ? url : `${url}/`) : undefined;
+
+const prev = withSlash(page.url.prev);
+const next = withSlash(page.url.next);
+const pageNumbers = Array.from({ length: page.lastPage }, (_, i) => i + 1);
+
+const isFirst = page.currentPage === 1;
+const title = isFirst ? "Blog" : `Blog — Página ${page.currentPage}`;
+---
+
+<BaseLayout
+  title={title}
+  description="Textos diretos sobre sites, performance e presença digital para quem toca um negócio pequeno."
+>
+  {/* Paginated pages point back at the run they belong to, so a crawler
+      reads them as one sequence rather than as near-duplicate listings. */}
+  <Fragment slot="head">
+    {prev && <link rel="prev" href={prev} />}
+    {next && <link rel="next" href={next} />}
+  </Fragment>
+
+  <GooeyStack>
+  <PageMasthead
+      title="O que a gente aprende fazendo."
+      intro="Sem jargão e sem curso. Coisas que ajudam a decidir sobre o seu site, mesmo que você não contrate a gente."
+    />
+  </GooeyStack>
+
+  <section class="relative on-white bg-white py-20" >
+    <div class="shell">
+      {
+        page.data.length === 0 ? (
+          <div class="max-w-[46ch] rounded-[var(--radius-plop-xl)] border-2 border-plop-hairline p-[clamp(28px,4vw,48px)]">
+            <h2 class="text-[length:var(--text-h3)]">
+              Ainda não publicamos nada aqui.
+            </h2>
+            <p class="muted mt-4">
+              O primeiro texto está a caminho. Enquanto isso, se você tem uma
+              dúvida sobre o seu site, mande — a resposta costuma virar post.
+            </p>
+            <a
+              href="/contato/"
+              class="mt-6 inline-flex min-h-[44px] items-center gap-2 font-display font-semibold text-plop-blue underline decoration-2 underline-offset-4"
+            >
+              Mandar a dúvida
+              <Icon name="arrow-right" size={18} />
+            </a>
+          </div>
+        ) : (
+          <div class="grid gap-x-[clamp(20px,2.4vw,36px)] gap-y-[clamp(40px,4vw,56px)] md:grid-cols-2 lg:grid-cols-3">
+            {page.data.map((post, index) => (
+              <PostCard
+                post={post}
+                sizes="(min-width: 1024px) 30vw, (min-width: 768px) 45vw, 88vw"
+                loading={index === 0 ? "eager" : "lazy"}
+                class="anim"
+                data-anim="bottom"
+                data-delay={index * 200}
+              />
+            ))}
+          </div>
+        )
+      }
+
+      {
+        page.lastPage > 1 && (
+          <nav
+            class="mt-[clamp(56px,7vw,88px)] flex items-center justify-center gap-2"
+            aria-label="Paginação"
+          >
+            {prev ? (
+              <a href={prev} class="pager pager--step" rel="prev">
+                <Icon name="chevron-left" size={20} />
+                <span class="sr-only">Página anterior</span>
+              </a>
+            ) : (
+              <span class="pager pager--step pager--off" aria-hidden="true">
+                <Icon name="chevron-left" size={20} />
+              </span>
+            )}
+
+            {pageNumbers.map((number) =>
+              number === page.currentPage ? (
+                <span class="pager pager--on" aria-current="page">
+                  {number}
+                </span>
+              ) : (
+                <a href={number === 1 ? "/blog/" : `/blog/${number}/`} class="pager">
+                  <span class="sr-only">Página </span>
+                  {number}
+                </a>
+              ),
+            )}
+
+            {next ? (
+              <a href={next} class="pager pager--step" rel="next">
+                <span class="sr-only">Próxima página</span>
+                <Icon name="chevron-right" size={20} />
+              </a>
+            ) : (
+              <span class="pager pager--step pager--off" aria-hidden="true">
+                <Icon name="chevron-right" size={20} />
+              </span>
+            )}
+          </nav>
+        )
+      }
+    </div>
+  </section>
+
+  {/* The closing CTA is a blue mass on a light ground, so it needs that
+      ground: on the home it comes from the stack it shares with Plans and FAQ,
+      here from one of its own. */}
+  <GooeyStack tone="light" variant="b">
+    <FinalCta />
+  </GooeyStack>
+</BaseLayout>

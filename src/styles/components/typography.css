@@ -17,9 +17,9 @@ html {
   /* Fluid display ramp: headline sizes that interpolate with the viewport. */
   --text-display: clamp(3.25rem, 7vw, 6.5rem);
   --text-h1: clamp(2.75rem, 4.5vw, 5.5rem);
-  --text-h2: clamp(2.125rem, 4vw, 3.75rem);
+  --text-h2: clamp(2.125rem, 3.6vw, 3.75rem);
   --text-h3: clamp(1.375rem, 2.2vw, 2rem);
-  --text-lead: clamp(1.125rem, 1.2vw, 1.375rem);
+  --text-lead: clamp(1.125rem, 1.5vw, 1.2rem);
 
   /* UI ramp: fixed steps for labels, captions, metadata and card titles,
      separate from the fluid display ramp above. */
@@ -29,7 +29,7 @@ html {
   --text-ui-lg: 1.125rem;
   --text-article: 1.0625rem;
   --text-base: 1rem;
-  --text-ui: 0.9375rem;
+  --text-ui: 1rem;
   --text-small: 0.875rem;
 
   /* Per-breakpoint tuning. Ascending order, so a wider step always lands
@@ -49,11 +49,12 @@ html {
   }
 
   @variant xg {
-    --text-html: 14px;
+    --text-html: 12px;
+    --text-base: 1.1rem;
   }
 
   @variant lg {
-    --text-html: 15px;
+    --text-html: 13px;
   }
 
   @variant xl {

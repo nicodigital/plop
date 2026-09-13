@@ -1,0 +1,54 @@
+/* The article page: the centred opening on the blue band, the meta row under
+   it, and the cover that straddles the seam into the white. */
+@layer components {
+  /* Category, echoing the card badge but on blue, where lime on ink would
+     shout over the headline it introduces. */
+  .post-pill {
+    @apply inline-flex items-center rounded-full border-2 border-white/30 px-4 py-1.5 font-display text-small font-semibold text-white;
+  }
+
+  /* Three columns divided by hairlines. The space between them is padding on
+     the items, not a gap, so the rule lands centred in it. */
+  .post-meta {
+    @apply mt-[clamp(28px,4vw,44px)] flex flex-wrap items-stretch justify-center gap-y-6;
+  }
+
+  .post-meta > div {
+    @apply px-[clamp(20px,3.5vw,48px)] text-center;
+  }
+
+  .post-meta > div + div {
+    border-left: 1px solid rgb(255 255 255 / 0.22);
+  }
+
+  .post-meta dt {
+    @apply text-plop-on-blue;
+  }
+
+  .post-meta dd {
+    @apply mt-2 font-display text-ui font-semibold text-white;
+  }
+
+  /* Positioned, because the blue header above is `relative` and would
+     otherwise paint over the part of the cover that overlaps it — positioned
+     boxes paint above in-flow ones whatever the document order says. */
+  .post-cover {
+    @apply relative z-10 block h-auto w-full rounded-[var(--radius-plop-xl)] object-cover;
+    corner-shape: squircle;
+    aspect-ratio: 16 / 9;
+    /* Pulls the image up into the padding the header reserved for it, so the
+       top of the cover breaks the seam instead of starting under it. */
+    margin-top: calc(-1 * clamp(64px, 8vw, 118px));
+    /* Every cover is blue on a blue band. Without an edge the overlapping
+       part dissolves into the header and the break reads as an accident. */
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.22);
+  }
+
+  @media (max-width: 640px) {
+    /* On a phone the divider column collapses to a stack of three rows and
+       the vertical rules read as stray marks. */
+    .post-meta > div + div {
+      border-left: 0;
+    }
+  }
+}

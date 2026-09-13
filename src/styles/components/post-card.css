@@ -1,0 +1,137 @@
+/* The blog card. The media is the whole card: no border, no panel, no
+   chrome — the cover carries the weight and the copy sits under it.
+
+   The silhouette comes from `src/assets/img/card-mask.svg`: a rounded
+   rectangle with a square notch taken out of the bottom-right, the inner
+   corner filleted the other way round. The arrow button sits in that notch.
+   Masking rather than painting a disc of background colour on top is what
+   lets the card work over the liquid ground on the home as well as over flat
+   white on the listing.
+
+   Everything below is a proportion of the mask's own 800-unit grid, so the
+   shape, the notch and the button stay fitted at every card width. */
+@layer components {
+  .post-card {
+    /* Button diameter, as a share of the card width.
+
+       The mask's notch is fixed at 200 of its 800 units, i.e. 25%. At exactly
+       25% the button fills the notch and the inverted fillet nests around the
+       circle with an even gap; below that the button pulls away from the
+       fillet and the notch reads as oversized. Anything but 25% is therefore
+       a deliberate choice about how much air sits in the corner, and moving
+       it far needs the mask redrawn to match. */
+    --card-notch: 15%;
+  }
+
+  .post-card__link {
+    @apply block no-underline;
+  }
+
+  .post-card__frame {
+    @apply relative;
+  }
+
+  /* Square, because the mask is authored 1:1 — stretching it to a 4:3 box
+     would turn every corner radius into an ellipse and the notch into a
+     rectangle the round button could no longer sit in. The radius and the
+     notch come from the mask now, so no border-radius here. */
+  .post-card__media {
+    @apply relative block aspect-square rounded-4xl [corenr-shape:squricle] w-full;
+    -webkit-mask: url("../../assets/img/card-mask-rect.svg") center / 100% 100%
+      no-repeat;
+    mask: url("../../assets/img/card-mask-rect.svg") center / 100% 100% no-repeat;
+  }
+
+  .post-card__media img {
+    @apply size-full object-cover;
+  }
+
+  .post-card__badge {
+    @apply absolute left-4 top-4 inline-flex items-center rounded-full bg-plop-lime px-4 py-[0.5rem] font-display text-small font-bold leading-none text-plop-ink;
+  }
+
+  /* Sits in the notch. Decorative: the whole card is already one link, and
+     this is not a control of its own. Hover lifts it one step up the ramp to
+     `plop-blue`. */
+  .post-card__arrow {
+    @apply absolute bottom-0 right-0 grid aspect-square place-items-center rounded-full bg-plop-blue-800 text-white;
+    width: var(--card-notch);
+    transition:
+      background-color var(--duration-fast) var(--ease-plop-standard),
+      color var(--duration-fast) var(--ease-plop-standard);
+  }
+
+  .post-card__arrow svg {
+    transition: transform var(--duration-fast) var(--ease-plop-out);
+  }
+
+  .post-card__title {
+    font-size: clamp(var(--text-h5), 2.2vw, var(--text-h4));
+    @apply mt-6 font-display font-bold leading-[1.06] tracking-[-0.035em] text-plop-ink min-h-[4rem] max-w-[22ch];
+    transition: color var(--duration-fast) var(--ease-plop-standard);
+  }
+
+  .post-card__excerpt {
+    @apply mt-3 min-h-[5rem];
+  }
+
+  .post-card__meta {
+    @apply mt-4 text-small;
+  }
+
+  /* Nothing moves under a finger that cannot hover, and the arrow must stay
+     legible there — so the whole hover treatment is gated, like card-swiper. */
+  @media (hover: hover) and (pointer: fine) {
+    .post-card__link:hover .post-card__title,
+    .post-card__link:focus-visible .post-card__title {
+      @apply text-plop-blue;
+    }
+
+    .post-card__link:hover .post-card__arrow,
+    .post-card__link:focus-visible .post-card__arrow {
+      @apply bg-plop-blue;
+    }
+
+    .post-card__link:hover .post-card__arrow svg,
+    .post-card__link:focus-visible .post-card__arrow svg {
+      transform: translateX(3px);
+    }
+  }
+
+  /* The link is a block wrapping everything, so the default focus ring would
+     trace a tall rectangle around card and copy. Rounding it to the card's
+     own radius keeps the indicator readable. */
+  .post-card__link:focus-visible {
+    @apply rounded-[var(--radius-plop-lg)] outline-offset-[6px];
+  }
+}
+
+/* Pagination under the listing. Square-ish pills on the 44px touch floor,
+   so number and step controls hit the same target size. */
+@layer components {
+  .pager {
+    @apply inline-flex size-11 items-center justify-center rounded-full border-2 border-plop-hairline font-display text-base font-semibold text-plop-ink no-underline;
+    transition:
+      background-color var(--duration-fast) var(--ease-plop-standard),
+      border-color var(--duration-fast) var(--ease-plop-standard),
+      color var(--duration-fast) var(--ease-plop-standard);
+  }
+
+  .pager:hover {
+    @apply border-plop-blue text-plop-blue;
+  }
+
+  .pager--on {
+    @apply border-plop-ink bg-plop-ink text-white;
+  }
+
+  .pager--step {
+    @apply text-plop-blue;
+  }
+
+  /* First and last page: the step stays in place so the row does not reflow
+     between pages, but reads as unavailable and takes no focus. */
+  .pager--off {
+    @apply border-plop-hairline text-plop-hairline;
+  }
+}

@@ -1,0 +1,66 @@
+---
+/**
+ * One blog post as a card. Shared by the home teaser and the listing, so the
+ * two surfaces can never drift apart.
+ *
+ * The whole card is a single link: no second anchor inside it, and the arrow
+ * in the corner is decoration rather than a control of its own.
+ */
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+import Icon from "./Icon.astro";
+import { BLOG_CATEGORIES, formatPostDate } from "../../data/blog.ts";
+
+interface Props {
+  post: CollectionEntry<"blog">;
+  /** So the card fits the outline of whichever surface mounts it. */
+  headingLevel?: "h2" | "h3";
+  /** Forwarded to <Image>; the two surfaces lay the grid out differently. */
+  sizes?: string;
+  loading?: "lazy" | "eager";
+  class?: string;
+}
+
+const {
+  post,
+  headingLevel: Heading = "h2",
+  sizes = "(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 92vw",
+  loading = "lazy",
+  class: className = "",
+  ...rest
+} = Astro.props;
+
+---
+
+<article class:list={["post-card", className]} {...rest}>
+  <a class="post-card__link" href={`/blog/${post.id}/`}>
+    <div class="post-card__frame">
+      <div class="post-card__media">
+        <Image
+          src={post.data.cover}
+          alt={post.data.coverAlt}
+          widths={[640, 1400]}
+          sizes={sizes}
+          format="webp"
+          quality={82}
+          loading={loading}
+          decoding="async"
+        />
+      </div>
+      <span class="post-card__badge">{BLOG_CATEGORIES[post.data.category]}</span>
+      <span class="post-card__arrow" aria-hidden="true">
+        <Icon name="arrow-right" size={22} />
+      </span>
+    </div>
+
+    <Heading class="post-card__title">{post.data.title}</Heading>
+    <p class="muted post-card__excerpt">{post.data.description}</p>
+    <p class="muted post-card__meta" data-numeric>
+      <time datetime={post.data.publishedAt.toISOString()}>
+        {formatPostDate(post.data.publishedAt, "short")}
+      </time>
+      {" · "}
+      {post.data.readingMinutes} min
+    </p>
+  </a>
+</article>

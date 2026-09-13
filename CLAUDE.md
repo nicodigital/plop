@@ -143,6 +143,8 @@ Do not create duplicate versions of an existing component just to achieve small 
 
 Tailwind is the primary styling system.
 
+`STYLES.md` documents how CSS is wired in this repository: file layout, the cascade-layer model, `@theme` vs `@theme inline`, and the responsive token recipe behind the type scale and the container width. Read it before adding or re-tuning a token.
+
 For a new implementation, prefer **Tailwind CSS 4 through the official Vite plugin** used by current Astro versions.
 
 Do not use the legacy `@astrojs/tailwind` integration for a new Tailwind 4 setup.

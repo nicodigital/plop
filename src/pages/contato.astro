@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageMasthead from "../components/layout/PageMasthead.astro";
+import GooeyStack from "../components/layout/GooeyStack.astro";
 import ContactForm from "../components/ui/ContactForm.astro";
 import Icon from "../components/ui/Icon.astro";
 import { CONTACT_EMAIL, HAS_WHATSAPP, whatsappHref } from "../data/site.ts";
@@ -17,10 +18,12 @@ const steps = [
   title="Contato"
   description="Conte sobre o seu negócio e receba prazo, escopo e preço fechado. Resposta em até um dia útil."
 >
+  <GooeyStack>
   <PageMasthead
-    title="Conte do seu negócio."
-    intro="Quanto mais concreto você for, mais útil a resposta. Não precisa ter nada pronto para escrever."
-  />
+      title="Conte do seu negócio."
+      intro="Quanto mais concreto você for, mais útil a resposta. Não precisa ter nada pronto para escrever."
+    />
+  </GooeyStack>
 
   <section class="on-white bg-white py-[var(--section-space)]">
     <div class="shell">

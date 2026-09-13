@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageMasthead from "../components/layout/PageMasthead.astro";
+import GooeyStack from "../components/layout/GooeyStack.astro";
 import { CONTACT_EMAIL, SITE_NAME } from "../data/site.ts";
 ---
 
@@ -8,7 +9,9 @@ import { CONTACT_EMAIL, SITE_NAME } from "../data/site.ts";
   title="Política de privacidade"
   description="Quais dados o site coleta, para que servem e como pedir a exclusão."
 >
+  <GooeyStack>
   <PageMasthead title="Política de privacidade" />
+  </GooeyStack>
 
   <section class="on-white bg-white py-[clamp(56px,8vw,110px)]">
     <div class="shell">

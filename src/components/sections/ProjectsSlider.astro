@@ -180,6 +180,13 @@ const ROW_SPEED = [9000, 6800];
     /** At most this many tiles decode at once, however many are on screen. */
     const MAX_DECODING = 4;
 
+    /**
+     * How many tiles per band are fetched ahead of the section arriving. Two
+     * is roughly what a band shows at once; anything past that is
+     * speculative bytes for tiles the visitor may never reach.
+     */
+    const WARM_PER_BAND = 2;
+
     const bands = hosts.map((host, index) => {
       const swiper = new Swiper(host, {
         modules: [Autoplay],
@@ -242,27 +249,53 @@ const ROW_SPEED = [9000, 6800];
      * At the edges they are cut off anyway, so the ceiling costs nothing to
      * look at and saves a phone several megabytes.
      */
-    const videos = hosts.flatMap((host) =>
+    const bandVideos = hosts.map((host) =>
       Array.from(host.querySelectorAll<HTMLVideoElement>("[data-project-video]")),
     );
+    const videos = bandVideos.flat();
     const onScreen = new Set<HTMLVideoElement>();
 
-    const sync = () => {
+    /**
+     * Orders tiles by how close they sit to the middle of the screen, which
+     * is the one measure that survives the travel: a band is always moving,
+     * so DOM order says nothing about what the visitor is looking at.
+     */
+    const nearestToCentre = (list: readonly HTMLVideoElement[], count: number) => {
       const centre = window.innerWidth / 2;
-      const budget = [...onScreen]
+      return list
         .map((video) => {
           const box = video.getBoundingClientRect();
           return { video, distance: Math.abs(box.left + box.width / 2 - centre) };
         })
         .sort((a, b) => a.distance - b.distance)
-        .slice(0, MAX_DECODING)
+        .slice(0, count)
         .map((entry) => entry.video);
+    };
 
+    /** Tiles already told to fetch, so nothing is asked to load twice. */
+    const warmed = new WeakSet<HTMLVideoElement>();
+
+    /**
+     * Takes a tile off `preload="none"` and starts the fetch. The markup
+     * ships with no preload at all so the hero owns the first connection;
+     * from here every byte is asked for deliberately. `load()` rather than
+     * the attribute alone, because a video that has already declined to
+     * fetch does not re-run source selection when the attribute changes.
+     */
+    const warm = (video: HTMLVideoElement) => {
+      if (warmed.has(video)) return;
+      warmed.add(video);
+      video.preload = "auto";
+      video.load();
+    };
+
+    const sync = () => {
+      const budget = nearestToCentre([...onScreen], MAX_DECODING);
       const allowed = new Set(document.hidden ? [] : budget);
 
       videos.forEach((video) => {
         if (allowed.has(video)) {
-          if (video.preload === "none") video.preload = "auto";
+          warm(video);
           void video.play().catch(() => {});
         } else {
           video.pause();
@@ -285,6 +318,47 @@ const ROW_SPEED = [9000, 6800];
       { threshold: 0.25 },
     );
     videos.forEach((video) => tileObserver.observe(video));
+
+    /**
+     * The bands are the section directly under the hero, so any scroll at all
+     * is already a request for them. Waiting for a tile to cross the edge of
+     * the screen means the band arrives holding its poster while the fetch
+     * starts; warming the leading tiles on the first sign of scroll buys that
+     * back, and costs nothing to a visitor who never leaves the hero.
+     * Everything past those tiles still waits for the observer.
+     *
+     * Intent rather than position: wheel and touch fire before the page has
+     * moved a pixel, and Lenis eases the window's own scroll, so the native
+     * scroll event still arrives for every other input.
+     */
+    const connection = (
+      navigator as Navigator & {
+        connection?: { saveData?: boolean; effectiveType?: string };
+      }
+    ).connection;
+    const metered =
+      connection?.saveData === true || /(^|-)2g$/.test(connection?.effectiveType ?? "");
+
+    if (!metered) {
+      const warmLeadingTiles = () => {
+        bandVideos.forEach((list) => nearestToCentre(list, WARM_PER_BAND).forEach(warm));
+      };
+
+      const intents = ["scroll", "wheel", "touchstart", "keydown"] as const;
+      const onFirstIntent = () => {
+        intents.forEach((intent) => window.removeEventListener(intent, onFirstIntent));
+        // Off the input's own frame: a fetch must not compete with the scroll
+        // that asked for it.
+        if (typeof window.requestIdleCallback === "function") {
+          window.requestIdleCallback(warmLeadingTiles, { timeout: 500 });
+        } else {
+          window.setTimeout(warmLeadingTiles, 200);
+        }
+      };
+      intents.forEach((intent) =>
+        window.addEventListener(intent, onFirstIntent, { passive: true }),
+      );
+    }
 
     // The budget is decided by horizontal position, which the travel keeps
     // changing, so it has to be re-decided as the bands move rather than

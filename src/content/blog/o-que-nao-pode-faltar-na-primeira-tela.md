@@ -3,6 +3,9 @@ title: "O que não pode faltar na primeira tela do seu site"
 description: "Quatro elementos que decidem se a pessoa continua ou fecha, e o erro mais comum de todos."
 publishedAt: 2026-09-04
 readingMinutes: 4
+category: conteudo
+cover: ../../assets/img/blog/o-que-nao-pode-faltar-na-primeira-tela.webp
+coverAlt: "Ilustração de um navegador com a faixa superior iluminada e um botão em destaque."
 ---
 
 A primeira tela é o que aparece antes de qualquer rolagem. É o único espaço do

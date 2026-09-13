@@ -82,6 +82,10 @@ const website = {
         <script type="application/ld+json" set:html={JSON.stringify(entry)} />
       ))
     }
+
+    {/* For the handful of head tags only one route knows about — the blog
+        listing's rel=prev/next, so far. */}
+    <slot name="head" />
   </head>
 
   <body>

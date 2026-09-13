@@ -9,7 +9,8 @@
     "preview": "astro preview",
     "check": "astro check",
     "deploy": "npm run build && wrangler deploy",
-    "check:worker": "tsc -p worker/tsconfig.json --noEmit"
+    "check:worker": "tsc -p worker/tsconfig.json --noEmit",
+    "covers": "node scripts/blog-covers.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.10",
