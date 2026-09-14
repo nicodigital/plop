@@ -72,7 +72,7 @@
   }
 
   .post-card__excerpt {
-    @apply mt-3 min-h-[5rem] leading-[1.3] opacity-85;
+    @apply mt-3 min-h-[5rem] leading-[1.3] opacity-85 font-[500];
   }
 
   .post-card__meta {

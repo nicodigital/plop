@@ -5,7 +5,7 @@
    remains the licensed face to swap in here when it arrives — the Fontspring
    demo cannot ship, it stamps a "DEMO" glyph over "$" and "4". */
 @import "@fontsource-variable/quicksand/index.css";
-@import "@fontsource-variable/outfit/index.css";
+@import "@fontsource-variable/manrope/index.css";
 
 /* Component styles. Everything past this point in the file is tokens, base
    element styles and global utilities; anything with its own selector family
@@ -76,7 +76,7 @@
   --color-plop-hairline: var(--color-plop-blue-200);
 
   --font-display: "Quicksand Variable", system-ui, sans-serif;
-  --font-sans: "Outfit Variable", system-ui, -apple-system, sans-serif;
+  --font-sans: "Manrope Variable", system-ui, -apple-system, sans-serif;
 
   /* Breakpoints. Tailwind ships sm/md/lg/xl/2xl; the extra steps are the
      widths this layout actually changes at — xg for the tablet-to-laptop
@@ -169,6 +169,7 @@
     color: var(--color-plop-ink);
     font-family: var(--font-sans);
     font-size: var(--text-base);
+    font-weight: 500;
     line-height: 1.4;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;

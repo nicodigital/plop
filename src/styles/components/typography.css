@@ -16,10 +16,10 @@ html {
 
   /* Fluid display ramp: headline sizes that interpolate with the viewport. */
   --text-display: clamp(3.25rem, 7vw, 6.5rem);
-  --text-h1: clamp(2.75rem, 4.5vw, 5.5rem);
+  --text-h1: clamp(2.5rem, 4.3vw, 5.5rem);
   --text-h2: clamp(2.125rem, 3.6vw, 3.75rem);
   --text-h3: clamp(1.375rem, 2.2vw, 2rem);
-  --text-lead: clamp(1.125rem, 1.5vw, 1.2rem);
+  --text-lead: clamp(0.9rem, 1.3vw, 1.1rem);
 
   /* UI ramp: fixed steps for labels, captions, metadata and card titles,
      separate from the fluid display ramp above. */
@@ -50,7 +50,6 @@ html {
 
   @variant xg {
     --text-html: 12px;
-    --text-base: 1.1rem;
   }
 
   @variant lg {
