@@ -22,4 +22,18 @@ const blog = defineCollection({
     }),
 });
 
-export const collections = { blog };
+/**
+ * Legal copy lives in the collection rather than inside the page so the text
+ * has one source: the rendered page and its `.md` sibling are the same body,
+ * and a clause can never be updated in one and forgotten in the other.
+ */
+const legal = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/legal" }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    updatedAt: z.coerce.date(),
+  }),
+});
+
+export const collections = { blog, legal };

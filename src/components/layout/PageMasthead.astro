@@ -15,11 +15,13 @@ interface Props {
 const { title, intro } = Astro.props;
 ---
 
-<section class="on-blue">
+<section class="on-blue" aria-labelledby="masthead-titulo">
   <div
     class="shell pb-[clamp(48px,7vw,88px)] pt-[clamp(160px,20vh,300px)]"
   >
-    <h1 class="max-w-[18ch] text-[length:var(--text-h1)]">{title}</h1>
+    <h1 id="masthead-titulo" class="max-w-[18ch] text-[length:var(--text-h1)]">
+      {title}
+    </h1>
     {
       intro && (
         <p class="muted measure mt-7 text-[length:var(--text-lead)] max-w-[40ch]">

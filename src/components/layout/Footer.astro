@@ -13,12 +13,12 @@ const year = new Date().getFullYear();
   every CTA and the nav point at, so the id belongs on the block that holds
   the invitation and the form, not on the form element itself.
 */}
-<footer id="contato" class="on-ink">
+<footer id="contato" class="on-ink" aria-labelledby="contato-titulo">
   <GooeyStack variant="b">
     <div class="shell py-[clamp(56px,10vw,150px)]">
       <div class="spine-grid">
         <div>
-          <h2 class="text-[length:var(--text-h2)]">
+          <h2 id="contato-titulo" class="text-[length:var(--text-h2)]">
             Bora começar<br />
             o <span class="text-plop-lime">seu site</span>.
           </h2>
@@ -29,7 +29,10 @@ const year = new Date().getFullYear();
 
           {/* The long lead-in is a desktop rhythm; on a phone it is a blank
               screenful between the invitation and the way to answer it. */}
-          <dl class="mt-8 flex flex-col gap-6 pt-2 lg:mt-10 lg:gap-10 lg:pt-20">
+          <dl
+            class="mt-8 flex flex-col gap-6 pt-2 lg:mt-10 lg:gap-10 lg:pt-20"
+            aria-label="Canais de contato diretos"
+          >
             <div>
               <dt class="muted flex items-center gap-2 font-semibold">
                 <Icon name={HAS_WHATSAPP ? "phone" : "send"} size={22} class="shrink-0" />
@@ -63,14 +66,14 @@ const year = new Date().getFullYear();
         </div>
 
         <div class="rounded-[var(--radius-plop-xl)] bg-white/20 border border-blue-300 p-[clamp(24px,5vw,50px)] [corner-shape:squircle] backdrop-blur-xs anim" data-anim="bottom" data-delay="200">
-          <h3 class="text-[length:var(--text-h3)] text-white">
+          <h3 id="contato-form-titulo" class="text-[length:var(--text-h3)] text-white">
             Entre em contato
           </h3>
           <p class="mt-2 text-white">
             Todos os campos, menos o último, são necessários para responder direito.
           </p>
           <div class="relative mt-7">
-            <ContactForm id="footer-contato" />
+            <ContactForm id="footer-contato" labelledBy="contato-form-titulo" />
           </div>
         </div>
       </div>

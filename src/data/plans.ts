@@ -80,3 +80,10 @@ export const formatBRL = (value: number): string =>
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(value);
+
+/**
+ * Entry price of the cheapest plan. The figure the home, the meta description
+ * and the Organization graph all quote, derived once so they cannot disagree
+ * with the cards.
+ */
+export const entryPrice = (): number => Math.min(...PLANS.map((plan) => plan.setup));

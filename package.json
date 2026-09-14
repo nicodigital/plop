@@ -10,7 +10,8 @@
     "check": "astro check",
     "deploy": "npm run build && wrangler deploy",
     "check:worker": "tsc -p worker/tsconfig.json --noEmit",
-    "covers": "node scripts/blog-covers.mjs"
+    "covers": "node scripts/blog-covers.mjs",
+    "og": "node scripts/og-image.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.10",

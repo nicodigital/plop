@@ -1,61 +1,39 @@
 ---
+/**
+ * The policy text itself lives in the `legal` collection, not here: the same
+ * body feeds this page and its `/privacidade.md` sibling, so the two can never
+ * drift apart.
+ */
+import { getEntry, render } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageMasthead from "../components/layout/PageMasthead.astro";
 import GooeyStack from "../components/layout/GooeyStack.astro";
-import { CONTACT_EMAIL, SITE_NAME } from "../data/site.ts";
+import { breadcrumbSchema, pageSchema } from "../data/schema.ts";
+
+const entry = await getEntry("legal", "privacidade");
+if (!entry) throw new Error("Missing legal entry: privacidade");
+
+const { Content } = await render(entry);
+const { title, description } = entry.data;
+
+const schema = [
+  pageSchema({ name: title, description, path: "/privacidade/" }),
+  breadcrumbSchema([{ name: title }]),
+];
 ---
 
-<BaseLayout
-  title="Política de privacidade"
-  description="Quais dados o site coleta, para que servem e como pedir a exclusão."
->
+<BaseLayout title={title} description={description} schema={schema}>
   <GooeyStack>
-  <PageMasthead title="Política de privacidade" />
+    <PageMasthead title={title} />
   </GooeyStack>
 
-  <section class="on-white bg-white py-[clamp(56px,8vw,110px)]">
+  <section
+    class="on-white bg-white py-[clamp(56px,8vw,110px)]"
+    aria-label={title}
+  >
     <div class="shell">
       <div class="prose-plop">
-        <h2>Quais dados coletamos</h2>
-        <p>
-          Apenas o que você escreve no formulário de contato: nome, negócio,
-          e-mail, WhatsApp, plano de interesse e mensagem. Não há cadastro, não
-          há área logada e não pedimos documento nem dado de pagamento pelo site.
-        </p>
-
-        <h2>Para que usamos</h2>
-        <p>
-          Exclusivamente para responder ao seu contato e, se você contratar,
-          conduzir o trabalho. Não vendemos, alugamos nem compartilhamos esses
-          dados com terceiros para fins de marketing.
-        </p>
-
-        <h2>Por quanto tempo guardamos</h2>
-        <p>
-          Mensagens sem continuidade comercial são descartadas depois de 12
-          meses. Dados de clientes ativos são mantidos enquanto durar a
-          prestação do serviço e pelo prazo legal aplicável depois dela.
-        </p>
-
-        <h2>Cookies e medição</h2>
-        <p>
-          O site não usa cookies de publicidade nem rastreamento entre sites. Se
-          uma ferramenta de medição de audiência for adicionada, esta página será
-          atualizada antes de ela entrar no ar.
-        </p>
-
-        <h2>Seus direitos</h2>
-        <p>
-          Pela LGPD (Lei 13.709/2018) você pode pedir acesso, correção ou
-          exclusão dos seus dados a qualquer momento. Escreva para
-          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> e a solicitação
-          é atendida em até 15 dias.
-        </p>
-
-        <h2>Responsável</h2>
-        <p>
-          {SITE_NAME} — contato por <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
-        </p>
+        <Content />
       </div>
     </div>
   </section>

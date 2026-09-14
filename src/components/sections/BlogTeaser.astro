@@ -17,10 +17,15 @@ const posts = (await getCollection("blog", ({ data }) => !data.draft))
 
 {
   posts.length > 0 && (
-    <section id="blog" class="on-white py-[clamp(64px,8vw,96px)]">
+    <section
+      id="blog"
+      class="on-white py-[clamp(64px,8vw,96px)]"
+      aria-labelledby="blog-titulo"
+    >
       <div class="shell">
         <div class="mx-auto mb-[clamp(40px,6vw,80px)] max-w-[40rem]">
           <h2
+            id="blog-titulo"
             class="anim mb-6 text-center text-[length:var(--text-h2)] lg:mb-10"
             data-anim="bottom"
             data-delay="200"

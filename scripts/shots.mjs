@@ -14,7 +14,7 @@ const VIEWPORTS = [
 
 const ROUTES = process.env.ROUTES
   ? process.env.ROUTES.split(",")
-  : ["/", "/planos/", "/projetos/", "/blog/", "/contato/"];
+  : ["/", "/blog/", "/privacidade/"];
 
 const slug = (route) =>
   route === "/" ? "home" : route.replace(/^\/|\/$/g, "").replace(/\//g, "-");

@@ -4,9 +4,16 @@ import Button from "./Button.astro";
 interface Props {
   /** Distinguishes the footer instance from the /contato/ page instance. */
   id?: string;
+  /**
+   * Id of the heading that already introduces the form on the surface
+   * mounting it. A <form> is only a landmark once it has a name, and the
+   * heading is the name — repeating it in an aria-label would announce the
+   * same words twice.
+   */
+  labelledBy?: string;
 }
 
-const { id = "contato", plan } = Astro.props;
+const { id = "contato", labelledBy } = Astro.props;
 const field =
   "w-full rounded-[var(--radius-plop-md)] [corner-shape:squircle] bg-white px-4 py-3 border-2 border-transparent text-plop-ink transition-colors duration-[var(--duration-fast)] placeholder:text-plop-on-white/60 focus:border-plop-blue-700 focus:outline-none focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-plop-lime";
 const label = "block font-semibold text-ui text-white";
@@ -18,6 +25,8 @@ const label = "block font-semibold text-ui text-white";
   method="post"
   action="/api/contato"
   novalidate
+  aria-labelledby={labelledBy}
+  aria-label={labelledBy ? undefined : "Formulário de contato"}
   data-contact-form
 >
   <div class="grid gap-5 sm:grid-cols-2">
@@ -35,6 +44,7 @@ const label = "block font-semibold text-ui text-white";
       <p
         class="hidden text-small font-semibold text-plop-pink"
         id={`${id}-nome-erro`}
+        aria-live="polite"
         data-error-for="nome"
       >
       </p>
@@ -54,6 +64,7 @@ const label = "block font-semibold text-ui text-white";
       <p
         class="hidden text-small font-semibold text-plop-pink"
         id={`${id}-negocio-erro`}
+        aria-live="polite"
         data-error-for="negocio"
       >
       </p>
@@ -73,6 +84,7 @@ const label = "block font-semibold text-ui text-white";
       <p
         class="hidden text-small font-semibold text-plop-pink"
         id={`${id}-email-erro`}
+        aria-live="polite"
         data-error-for="email"
       >
       </p>
@@ -94,6 +106,7 @@ const label = "block font-semibold text-ui text-white";
       <p
         class="hidden text-small font-semibold text-plop-pink"
         id={`${id}-whatsapp-erro`}
+        aria-live="polite"
         data-error-for="whatsapp"
       >
       </p>

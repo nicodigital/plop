@@ -1,6 +1,6 @@
 ---
 title: "Seu site aguenta a temporada?"
-description: "Todo negócio tem seu mês cheio. O site é justamente a parte que costuma cair quando a procura chega."
+description: "Todo negócio tem seu mês cheio, e o site costuma ser a parte que cai quando a procura chega. Por que isso acontece e o que checar antes."
 publishedAt: 2026-09-11
 readingMinutes: 4
 category: performance

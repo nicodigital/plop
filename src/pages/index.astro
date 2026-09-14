@@ -9,24 +9,29 @@ import Faq from "../components/sections/Faq.astro";
 import BlogTeaser from "../components/sections/BlogTeaser.astro";
 import FinalCta from "../components/sections/FinalCta.astro";
 import GooeyStack from "../components/layout/GooeyStack.astro";
-import { FAQ } from "../data/faq.ts";
+import { faqSchema, pageSchema, plansSchema, projectsSchema } from "../data/schema.ts";
+import { SITE_DESCRIPTION } from "../data/site.ts";
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: FAQ.map((item) => ({
-    "@type": "Question",
-    name: item.question,
-    acceptedAnswer: { "@type": "Answer", text: item.answer },
-  })),
-};
+const title = "Sites profissionais para pequenos negócios";
+/* The site-wide sentence, which quotes the entry price straight from
+   `plans.ts`. It used to be typed here and had drifted a plan behind. */
+const description = SITE_DESCRIPTION;
+
+/**
+ * The home carries the whole offer, so it carries the whole graph: the page
+ * itself, the questions, the three plans and the delivered work. The plan
+ * anchors point at this page because the cards are rendered here — a rich
+ * result for "Profissional" should land on the card, not on another route.
+ */
+const schema = [
+  pageSchema({ type: "WebPage", name: title, description, path: "/" }),
+  faqSchema(),
+  plansSchema("/"),
+  projectsSchema(),
+];
 ---
 
-<BaseLayout
-  title="Sites profissionais para pequenos negócios"
-  description="Sites modernos, rápidos e fáceis de gerenciar. Entrada a partir de R$ 900 e mensalidade com hospedagem, suporte e manutenção incluídos."
-  schema={faqSchema}
->
+<BaseLayout title={title} description={description} schema={schema}>
 {/*
     One liquid ground for the whole blue stretch: pinned behind the three
     sections so they read as one body the page scrolls over, not as three

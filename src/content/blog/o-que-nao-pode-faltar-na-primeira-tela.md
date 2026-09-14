@@ -1,6 +1,6 @@
 ---
 title: "O que não pode faltar na primeira tela do seu site"
-description: "Quatro elementos que decidem se a pessoa continua ou fecha, e o erro mais comum de todos."
+description: "Quatro elementos decidem se a pessoa continua ou fecha o seu site. Quais são, o erro mais comum de todos e um teste rápido para fazer hoje."
 publishedAt: 2026-09-04
 readingMinutes: 4
 category: conteudo

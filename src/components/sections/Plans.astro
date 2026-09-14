@@ -18,13 +18,19 @@ const {
 ---
 
 <section
-  class="on-white py-[var(--section-space)]"
+  class="on-white py-[var(--section-space)] focus-visible:outline-none"
   id="planos"
+  aria-labelledby="planos-titulo"
   data-plans-section
 >
   <div class="shell">
     <div class="max-w-[42rem] mx-auto">
-      <Heading class="text-[length:var(--text-h2)] text-center anim" data-anim="bottom" data-delay="200" >
+      <Heading
+        id="planos-titulo"
+        class="text-[length:var(--text-h2)] text-center anim"
+        data-anim="bottom"
+        data-delay="200"
+      >
         <Fragment set:html={heading} />
       </Heading>
       <p class="measure mt-6 text-[length:var(--text-lead)] leading-[1.3] text-plop-blue-deep text-center anim" data-anim="bottom" data-delay="400">
@@ -37,10 +43,12 @@ const {
       and monthly fee each sit at one height down the whole table. A price is
       read by comparison; it must not move between columns.
     */}
-    <ul class="plan-table mt-[clamp(40px,5vw,72px)]">
+    <ul class="plan-table mt-[clamp(40px,5vw,72px)]" aria-label="Planos e preços">
       {
         PLANS.map((plan, index) => (
           <li
+            id={plan.slug}
+            aria-labelledby={`plano-${plan.slug}-nome`}
             class:list={[
               "plan-card flex flex-col rounded-[var(--radius-plop-xl)] p-[clamp(24px,2.6vw,36px)] [corner-shape:squircle] anim",
               plan.recommended
@@ -52,6 +60,7 @@ const {
           >
             <div class="flex items-center gap-3">
               <h3
+                id={`plano-${plan.slug}-nome`}
                 class:list={[
                   "font-display text-h4 font-semibold",
                   plan.recommended ? "text-white" : "text-plop-ink",

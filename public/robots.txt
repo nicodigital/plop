@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://plopsites.com.br/sitemap-index.xml

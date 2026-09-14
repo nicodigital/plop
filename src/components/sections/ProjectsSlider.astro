@@ -34,10 +34,16 @@ const ROW_SPEED = [9000, 6800];
 <section
   id="projetos"
   class="on-blue relative flex flex-col justify-center py-[var(--section-space)] lg:min-h-svh lg:py-[clamp(72px,8vh,120px)]"
+  aria-labelledby="projetos-titulo"
 >
   <div class="shell">
     <div class="max-w-[44rem] mx-auto pb-10 lg:pb-15">
-      <Heading class="text-[length:var(--text-h2)] text-center anim" data-anim="bottom" data-delay="200" >
+      <Heading
+        id="projetos-titulo"
+        class="text-[length:var(--text-h2)] text-center anim"
+        data-anim="bottom"
+        data-delay="200"
+      >
         <Fragment set:html={heading} />
       </Heading>
       <p class="muted balanced-breaks mt-6 text-center text-[length:var(--text-lead)] leading-[1.3] anim" data-anim="bottom" data-delay="400">
@@ -64,7 +70,10 @@ const ROW_SPEED = [9000, 6800];
           data-row={rowIndex}
           data-speed={ROW_SPEED[rowIndex]}
         >
-          <ul class="swiper-wrapper !list-none">
+          {/* `list-style: none` strips list semantics in Safari, so the role is
+              restored by hand — the band is a list of projects, and the count
+              is what tells a screen-reader user how much work is here. */}
+          <ul class="swiper-wrapper !list-none" role="list">
             {row.map((project) => {
               /* A tile with a live site is a link; one without is just a tile.
                  An <a> with no href is neither focusable nor announced, so it
@@ -78,7 +87,9 @@ const ROW_SPEED = [9000, 6800];
                 <li class="swiper-slide !h-auto">
                   <article class="h-full">
                     <Tile class="tile flex h-full flex-col" {...linkProps}>
-                      <figure class="card-swiper">
+                      {/* The capture is decoration: the sector and the description below
+                         carry everything the tile claims. */}
+                      <figure class="card-swiper" aria-hidden="true">
                         <video
                           class="size-full object-cover"
                           muted

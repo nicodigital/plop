@@ -32,10 +32,15 @@ const groups: { title: string; icon: IconName; items: string[] }[] = [
 ];
 ---
 
-<section id="servico" class="on-ink relative py-[var(--section-space)]">
+<section
+  id="servico"
+  class="on-ink relative py-[var(--section-space)]"
+  aria-labelledby="servico-titulo"
+>
   <div class="shell">
     <div class="mx-auto max-w-[56rem] text-center">
       <h2
+        id="servico-titulo"
         class="mx-auto max-w-[20ch] text-[length:var(--text-h2)]"
       >
         <span class="anim" data-anim="bottom" data-delay="200" >
@@ -64,12 +69,16 @@ const groups: { title: string; icon: IconName; items: string[] }[] = [
     </div>
 
     <h3
+      id="servico-recebe"
       class="mt-[clamp(56px,7vw,96px)] text-center text-[length:var(--text-h4)] text-white"
     >
       Você recebe
     </h3>
 
-    <ul class="mt-[clamp(32px,3.5vw,48px)] grid gap-[clamp(16px,2vw,60px)] md:grid-cols-3">
+    <ul
+      class="mt-[clamp(32px,3.5vw,48px)] grid gap-[clamp(16px,2vw,60px)] md:grid-cols-3"
+      aria-labelledby="servico-recebe"
+    >
       {
         /* The tall minimum on the card exists to level three of them standing
            side by side. Stacked on a phone there is nothing to level, and it

@@ -5,12 +5,20 @@ import ProjectsSlider from "../components/sections/ProjectsSlider.astro";
 import FinalCta from "../components/sections/FinalCta.astro";
 import GooeyStack from "../components/layout/GooeyStack.astro";
 import { PROJECTS } from "../data/projects.ts";
+import { breadcrumbSchema, pageSchema, projectsSchema } from "../data/schema.ts";
+
+const title = "Projetos";
+const description =
+  "Sites reais entregues e no ar, apresentados por setor: arquitetura, farmacêutica, cibersegurança, audiovisual e mais.";
+
+const schema = [
+  pageSchema({ type: "CollectionPage", name: title, description, path: "/projetos/" }),
+  breadcrumbSchema([{ name: "Projetos" }]),
+  projectsSchema(),
+];
 ---
 
-<BaseLayout
-  title="Projetos"
-  description="Sites reais entregues e no ar, apresentados por setor: arquitetura, farmacêutica, cibersegurança, audiovisual e mais."
->
+<BaseLayout title={title} description={description} schema={schema}>
   <GooeyStack>
     <PageMasthead
       title="Trabalho entregue, no ar."
@@ -23,13 +31,19 @@ import { PROJECTS } from "../data/projects.ts";
     />
   </GooeyStack>
 
-  <section class="on-white bg-white py-[var(--section-space)]">
+  <section
+    class="on-white bg-white py-[var(--section-space)]"
+    aria-labelledby="setores-titulo"
+  >
     <div class="shell">
-      <h2 class="max-w-[22ch] text-[length:var(--text-h2)]">
+      <h2 id="setores-titulo" class="max-w-[22ch] text-[length:var(--text-h2)]">
         Os setores que já passaram por aqui.
       </h2>
 
-      <ul class="mt-[clamp(36px,4vw,60px)] grid gap-x-10 sm:grid-cols-2 lg:grid-cols-3">
+      <ul
+        class="mt-[clamp(36px,4vw,60px)] grid gap-x-10 sm:grid-cols-2 lg:grid-cols-3"
+        aria-labelledby="setores-titulo"
+      >
         {
           PROJECTS.map((project) => (
             <li class="border-t border-plop-hairline py-6">

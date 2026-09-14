@@ -1,14 +1,19 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Button from "../components/ui/Button.astro";
+import { PLANS_ANCHOR } from "../data/nav.ts";
 ---
 
 <BaseLayout
   title="Página não encontrada"
-  description="Esta página não existe ou mudou de endereço."
+  description="Esta página não existe ou mudou de endereço. Volte ao início para ver os planos, os projetos entregues e o formulário de contato."
   noindex
+  markdown={false}
 >
-  <section class="on-blue relative isolate flex min-h-[70svh] items-center overflow-hidden bg-plop-blue-deep">
+  <section
+    class="on-blue relative isolate flex min-h-[70svh] items-center overflow-hidden bg-plop-blue-deep"
+    aria-labelledby="erro-titulo"
+  >
     <div
       class="pointer-events-none absolute -right-[10%] -top-[52%] -z-10 size-[min(64vw,680px)] rounded-full bg-[radial-gradient(circle_at_44%_58%,color-mix(in_srgb,var(--color-plop-blue)_82%,transparent),transparent_70%)]"
       aria-hidden="true"
@@ -16,7 +21,7 @@ import Button from "../components/ui/Button.astro";
     </div>
 
     <div class="shell py-[clamp(96px,14vh,160px)]">
-      <h1 class="max-w-[16ch] text-[length:var(--text-h1)]">
+      <h1 id="erro-titulo" class="max-w-[16ch] text-[length:var(--text-h1)]">
         Essa página não existe.
       </h1>
       <p class="muted mt-5 text-ui font-semibold" data-numeric>Erro 404</p>
@@ -25,7 +30,7 @@ import Button from "../components/ui/Button.astro";
       </p>
       <div class="mt-9 flex flex-wrap gap-3">
         <Button href="/" size="lg">Voltar ao início</Button>
-        <Button href="/planos/" variant="outline" size="lg">Ver planos</Button>
+        <Button href={PLANS_ANCHOR} variant="outline" size="lg">Ver planos</Button>
       </div>
     </div>
   </section>

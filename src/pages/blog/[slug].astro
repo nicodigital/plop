@@ -2,13 +2,15 @@
 import { getCollection, render } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 import type { GetStaticPaths } from "astro";
-import { Image } from "astro:assets";
+import { Image, getImage } from "astro:assets";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Button from "../../components/ui/Button.astro";
 import Icon from "../../components/ui/Icon.astro";
 import GooeyStack from "../../components/layout/GooeyStack.astro";
-import { SITE_NAME, SITE_URL } from "../../data/site.ts";
+import { SITE_URL } from "../../data/site.ts";
+import { PLANS_ANCHOR } from "../../data/nav.ts";
 import { BLOG_AUTHOR, BLOG_CATEGORIES, formatPostDate } from "../../data/blog.ts";
+import { ORGANIZATION_ID, WEBSITE_ID, breadcrumbSchema } from "../../data/schema.ts";
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const posts = await getCollection("blog", ({ data }) => !data.draft);
@@ -23,45 +25,77 @@ const { post } = Astro.props;
 const { Content } = await render(post);
 const cover = post.data.cover;
 
+/* The cover again, cropped to the social-card ratio and encoded as JPEG.
+   The cover itself is a 16:9 WebP, which WhatsApp will not preview and
+   LinkedIn crops unpredictably. */
+const ogCard = await getImage({
+  src: cover,
+  width: 1200,
+  height: 630,
+  format: "jpg",
+  fit: "cover",
+});
 
+const publishedTime = post.data.publishedAt.toISOString();
+const modifiedTime = (post.data.updatedAt ?? post.data.publishedAt).toISOString();
+
+
+const url = new URL(`/blog/${post.id}/`, SITE_URL).href;
+
+/**
+ * BlogPosting rather than the bare Article this route used to emit: it is the
+ * type Google reads for an article rich result, and it is what the listing
+ * page already calls these posts. Publisher and site are references to the
+ * site-wide nodes in the layout, so there is one business in the graph.
+ */
 const schema = {
   "@context": "https://schema.org",
-  "@type": "Article",
+  "@type": "BlogPosting",
+  "@id": `${url}#article`,
   headline: post.data.title,
   description: post.data.description,
-  image: new URL(cover.src, SITE_URL).href,
+  image: {
+    "@type": "ImageObject",
+    url: new URL(cover.src, SITE_URL).href,
+    width: cover.width,
+    height: cover.height,
+  },
   articleSection: BLOG_CATEGORIES[post.data.category],
   datePublished: post.data.publishedAt.toISOString(),
   dateModified: (post.data.updatedAt ?? post.data.publishedAt).toISOString(),
   inLanguage: "pt-BR",
-  author: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
-  publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
-  mainEntityOfPage: new URL(`/blog/${post.id}/`, SITE_URL).href,
+  /* Authored as minutes on the post, so the reading time in the rich result
+     and the one under the title can never disagree. ISO 8601 duration. */
+  timeRequired: `PT${post.data.readingMinutes}M`,
+  author: { "@type": "Organization", name: BLOG_AUTHOR, url: SITE_URL },
+  publisher: { "@id": ORGANIZATION_ID },
+  isPartOf: { "@id": WEBSITE_ID },
+  mainEntityOfPage: { "@type": "WebPage", "@id": url },
+  url,
 };
 
-const breadcrumbs = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Início", item: SITE_URL },
-    {
-      "@type": "ListItem",
-      position: 2,
-      name: "Blog",
-      item: new URL("/blog/", SITE_URL).href,
-    },
-    { "@type": "ListItem", position: 3, name: post.data.title },
-  ],
-};
+const breadcrumbs = breadcrumbSchema([
+  { name: "Blog", path: "/blog/" },
+  { name: post.data.title },
+]);
 ---
 
 <BaseLayout
   title={post.data.title}
   description={post.data.description}
-  image={cover.src}
+  image={ogCard.src}
+  imageAlt={post.data.coverAlt}
+  imageWidth={1200}
+  imageHeight={630}
+  ogType="article"
+  article={{
+    publishedTime,
+    modifiedTime,
+    section: BLOG_CATEGORIES[post.data.category],
+  }}
   schema={[schema, breadcrumbs]}
 >
-  <article>
+  <article aria-labelledby="post-titulo">
     {/* The same liquid ground every other route opens on, instead of the flat
         blue panel this one used to paint for itself. The stack owns the wash,
         so the header stays transparent. */}
@@ -83,7 +117,7 @@ const breadcrumbs = {
           <div class="mx-auto mt-6 max-w-[52rem] text-center">
             <p class="post-pill">{BLOG_CATEGORIES[post.data.category]}</p>
 
-            <h1 class="mx-auto mt-6 max-w-[20ch] text-[length:var(--text-h1)]">
+            <h1 id="post-titulo" class="mx-auto mt-6 max-w-[20ch] text-[length:var(--text-h1)]">
               {post.data.title}
             </h1>
 
@@ -93,7 +127,7 @@ const breadcrumbs = {
               {post.data.description}
             </p>
 
-            <dl class="post-meta">
+            <dl class="post-meta" aria-label="Dados do texto">
               <div>
                 <dt class="eyebrow">Data</dt>
                 <dd data-numeric>
@@ -139,8 +173,9 @@ const breadcrumbs = {
 
         <aside
           class="mx-auto mt-[clamp(56px,7vw,96px)] max-w-[68ch] rounded-[var(--radius-plop-xl)] bg-plop-paper p-[clamp(28px,4vw,48px)]"
+          aria-labelledby="post-cta-titulo"
         >
-          <h2 class="text-[length:var(--text-h3)]">
+          <h2 id="post-cta-titulo" class="text-[length:var(--text-h3)]">
             Quer isso resolvido sem ler mais nada?
           </h2>
           <p class="muted mt-3">
@@ -148,7 +183,7 @@ const breadcrumbs = {
             todo mês, com preço fechado.
           </p>
           <div class="mt-7 flex flex-wrap gap-3">
-            <Button href="/planos/" variant="solid-ink" data-track="blog_cta_click">
+            <Button href={PLANS_ANCHOR} variant="solid-ink" data-track="blog_cta_click">
               Ver planos
             </Button>
           </div>

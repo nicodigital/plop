@@ -30,10 +30,16 @@ const {
   ...rest
 } = Astro.props;
 
+/** Ties the card link to its own title, so the link is named by the post. */
+const titleId = `post-${post.id}-titulo`;
+
 ---
 
-<article class:list={["post-card", className]} {...rest}>
-  <a class="post-card__link" href={`/blog/${post.id}/`}>
+<article class:list={["post-card", className]} {...rest} aria-labelledby={titleId}>
+  {/* The whole card is the link, so without a name of its own it would be
+      announced as title + excerpt + date in one run. Pointing it at the title
+      keeps the link list on the listing page readable. */}
+  <a class="post-card__link" href={`/blog/${post.id}/`} aria-labelledby={titleId}>
     <div class="post-card__frame">
       <div class="post-card__media">
         <Image
@@ -53,7 +59,7 @@ const {
       </span>
     </div>
 
-    <Heading class="post-card__title">{post.data.title}</Heading>
+    <Heading class="post-card__title" id={titleId}>{post.data.title}</Heading>
     <p class="muted post-card__excerpt">{post.data.description}</p>
     <p class="muted post-card__meta" data-numeric>
       <time datetime={post.data.publishedAt.toISOString()}>

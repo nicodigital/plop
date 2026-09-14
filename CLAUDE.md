@@ -642,6 +642,11 @@ Run performance tests after major media or interaction changes.
 
 ## 17. SEO
 
+`SEO.md` documents how this is wired: the metadata contract on `BaseLayout`,
+the JSON-LD builders, the markdown mirrors and `llms.txt`, `robots.txt`, the
+sitemap options and the social card. Read it before adding a page or touching
+anything a crawler sees.
+
 Pages must be server-rendered/pre-rendered HTML and crawlable without JavaScript.
 
 Implement:

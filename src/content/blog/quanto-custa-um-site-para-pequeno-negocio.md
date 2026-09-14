@@ -1,6 +1,6 @@
 ---
 title: "Quanto custa um site para pequeno negócio (e por que ninguém te diz)"
-description: "Entrada, mensalidade, domínio, hospedagem. O que cada item significa e o que muda o preço de verdade."
+description: "Entrada, mensalidade, domínio e hospedagem: o que cada item significa, o que realmente muda o preço e três perguntas para fazer antes de fechar."
 publishedAt: 2026-08-14
 readingMinutes: 6
 category: negocio

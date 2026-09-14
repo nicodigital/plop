@@ -9,11 +9,20 @@ interface Props {
 const { headingLevel: Heading = "h2" } = Astro.props;
 ---
 
-<section id="duvidas" class="on-white py-[clamp(64px,8vw,96px)]">
+<section
+  id="duvidas"
+  class="on-white py-[clamp(64px,8vw,96px)]"
+  aria-labelledby="duvidas-titulo"
+>
   <div class="shell">
 
       <div class="mx-auto mb-[clamp(40px,6vw,80px)] max-w-[40rem]">
-        <Heading class="mb-6 text-center text-[length:var(--text-h2)] lg:mb-10 anim" data-anim="bottom" data-delay="200" >
+        <Heading
+          id="duvidas-titulo"
+          class="mb-6 text-center text-[length:var(--text-h2)] lg:mb-10 anim"
+          data-anim="bottom"
+          data-delay="200"
+        >
           Suas dúvidas, nossas respostas
         </Heading>
         <p class="mx-auto mt-6 text-center text-[length:var(--text-lead)] leading-[1.3] text-plop-blue-deep lg:max-w-[35ch] anim" data-anim="bottom" data-delay="400">
