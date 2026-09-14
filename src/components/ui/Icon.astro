@@ -15,6 +15,9 @@ export type IconName =
   | "menu"
   | "close"
   | "whatsapp"
+  | "facebook"
+  | "linkedin"
+  | "x-twitter"
   | "chevron-left"
   | "chevron-right"
   | "play"
@@ -56,6 +59,16 @@ const strokePaths: Partial<Record<IconName, string>> = {
     "M11.5 21H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6M16 3v4M8 3v4m-4 4h16m-5 8 2 2 4-4",
   whatsapp:
     "m3 21 1.65-3.8a9 9 0 1 1 3.4 2.9zM9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0za5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1",
+  /* The three remaining share marks, drawn on the same grid as everything
+     else rather than pasted in as official solid logos: the bar sits inside
+     the article, where a row of vendor brand colours would pull harder than
+     the CTA below it. Each is still the network's own glyph — circled f,
+     boxed "in", the X cross — so it stays recognisable at 20px. */
+  facebook:
+    "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18M15 8.3h-1.4a2.3 2.3 0 0 0-2.3 2.3v10.3M9.4 12.7h5.2",
+  linkedin:
+    "M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2M8 7.6v.01M8 10.6V17M12 17v-6.4M12 13.4a2.6 2.6 0 0 1 5.2 0V17",
+  "x-twitter": "M4 4 20 20M20 4 4 20",
   phone: "M6 5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2zm5-1h2m-1 13v.01",
   email: "M8 12a4 4 0 1 0 8 0 4 4 0 1 0-8 0M16 12v1.5a2.5 2.5 0 0 0 5 0V12a9 9 0 1 0-5.5 8.28",
   question: "M8 8a3.5 3 0 0 1 3.5-3h1A3.5 3 0 0 1 16 8a3 3 0 0 1-2 3 3 4 0 0 0-2 4m0 4v.01",

@@ -4,8 +4,8 @@ description: "O que acontece nos três primeiros segundos, por que o Google mede
 publishedAt: 2026-08-28
 readingMinutes: 5
 category: performance
-cover: ../../assets/img/blog/site-lento-perde-cliente.webp
-coverAlt: "Ilustração de um velocímetro com o ponteiro ainda longe do topo da escala."
+cover: ../../assets/img/blog/site-lento-perde-cliente-isometric.webp
+coverAlt: "Ilustração isométrica de um velocímetro lento diante de um navegador e um servidor, com uma pessoa esperando."
 ---
 
 Quem abre um site no celular, na rua, com sinal ruim, não espera. Fecha e volta

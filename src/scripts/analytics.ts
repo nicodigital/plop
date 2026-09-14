@@ -9,7 +9,8 @@ export type PlopEvent =
   | "whatsapp_click"
   | "contact_submit"
   | "project_view"
-  | "blog_cta_click";
+  | "blog_cta_click"
+  | "post_share";
 
 type Payload = Record<string, string | number | boolean>;
 

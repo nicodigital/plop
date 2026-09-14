@@ -6,6 +6,7 @@ import { Image, getImage } from "astro:assets";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Button from "../../components/ui/Button.astro";
 import Icon from "../../components/ui/Icon.astro";
+import ShareBar from "../../components/ui/ShareBar.astro";
 import GooeyStack from "../../components/layout/GooeyStack.astro";
 import { SITE_URL } from "../../data/site.ts";
 import { PLANS_ANCHOR } from "../../data/nav.ts";
@@ -122,7 +123,7 @@ const breadcrumbs = breadcrumbSchema([
             </h1>
 
             <p
-              class="muted measure mx-auto mt-7 text-[length:var(--text-lead)] leading-[1.4]"
+              class="muted font-light measure mx-auto mt-7 text-[length:var(--text-lead)] leading-[1.4]"
             >
               {post.data.description}
             </p>
@@ -170,6 +171,15 @@ const breadcrumbs = breadcrumbSchema([
         <div class="prose-plop mx-auto mt-[clamp(48px,6vw,88px)]">
           <Content />
         </div>
+
+        {/* Below the text, above the offer: the share row is the reader's
+            action once the article is read, and it must not compete with the
+            CTA for the same moment. Same measure as the prose. */}
+        <ShareBar
+          class="mx-auto mt-[clamp(40px,5vw,64px)] max-w-[68ch]"
+          url={url}
+          title={post.data.title}
+        />
 
         <aside
           class="mx-auto mt-[clamp(56px,7vw,96px)] max-w-[68ch] rounded-[var(--radius-plop-xl)] bg-plop-paper p-[clamp(28px,4vw,48px)]"

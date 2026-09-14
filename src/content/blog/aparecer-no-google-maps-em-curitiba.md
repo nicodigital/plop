@@ -4,8 +4,8 @@ description: "Quem procura serviço perto de casa não rola a página. O que dec
 publishedAt: 2026-09-13
 readingMinutes: 5
 category: curitiba
-cover: ../../assets/img/blog/aparecer-no-google-maps-em-curitiba.webp
-coverAlt: "Ilustração de um marcador de mapa sobre uma grade de ruas, com um raio de busca pontilhado ao redor."
+cover: ../../assets/img/blog/aparecer-no-google-maps-em-curitiba-isometric.webp
+coverAlt: "Ilustração isométrica de um mapa de ruas elevado com um pin, um raio de busca e um ponto de serviço local."
 ---
 
 Alguém no Água Verde procura "conserto de fogão perto de mim". O celular já

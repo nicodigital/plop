@@ -82,7 +82,7 @@ La primera parte de Home utiliza un video de fondo (C:\Proyectos\PLOP\assets\vid
 - Laptop a la derecha.
 - Gran espacio negativo a la izquierda.
 - H1 sugerido: `Seu negócio em destaque.`
-- Eyebrow: `SITES PROFISSIONAIS PARA PEQUENOS NEGÓCIOS`
+- Eyebrow: `SITES PROFISSIONAIS PARA NEGÓCIOS INDEPENDENTES`
 - Copy orientativo:
   `Sites modernos, rápidos e fáceis de gerenciar. Design de alto desempenho com um preço que faz sentido.`
 - CTA primario: `Quero meu site`

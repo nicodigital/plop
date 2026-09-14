@@ -1,0 +1,89 @@
+---
+/**
+ * Share row for a single piece of content. Plain links to each network's
+ * public share endpoint — no SDK, no widget, no client JavaScript: every
+ * href is final at build time, so the bar works before (and without) any
+ * script on the page.
+ */
+import Icon from "./Icon.astro";
+import type { IconName } from "./Icon.astro";
+
+interface Props {
+  /** Absolute URL of the page being shared. Relative URLs break every target. */
+  url: string;
+  title: string;
+  label?: string;
+  class?: string;
+}
+
+const { url, title, label = "Compartilhar", class: className = "" } = Astro.props;
+
+type ShareTarget = {
+  /** Also the analytics value, so a report reads by network. */
+  id: string;
+  name: string;
+  icon: IconName;
+  href: string;
+};
+
+const page = encodeURIComponent(url);
+const text = encodeURIComponent(title);
+
+const targets: ShareTarget[] = [
+  {
+    id: "facebook",
+    name: "Facebook",
+    icon: "facebook",
+    href: `https://www.facebook.com/sharer/sharer.php?u=${page}`,
+  },
+  {
+    id: "twitter",
+    name: "X",
+    icon: "x-twitter",
+    /* x.com/intent/post is the current endpoint; twitter.com/intent/tweet
+       still redirects to it, but redirects cost the visitor a round trip. */
+    href: `https://x.com/intent/post?url=${page}&text=${text}`,
+  },
+  {
+    id: "linkedin",
+    name: "LinkedIn",
+    icon: "linkedin",
+    href: `https://www.linkedin.com/sharing/share-offsite/?url=${page}`,
+  },
+  {
+    id: "whatsapp",
+    name: "WhatsApp",
+    icon: "whatsapp",
+    /* wa.me with no number is the share sheet: it opens the installed app on
+       a phone and WhatsApp Web on a desktop, which is the split we want and
+       the reason this is not an api.whatsapp.com/send link. */
+    href: `https://wa.me/?text=${encodeURIComponent(`${title} ${url}`)}`,
+  },
+];
+---
+
+<div
+  class={`flex flex-wrap items-center justify-between gap-x-6 gap-y-4 border-t-2 border-plop-hairline pt-7 ${className}`}
+>
+  <p class="eyebrow text-plop-on-white">{label}</p>
+
+  <ul class="flex flex-wrap items-center gap-2.5">
+    {
+      targets.map((target) => (
+        <li>
+          <a
+            href={target.href}
+            class="btn btn--share inline-flex size-11 items-center justify-center rounded-full border-2 border-plop-hairline text-plop-ink no-underline hover:border-plop-ink hover:bg-plop-ink hover:text-white"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-track="post_share"
+            data-track-value={target.id}
+          >
+            <Icon name={target.icon} size={20} />
+            <span class="sr-only">Compartilhar no {target.name}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</div>

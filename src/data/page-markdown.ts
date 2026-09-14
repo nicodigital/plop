@@ -57,7 +57,7 @@ const abs = (path: string) => new URL(path, SITE_URL).href;
  * to the claims those sections actually make — everything below this constant
  * is generated from data and needs no maintenance.
  */
-const HOME_PROSE = `${SITE_NAME} desenvolve sites para pequenos negócios no Brasil: sites modernos,
+const HOME_PROSE = `${SITE_NAME} desenvolve sites para negócios independentes no Brasil: sites modernos,
 rápidos e fáceis de gerenciar, com design de alto desempenho e um preço que faz
 sentido — e já preparados para aparecer em buscadores e em ferramentas de
 inteligência artificial.
@@ -149,7 +149,7 @@ const blogIndexPage = (posts: CollectionEntry<"blog">[]): TextPage => ({
   mdPath: mdPathFor("/blog/"),
   title: "Blog",
   description:
-    "Textos diretos sobre sites, performance e presença digital para quem toca um negócio pequeno, sem jargão e sem curso.",
+    "Textos diretos sobre sites, performance e presença digital para quem toca o próprio negócio, sem jargão e sem curso.",
   meta: [`Artigos: ${posts.length}`],
   body: [
     "## Artigos",
@@ -179,7 +179,7 @@ export const textPages = async (): Promise<TextPage[]> => {
     {
       path: "/",
       mdPath: mdPathFor("/"),
-      title: `${SITE_NAME} — sites profissionais para pequenos negócios`,
+      title: `${SITE_NAME} — sites profissionais para negócios independentes`,
       description: SITE_DESCRIPTION,
       meta: [`Idioma: português (Brasil)`, "Atendimento: Brasil"],
       body: homeBody(),

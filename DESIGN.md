@@ -463,6 +463,12 @@ de botones y listas, 22–24px en controles. La única excepción sólida es la 
 de WhatsApp, que es un logotipo de terceros y no un icono de UI. No se mezclan
 familias, ni pesos de trazo, ni glifos tipográficos usados como iconos.
 
+Las marcas de las redes en la share bar del post (Facebook, X, LinkedIn,
+WhatsApp) se dibujan en esa misma familia —f encerrada, «in» en caja, la cruz
+de X— en vez de pegar los logotipos sólidos oficiales: la barra vive dentro del
+artículo, donde una fila de colores de marca ajenos tiraría más que el CTA que
+va justo debajo.
+
 ### Plan Table (signature)
 
 Las tres cards de planes comparten una grilla: `.plan-table` define seis filas

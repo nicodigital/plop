@@ -274,7 +274,7 @@ The following must remain real HTML:
 Suggested content direction:
 
 ```text
-SITES PROFISSIONAIS PARA PEQUENOS NEGÓCIOS
+SITES PROFISSIONAIS PARA NEGÓCIOS INDEPENDENTES
 
 Seu negócio
 em destaque.
@@ -554,6 +554,11 @@ experiências digitais disruptivas
 soluções 360º
 transformação digital inovadora
 ```
+
+Never describe the audience by its size. `pequenos negócios`, `pequenas
+empresas` and `negócio pequeno` are out: nobody wants to be addressed as small.
+The audience term is `negócios independentes`, or `quem toca o próprio negócio`
+when the sentence is better off naming the person than the company.
 
 Prefer:
 

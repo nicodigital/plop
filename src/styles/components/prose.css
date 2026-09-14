@@ -4,6 +4,10 @@
   max-width: 68ch;
   font-size: var(--text-article);
   line-height: 1.72;
+
+  p{
+    @apply leading-[1.3];
+  }
 }
 
 .prose-plop > * + * {
@@ -12,9 +16,7 @@
 
 .prose-plop h2 {
   font-size: clamp(var(--text-h4), 3vw, 2.25rem);
-  line-height: 1.08;
-  margin-top: 2.2em;
-  margin-bottom: -0.4em;
+  @apply mt-[5rem] mb-[2rem];
 }
 
 .prose-plop h3 {

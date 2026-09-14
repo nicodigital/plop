@@ -4,11 +4,11 @@ description: "A página que mais recebe visita costuma ser a mais vaga do site. 
 publishedAt: 2026-09-09
 readingMinutes: 5
 category: conteudo
-cover: ../../assets/img/blog/o-que-escrever-na-pagina-de-servicos.webp
-coverAlt: "Ilustração de um bloco de texto com linhas e um visto marcando a linha final."
+cover: ../../assets/img/blog/o-que-escrever-na-pagina-de-servicos-isometric.webp
+coverAlt: "Ilustração isométrica de uma página de serviços sendo montada com blocos de conteúdo e um módulo concluído."
 ---
 
-Na maioria dos sites de pequeno negócio, a página de serviços é uma lista de
+Na maioria dos sites por aí, a página de serviços é uma lista de
 substantivos.
 
 "Manutenção. Instalação. Consultoria." Três palavras que descrevem o que você

@@ -54,7 +54,7 @@ export const organizationSchema = (): JsonLd => ({
   },
   image: abs(OG_IMAGE),
   description:
-    "Desenvolvimento de sites profissionais para pequenos negócios, com hospedagem, suporte e manutenção mensal.",
+    "Desenvolvimento de sites profissionais para negócios independentes, com hospedagem, suporte e manutenção mensal.",
   email: CONTACT_EMAIL,
   ...(HAS_WHATSAPP ? { telephone: PHONE_NUMBER } : {}),
   areaServed: { "@type": "Country", name: "Brasil" },

@@ -4,8 +4,8 @@ description: "Todo negócio tem seu mês cheio, e o site costuma ser a parte que
 publishedAt: 2026-09-11
 readingMinutes: 4
 category: performance
-cover: ../../assets/img/blog/seu-site-aguenta-a-temporada.webp
-coverAlt: "Ilustração de uma curva de demanda com um pico, apoiada sobre uma linha de base reta."
+cover: ../../assets/img/blog/seu-site-aguenta-a-temporada-isometric.webp
+coverAlt: "Ilustração isométrica de uma curva de demanda carregada de blocos que atravessa um navegador e chega a um servidor preparado."
 ---
 
 Todo negócio tem seu mês. A casa de fondue lota quando a friagem chega. O
@@ -17,7 +17,7 @@ pé — e é quando ele costuma não estar.
 
 ## Por que um site cai justo na hora errada
 
-A maioria dos sites de pequeno negócio roda em hospedagem compartilhada: um
+A maioria dos sites por aí roda em hospedagem compartilhada: um
 servidor que atende centenas de sites ao mesmo tempo. Cada visita que chega
 obriga esse servidor a montar a página do zero — consultar o banco de dados,
 executar os plugins, devolver o HTML.

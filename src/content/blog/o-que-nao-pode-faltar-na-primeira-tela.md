@@ -4,14 +4,14 @@ description: "Quatro elementos decidem se a pessoa continua ou fecha o seu site.
 publishedAt: 2026-09-04
 readingMinutes: 4
 category: conteudo
-cover: ../../assets/img/blog/o-que-nao-pode-faltar-na-primeira-tela.webp
-coverAlt: "Ilustração de um navegador com a faixa superior iluminada e um botão em destaque."
+cover: ../../assets/img/blog/o-que-nao-pode-faltar-na-primeira-tela-isometric.webp
+coverAlt: "Ilustração isométrica de uma janela de navegador com a primeira tela destacada e uma pessoa se aproximando."
 ---
 
 A primeira tela é o que aparece antes de qualquer rolagem. É o único espaço do
 site que todo visitante vê.
 
-Na maior parte dos sites de pequeno negócio, esse espaço é gasto com uma foto
+Na maior parte dos sites por aí, esse espaço é gasto com uma foto
 grande, uma frase genérica e nada mais.
 
 ## Os quatro elementos

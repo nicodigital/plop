@@ -48,4 +48,11 @@
   .btn-lime{
     --btn-lift-shadow: var(--color-plop-lime-deep);
   }
+
+  /* The share icons sit on white inside the article, where even the ink
+     drop of the solid button would read as heavy next to body copy: they
+     cast the hairline itself. */
+  .btn--share {
+    --btn-lift-shadow: var(--color-plop-hairline);
+  }
 }
