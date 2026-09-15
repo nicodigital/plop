@@ -4,9 +4,18 @@
   "compatibility_date": "2026-09-11",
   "assets": {
     "directory": "./dist",
-    "binding": "ASSETS"
+    "binding": "ASSETS",
+    // The contact endpoint is not a file in ./dist, so the Worker has to see
+    // that request before the asset server answers 404.
+    "run_worker_first": ["/api/contato"]
   },
   "main": "./worker/index.ts",
+  // Not secrets: these only shape how the message reads in the inbox. The
+  // relay URL, its key and the destination mailbox are Worker secrets.
+  "vars": {
+    "MAIL_FROM_NAME": "PLOP! Sites",
+    "MAIL_SUBJECT": "Novo contato pelo site"
+  },
   "observability": {
     "enabled": true
   }

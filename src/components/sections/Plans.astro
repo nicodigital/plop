@@ -174,18 +174,11 @@ const {
             </ul>
 
             <div class="mt-8 flex pt-1">
-              {/*
-                The card used to hand the plan to `/contato/` as a query
-                string. The form now lives in the footer of this same page, so
-                the plan travels as an attribute and the script below drops it
-                into the select — the visitor arrives at the form with their
-                answer already given, exactly as before.
-              */}
               <Button
                 href={CONTACT_ANCHOR}
                 variant={plan.recommended ? "primary" : "solid-ink"}
                 class="w-full"
-                data-plan-pick={plan.slug}
+                data-plan-pick={plan.name}
                 data-track="plan_select"
                 data-track-value={plan.slug}
               >
@@ -233,23 +226,28 @@ const {
 
 <script>
   /**
-   * The plan a card was selected from. It used to ride to `/contato/` as a
-   * query string; the form is now on this same page, so the pick is applied
-   * to the select directly. The scroll itself is the site's shared anchor
-   * handler — this only has to have set the value before the visitor gets
-   * there, and a click handler always runs first.
+   * A card sends the visitor to the contact form with the ask already
+   * written, so the first field they meet is not a blank one. The message is
+   * the only thing the plan travels as — the form has no plan field, and the
+   * sentence says more to whoever reads the e-mail than a slug would.
    */
+  const messageFor = (plan: string) => `Quero contratar o plano ${plan}.`;
+
   document.querySelectorAll<HTMLAnchorElement>("[data-plan-pick]").forEach((link) => {
     link.addEventListener("click", () => {
-      const slug = link.dataset.planPick;
-      if (!slug) return;
+      const plan = link.dataset.planPick;
+      if (!plan) return;
 
       const target = document.querySelector<HTMLElement>(link.hash || "#contato");
-      const select = target?.querySelector<HTMLSelectElement>('select[name="plano"]');
-      if (!select) return;
+      const field = target?.querySelector<HTMLTextAreaElement>('textarea[name="mensagem"]');
+      if (!field) return;
 
-      select.value = slug;
-      select.dispatchEvent(new Event("change", { bubbles: true }));
+      /* What the visitor wrote themselves is theirs: only an empty field, or a
+         sentence this handler put there before, gets replaced. */
+      if (field.value.trim() !== "" && field.value !== field.dataset.planMessage) return;
+
+      field.value = messageFor(plan);
+      field.dataset.planMessage = field.value;
     });
   });
 </script>

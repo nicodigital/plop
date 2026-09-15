@@ -158,10 +158,15 @@ const label = "block font-semibold text-ui text-white";
     },
   };
 
+  const FAILURES: Record<string, string> = {
+    invalid_fields: "Confira os campos marcados acima.",
+    rate_limited: "Muitas mensagens deste dispositivo. Tente de novo em alguns minutos.",
+    default: "Não conseguimos enviar agora. Tente de novo ou chame no WhatsApp.",
+  };
+
   document.querySelectorAll<HTMLFormElement>("[data-contact-form]").forEach((form) => {
     const status = form.querySelector<HTMLElement>("[data-form-status]");
     const submit = form.querySelector<HTMLButtonElement>("[data-submit]");
-    const defaultStatus = status?.textContent ?? "";
 
     const showError = (name: FieldName, message: string) => {
       const slot = form.querySelector<HTMLElement>(`[data-error-for="${name}"]`);
@@ -210,7 +215,21 @@ const label = "block font-semibold text-ui text-white";
           body: new FormData(form),
         });
 
-        if (!response.ok) throw new Error(String(response.status));
+        if (!response.ok) {
+          // The server validates again and its answer wins: it is the one that
+          // knows whether the message actually left.
+          const payload = (await response.json().catch(() => null)) as {
+            error?: string;
+            fields?: string[];
+          } | null;
+
+          (payload?.fields ?? []).forEach((name) => {
+            if (name in RULES) showError(name as FieldName, RULES[name as FieldName].message);
+          });
+
+          if (status) status.textContent = FAILURES[payload?.error ?? ""] ?? FAILURES.default;
+          return;
+        }
 
         form.reset();
         if (status) {
@@ -219,16 +238,10 @@ const label = "block font-semibold text-ui text-white";
         // Conversion counts only once the server has confirmed it.
         window.dispatchEvent(new CustomEvent("plop:contact_submit"));
       } catch {
-        if (status) {
-          status.textContent =
-            "Não conseguimos enviar agora. Tente de novo ou chame no WhatsApp.";
-        }
+        if (status) status.textContent = FAILURES.default;
       } finally {
         submit?.removeAttribute("disabled");
         submit?.classList.remove("opacity-60", "pointer-events-none");
-        window.setTimeout(() => {
-          if (status && status.textContent === defaultStatus) return;
-        }, 8000);
       }
     });
   });

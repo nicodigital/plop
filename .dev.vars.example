@@ -1,0 +1,12 @@
+# Copy to .dev.vars (git-ignored) for `wrangler dev`.
+# In production these three are Worker secrets:
+#   wrangler secret put MAIL_API_URL
+#   wrangler secret put MAIL_API_KEY
+#   wrangler secret put MAIL_CONTACT_TO
+MAIL_API_URL=
+MAIL_API_KEY=
+MAIL_CONTACT_TO=
+
+# Optional overrides of the wrangler.jsonc vars.
+# MAIL_FROM_NAME=PLOP! Sites
+# MAIL_SUBJECT=Novo contato pelo site
