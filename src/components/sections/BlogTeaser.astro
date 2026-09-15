@@ -23,7 +23,7 @@ const posts = (await getCollection("blog", ({ data }) => !data.draft))
       aria-labelledby="blog-titulo"
     >
       <div class="shell">
-        <div class="mx-auto mb-[clamp(40px,6vw,80px)] max-w-[40rem]">
+        <div class="mx-auto mb-10 xg:mb-17 max-w-[40rem]">
           <h2
             id="blog-titulo"
             class="anim mb-6 text-center text-[length:var(--text-h2)] lg:mb-10"
@@ -33,7 +33,7 @@ const posts = (await getCollection("blog", ({ data }) => !data.draft))
             O que a gente aprende fazendo
           </h2>
           <p
-            class="anim mx-auto mt-10 text-center text-[length:var(--text-lead)] text-plop-blue-deep lg:max-w-[35ch]"
+            class="anim mx-auto mt-10 text-center text-[length:var(--text-lead)] text-plop-blue-deep max-w-[35ch]"
             data-anim="bottom"
             data-delay="400"
           >

@@ -10,14 +10,14 @@ import { HAS_WHATSAPP, whatsappHref } from "../../data/site.ts";
 */}
 <a
   href={whatsappHref()}
-  class="group fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-4 z-40 inline-flex min-h-[56px] items-center gap-3 rounded-full bg-plop-ink pl-4 pr-4 font-display font-semibold text-white no-underline transition-[background-color,transform] duration-[var(--duration-fast)] ease-[var(--ease-plop-out)] hover:bg-plop-blue-800 sm:pr-6 lg:bottom-8 lg:right-8"
+  class="group fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-4 z-40 inline-flex min-h-[56px] items-center gap-3 rounded-full xg:bg-plop-ink xg:px-4 font-display font-semibold text-white no-underline transition-[background-color,transform] duration-[var(--duration-fast)] ease-[var(--ease-plop-out)] hover:bg-plop-blue-800 sm:pr-6 lg:bottom-8 lg:right-8"
   data-track={HAS_WHATSAPP ? "whatsapp_click" : "cta_primary_click"}
   rel="noopener"
 >
   <span
-    class="inline-flex size-11 shrink-0 items-center justify-center rounded-full bg-plop-lime text-plop-ink -ml-2"
+    class="inline-flex size-17 xg:size-11 shrink-0 items-center justify-center rounded-full bg-plop-lime text-plop-ink -ml-2"
   >
-    <Icon name="whatsapp" size={30} />
+    <Icon name="whatsapp" size={30} class="size-12 xg:size-8" />
   </span>
   <span class="hidden sm:inline">{HAS_WHATSAPP ? "WhatsApp" : "Fale com a gente"}</span>
   <span class="sr-only sm:hidden">

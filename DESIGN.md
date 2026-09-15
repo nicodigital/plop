@@ -370,8 +370,8 @@ ruptura es el momento memorable de la página, y solo hay uno.
 
 ## Elevation & Depth
 
-El sistema es **plano por decisión**: el build no contiene un solo `box-shadow`,
-`drop-shadow` ni `backdrop-filter`. La profundidad se produce por tres medios:
+El sistema es **plano por decisión**: el build no contiene un solo `box-shadow`
+ni `drop-shadow`. La profundidad se produce por tres medios:
 escalones tonales dentro de la misma familia azul (`plop-blue`,
 `plop-blue-deep`, `plop-blue-dim`), superficies muy oscuras (`plop-ink`) contra
 superficies claras (`plop-paper`, blanco), y radios grandes que separan una masa
@@ -383,12 +383,19 @@ blanco al 15% dentro de la card ink.
 ### Named Rules
 
 **La Regla Sin Sombra.** Ninguna superficie proyecta sombra, en reposo ni en
-hover. Si un elemento necesita separarse, cambia de tono o de radio. Glows y
-blurs de fondo están fuera de este mundo.
+hover. Si un elemento necesita separarse, cambia de tono o de radio. Los glows
+están fuera de este mundo.
+
+**El blur es un velo, no un material.** `backdrop-filter` no decora
+superficies: se usa cuando algo tiene que apartar la página entera de la
+lectura. Hoy hay un solo uso pleno, el velo del menú móvil (`blur(20px)`), más
+el `backdrop-blur-xs` de tres cards que descansan sobre el fondo líquido. Una
+card no se gana un blur por ser card.
 
 **La Regla del Scrim Tonal.** Cuando haga falta legibilidad sobre media, el velo
-se pinta en la familia azul (gradiente de `plop-blue-deep` a transparente, con
-`color-mix`), nunca en negro ni en blanco translúcido.
+se pinta en la familia azul (gradiente de `plop-blue-deep` a transparente, o
+`plop-blue-950` con `color-mix` para los velos planos del modal y del menú),
+nunca en negro ni en blanco translúcido.
 
 ## Shapes
 
@@ -451,9 +458,16 @@ pequeñas.
 - **States:** blanco al 85% en reposo, blanco puro en hover y en `aria-current`;
   la página actual añade una barra lima de 2px bajo la etiqueta, de modo que el
   estado no depende solo del color.
-- **Mobile:** botón circular de 44px con borde fantasma abre un drawer que
-  hereda la tipografía display, cierra con `Escape` y marca la página actual en
-  lima.
+- **Mobile:** botón circular de 44px con borde fantasma abre un panel ink que
+  cuelga del propio botón (ancho completo hasta 26rem, alineado a la derecha),
+  hereda la tipografía display y marca la página actual en lima.
+- **Velo del menú:** el panel no flota sobre el héroe, lo tapa. Detrás va un
+  velo fijo de `plop-blue-950` al 70% con `blur(20px) saturate(125%)`, hijo del
+  header y en un escalón negativo de su propio contexto de apilado: por encima
+  de toda la página, por debajo de la barra y del panel. Mientras está abierto
+  el resto del `<body>` queda `inert` y Lenis sostiene el scroll, así que el
+  menú es la página. Cierra con `Escape`, con un toque en el velo o al seguir
+  un enlace, y el foco vuelve al botón.
 
 ### Icons
 
@@ -655,8 +669,9 @@ ya es correcto y legible.
 
 ### Don't:
 
-- **Don't** añadir `box-shadow`, `drop-shadow`, glow ni `backdrop-filter`: el
-  sistema es plano y la profundidad es tonal.
+- **Don't** añadir `box-shadow`, `drop-shadow` ni glow: el sistema es plano y la
+  profundidad es tonal. El `backdrop-filter` tampoco es decoración: solo vela
+  la página cuando algo la reemplaza.
 - **Don't** oscurecer media con velos negros; el scrim se pinta en azul
   profundo.
 - **Don't** usar lima como fondo de áreas grandes ni como color de texto pequeño

@@ -6,7 +6,7 @@ import { entryPrice, formatBRL } from "./plans.ts";
 
 export const SITE_URL = "https://plopsites.com.br";
 
-export const SITE_NAME = "PLOP! Sites";
+export const SITE_NAME = "Plop! sites";
 
 /**
  * The one-line description of the business. Used as the blockquote in

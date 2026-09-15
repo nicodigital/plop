@@ -38,8 +38,17 @@ if (smallTargets.length) fails.push(`touch targets under 44px high: ${smallTarge
 // Mobile menu opens, closes on Escape, and returns focus.
 await mp.locator("#nav-toggle").click();
 const opened = await mp.locator("#nav-drawer").isVisible();
+const veiled = await mp.locator("[data-nav-scrim]").isVisible();
+const sealed = await mp.evaluate(() => document.getElementById("conteudo")?.hasAttribute("inert") === true);
 await mp.keyboard.press("Escape");
-const closed = !(await mp.locator("#nav-drawer").isVisible());
+// The drawer and its veil ease out over a beat, so "closed" is a question
+// about where the transition lands, not about the next frame.
+const closed = await mp
+  .locator("#nav-drawer")
+  .waitFor({ state: "hidden", timeout: 2000 })
+  .then(() => true, () => false);
+if (!veiled) fails.push("mobile menu opened without its scrim");
+if (!sealed) fails.push("page behind the open mobile menu was not made inert");
 const refocused = await mp.evaluate(() => document.activeElement?.id === "nav-toggle");
 if (!opened) fails.push("mobile menu did not open");
 if (!closed) fails.push("mobile menu did not close on Escape");

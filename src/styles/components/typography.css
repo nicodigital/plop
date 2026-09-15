@@ -30,7 +30,7 @@ html {
   --text-article: 1.0625rem;
   --text-base: 1rem;
   --text-ui: 1rem;
-  --text-small: 0.875rem;
+  --text-small: 0.8rem;
 
   /* Per-breakpoint tuning. Ascending order, so a wider step always lands
      after the narrower one it refines. Redeclare only the tokens that

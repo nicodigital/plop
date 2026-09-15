@@ -24,7 +24,7 @@ const {
   data-plans-section
 >
   <div class="shell">
-    <div class="max-w-[42rem] mx-auto">
+    <div class="max-w-[42rem] mx-auto mb-20">
       <Heading
         id="planos-titulo"
         class="text-[length:var(--text-h2)] text-center anim"
@@ -50,7 +50,7 @@ const {
             id={plan.slug}
             aria-labelledby={`plano-${plan.slug}-nome`}
             class:list={[
-              "plan-card flex flex-col rounded-[var(--radius-plop-xl)] p-[clamp(24px,2.6vw,36px)] [corner-shape:squircle] anim",
+              "plan-card flex flex-col rounded-[var(--radius-plop-xl)] p-[clamp(46px,2.6vw,36px)] [corner-shape:squircle] anim",
               plan.recommended
                 ? "bg-plop-ink text-white"
                 : "border-1 border-plop-blue/50 bg-white/50 backdrop-blur-xs [corner-shape:squircle]",

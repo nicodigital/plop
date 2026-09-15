@@ -15,14 +15,24 @@ const isCurrentPage = (item: (typeof NAV_ITEMS)[number]) =>
   !item.watches && (item.href === "/" ? pathname === "/" : pathname.startsWith(item.href));
 ---
 
-<header class="on-blue absolute inset-x-0 top-0 z-50">
-  <div class="shell flex items-center justify-between gap-4 py-4 sm:py-5 lg:gap-6 lg:py-7">
+<header class="on-blue absolute inset-x-0 top-0 z-50" data-nav-root>
+  {/*
+    The veil for the mobile drawer. It is a child of the header and sits on a
+    negative step of the header's own stacking context: that puts it over the
+    whole page and under the bar and the menu, without a second z-index scale
+    to keep in sync with the dock and the skip link. Tonal, per the site's
+    scrim rule — the deepest step of the blue ramp, never black — and blurred,
+    because the hero behind it is the one surface a flat veil cannot calm.
+  */}
+  <div class="nav-scrim fixed inset-0 -z-10" data-nav-scrim aria-hidden="true"></div>
+
+  <div class="shell relative flex items-center justify-between gap-4 py-4 sm:py-5 lg:gap-6 lg:py-7">
     <a
       href="/#topo"
       class="inline-flex min-h-[44px] shrink-0 items-center rounded-lg transition-opacity duration-[var(--duration-fast)] hover:opacity-85"
       aria-label="PLOP! Sites — início"
     >
-      <Logo height={65} class="h-11 w-auto sm:h-14 lg:h-[65px]" decorative />
+      <Logo height={65} class="h-15 xg:h-11 w-auto sm:h-14 lg:h-[65px]" decorative />
     </a>
 
     <nav class="hidden lg:block" aria-label="Principal">
@@ -79,10 +89,14 @@ const isCurrentPage = (item: (typeof NAV_ITEMS)[number]) =>
     one the menu reads on top of the headline it is covering. Ink rather than
     brand blue, because the hero behind it is brand blue and two identical
     surfaces would not separate.
+
+    Open and closed are one attribute on the header, read by the block below,
+    so the panel and its veil can never disagree about which state they are in
+    halfway through a transition.
   */}
-  <div id="nav-drawer" class="shell hidden pb-4 lg:hidden" data-nav-drawer>
+  <div id="nav-drawer" class="shell relative pb-4" data-nav-drawer>
     <nav
-      class="on-ink rounded-[var(--radius-plop-lg)] bg-plop-ink p-3 [corner-shape:squircle]"
+      class="on-ink ml-auto w-full max-w-[min(100%,26rem)] rounded-[var(--radius-plop-lg)] bg-plop-ink px-3 pt-3 pb-6 [corner-shape:squircle]"
       aria-label="Principal, mobile"
     >
       <ul class="flex flex-col gap-1">
@@ -101,7 +115,7 @@ const isCurrentPage = (item: (typeof NAV_ITEMS)[number]) =>
             </li>
           ))
         }
-        <li class="pt-2 sm:hidden">
+        <li class="pt-2 xg:hidden">
           <a
             href={PRIMARY_CTA.href}
             class="flex min-h-[52px] items-center justify-center rounded-full bg-plop-lime px-5 font-display font-semibold text-plop-ink no-underline"
@@ -138,17 +152,84 @@ const isCurrentPage = (item: (typeof NAV_ITEMS)[number]) =>
     color: var(--color-plop-lime);
   }
 
+  /* --------------------------------------------------- drawer and its veil
+
+     Closed is the default, so nothing here waits on a script to hide it, and
+     the whole open state hangs off one attribute on the header. `display`
+     eases discretely on both, which is what keeps the veil on screen long
+     enough to fade back out instead of blinking away with the menu. */
+
+  .nav-scrim,
+  [data-nav-drawer] {
+    display: none;
+    opacity: 0;
+    transition:
+      opacity var(--beat) var(--ease-plop-out),
+      display var(--beat) allow-discrete;
+  }
+
+  .nav-scrim {
+    /* The one blurred surface on the site, and it earns it: the veil covers a
+       saturated hero with video under it, where a flat tint would still leave
+       the headline legible behind the menu. 82% would hide the page; this
+       leaves it readable as depth, not as content. */
+    background: color-mix(in srgb, var(--color-plop-blue-950) 70%, transparent);
+    -webkit-backdrop-filter: blur(20px) saturate(125%);
+    backdrop-filter: blur(20px) saturate(125%);
+  }
+
+  [data-nav-drawer] {
+    translate: 0 -10px;
+    transition:
+      opacity var(--beat) var(--ease-plop-out),
+      translate var(--beat) var(--ease-plop-out),
+      display var(--beat) allow-discrete;
+  }
+
+  [data-nav-root][data-nav-open] .nav-scrim,
+  [data-nav-root][data-nav-open] [data-nav-drawer] {
+    display: block;
+    opacity: 1;
+  }
+
+  [data-nav-root][data-nav-open] [data-nav-drawer] {
+    translate: 0 0;
+  }
+
+  @starting-style {
+    [data-nav-root][data-nav-open] .nav-scrim,
+    [data-nav-root][data-nav-open] [data-nav-drawer] {
+      opacity: 0;
+    }
+
+    [data-nav-root][data-nav-open] [data-nav-drawer] {
+      translate: 0 -10px;
+    }
+  }
+
+  /* Above the drawer's own breakpoint the desktop nav is the menu, and a
+     stale open state must not be able to draw either piece. */
+  @media (width >= 64rem) {
+    .nav-scrim,
+    [data-nav-drawer],
+    [data-nav-root][data-nav-open] .nav-scrim,
+    [data-nav-root][data-nav-open] [data-nav-drawer] {
+      display: none;
+    }
+  }
 </style>
 
 <script>
   import { getLenis, samePageHash, scrollToSection } from "../../scripts/smooth-scroll.ts";
 
+  const header = document.querySelector<HTMLElement>("[data-nav-root]");
   const toggle = document.getElementById("nav-toggle");
   const drawer = document.querySelector<HTMLElement>("[data-nav-drawer]");
+  const scrim = document.querySelector<HTMLElement>("[data-nav-scrim]");
 
   const setOpen = (open: boolean) => {
-    if (!toggle || !drawer) return;
-    drawer.classList.toggle("hidden", !open);
+    if (!header || !toggle || !drawer) return;
+    header.toggleAttribute("data-nav-open", open);
     toggle.setAttribute("aria-expanded", String(open));
     const label = toggle.querySelector(".sr-only");
     if (label) label.textContent = open ? "Fechar menu" : "Abrir menu";
@@ -159,6 +240,22 @@ const isCurrentPage = (item: (typeof NAV_ITEMS)[number]) =>
     // `lenis-stopped` class is what stops a finger doing the same.
     if (open) getLenis()?.stop();
     else getLenis()?.start();
+
+    // With a veil over it the page is no longer reachable, so it leaves the
+    // tab order and the accessibility tree too: an open menu that can still
+    // be tabbed past into the hidden page is the usual way this pattern
+    // breaks. `inert` on the siblings does what a <dialog> would, without
+    // moving the header into the top layer and away from its own stacking
+    // context.
+    for (const sibling of Array.from(document.body.children)) {
+      if (sibling === header || sibling.tagName === "SCRIPT") continue;
+      sibling.toggleAttribute("inert", open);
+    }
+  };
+
+  const close = () => {
+    setOpen(false);
+    toggle?.focus();
   };
 
   if (toggle && drawer) {
@@ -191,10 +288,14 @@ const isCurrentPage = (item: (typeof NAV_ITEMS)[number]) =>
       history.replaceState(null, "", hash);
     });
 
+    // Dismissing by tapping the veil is the gesture people try first on a
+    // phone, and the veil is the only part of an open menu big enough to hit
+    // without aiming.
+    scrim?.addEventListener("click", close);
+
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape" && toggle.getAttribute("aria-expanded") === "true") {
-        setOpen(false);
-        toggle.focus();
+        close();
       }
     });
 

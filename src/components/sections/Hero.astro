@@ -28,7 +28,7 @@ import { CONTACT_ANCHOR, PLANS_ANCHOR } from "../../data/nav.ts";
         Sites modernos, rápidos e fáceis de gerenciar.<br> Design de alto desempenho com um preço que faz sentido — e já preparado para aparecer em buscadores e inteligência artificial.
       </p>
 
-      <div class="mt-6 flex flex-wrap items-center gap-3 lg:mt-8">
+      <div class="flex flex-wrap items-center gap-3 mt-12 lg:mt-8">
         <div class="anim" data-anim="bottom" data-delay="1400" >
         <Button href={CONTACT_ANCHOR} size="lg" data-track="cta_primary_click">
           Quero meu site
@@ -43,15 +43,15 @@ import { CONTACT_ANCHOR, PLANS_ANCHOR } from "../../data/nav.ts";
 
       {/* Separators are drawn, not listed, so a wrap never strands one. */}
       <ul
-        class="muted mt-6 flex flex-wrap gap-x-5 gap-y-1 text-ui font-semibold lg:mt-9 lg:gap-x-4 anim" data-anim="bottom" data-delay="1800"
+        class="hidden muted mt-6 xg:flex flex-col xg:flex-row flex-wrap gap-x-5 gap-y-1 text-ui font-semibold lg:mt-9 lg:gap-x-4 anim" data-anim="bottom" data-delay="1800"
       >
-        <li class="before:mr-5 before:text-plop-on-blue/55 before:content-['·'] first:before:hidden lg:before:mr-6">
+        <li class="before:mr-5 xg:before:text-plop-on-blue/55 xg:before:content-['·'] first:before:hidden lg:before:mr-6">
           No ar em semanas
         </li>
-        <li class="before:mr-5 before:text-plop-on-blue/55 before:content-['·'] first:before:hidden lg:before:mr-6">
+        <li class="xg:before:mr-5 xg:before:text-plop-on-blue/55 xg:before:content-['·'] first:before:hidden xg:before:mr-6">
           Hospedagem inclusa
         </li>
-        <li class="before:mr-5 before:text-plop-on-blue/55 before:content-['·'] first:before:hidden lg:before:mr-6">
+        <li class="xg:before:mr-5 xg:before:text-plop-on-blue/55 xg:before:content-['·'] first:before:hidden xg:before:mr-6">
           Cuidado todo mês
         </li>
       </ul>
@@ -72,7 +72,7 @@ import { CONTACT_ANCHOR, PLANS_ANCHOR } from "../../data/nav.ts";
     The file carries an alpha channel, so the band needs no scrim and leaves
     no seam: what sits around the machine is the same liquid ground.
   */}
-  <div class="hero-media relative -z-20" aria-hidden="true">
+  <div class="hero-media relative -z-20 -mt-12 xg:mt-0" aria-hidden="true">
     <video
       class="hero-video"
       autoplay
@@ -141,7 +141,7 @@ import { CONTACT_ANCHOR, PLANS_ANCHOR } from "../../data/nav.ts";
   }
 
   .hero-body {
-    padding-top: clamp(96px, 13vh, 168px);
+    padding-top: clamp(140px, 13vh, 168px);
     padding-bottom: clamp(16px, 3vh, 32px);
   }
 
