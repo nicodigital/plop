@@ -13,21 +13,38 @@ interface Props {
 }
 
 const { title, intro } = Astro.props;
+
+/* The masthead only becomes two columns when a caller fills the rail — the
+   blog and the policy keep their single column and their own measure. */
+const hasAside = Astro.slots.has("aside");
 ---
 
 <section class="on-blue" aria-labelledby="masthead-titulo">
-  <div
-    class="shell pb-[clamp(48px,7vw,88px)] pt-[clamp(160px,20vh,300px)]"
-  >
-    <h1 id="masthead-titulo" class="max-w-[18ch] text-[length:var(--text-h1)]">
-      {title}
-    </h1>
-    {
-      intro && (
-        <p class="muted measure mt-7 text-[length:var(--text-lead)] max-w-[40ch]">
-          {intro}
-        </p>
-      )
-    }
+  <div class="shell pb-[clamp(48px,7vw,88px)] pt-[clamp(160px,20vh,300px)]">
+    <div class:list={[hasAside && "spine-grid"]}>
+      <div>
+        <h1 id="masthead-titulo" class="max-w-[18ch] text-[length:var(--text-h1)]">
+          {title}
+        </h1>
+        {
+          intro && (
+            <p class="muted measure mt-7 max-w-[40ch] text-[length:var(--text-lead)]">
+              {intro}
+            </p>
+          )
+        }
+      </div>
+
+      {
+        /* The rail carries whatever the page needs beside its title — today
+           the sector filter, which belongs up here with the heading rather
+           than floating above the table it controls. */
+        hasAside && (
+          <div class="mt-12 lg:mt-0 lg:self-end lg:justify-self-end">
+            <slot name="aside" />
+          </div>
+        )
+      }
+    </div>
   </div>
 </section>

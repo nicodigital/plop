@@ -10,6 +10,7 @@ import BlogTeaser from "../components/sections/BlogTeaser.astro";
 import FinalCta from "../components/sections/FinalCta.astro";
 import GooeyStack from "../components/layout/GooeyStack.astro";
 import { faqSchema, pageSchema, plansSchema, projectsSchema } from "../data/schema.ts";
+import { FEATURED_PROJECTS } from "../data/projects.ts";
 import { SITE_DESCRIPTION } from "../data/site.ts";
 
 const title = "Sites profissionais para negócios independentes";
@@ -27,7 +28,10 @@ const schema = [
   pageSchema({ type: "WebPage", name: title, description, path: "/" }),
   faqSchema(),
   plansSchema("/"),
-  projectsSchema(),
+  /* The home slider shows the featured ten, so its ItemList describes ten.
+     Structured data that listed all thirty-three would describe a page the
+     crawler cannot see. */
+  projectsSchema(FEATURED_PROJECTS),
 ];
 ---
 

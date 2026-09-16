@@ -21,6 +21,128 @@
 @import "components/modal.css";
 @import "components/post-card.css";
 @import "components/post.css";
+@import "components/projects-table.css";
+
+/**
+ * Cross-document view transitions, opted into in CSS rather than through a
+ * client router. Same-origin navigations get a cross-fade for free; the
+ * document still loads normally, so nothing on the page is re-initialised and
+ * no JavaScript ships to pay for the effect. Browsers without support just
+ * navigate.
+ */
+@view-transition {
+  navigation: auto;
+}
+
+/**
+ * The browser's default transition is 250ms with its own easing, which is
+ * tuned for a page swapping wholesale. What happens here is different: rows
+ * travel several hundred pixels up the table as the list collapses, and at
+ * 250ms that journey is over before the eye finds it. The group animation is
+ * the one that carries the movement, so it gets the project's own duration
+ * and its exponential ease-out; the root keeps the short default, because
+ * nothing outside the table actually changed.
+ */
+::view-transition-group(*) {
+  animation-duration: 380ms;
+  /* Not `--ease-plop-out` here: that curve covers most of the distance in the
+     first fifth of its duration, so a row crossing several hundred pixels
+     arrives almost immediately and then creeps — the movement never becomes
+     legible however long the duration is. The standard curve spends the time
+     it is given. */
+  animation-timing-function: var(--ease-plop-standard);
+}
+
+/**
+ * The positional morph alone is not enough here, and the reason is worth
+ * writing down: a transition snapshot is clipped to the viewport, so a row
+ * that was scrolled out of sight has no old snapshot to travel *from*. When
+ * the list collapses from thirty rows to seven, the survivors that were far
+ * down the page do not slide into place — they simply appear, and the rows
+ * still on screen move only a few pixels. Left to the default, the whole
+ * thing reads as a crossfade no matter how long it runs.
+ *
+ * So the arrival is authored: rows rise a short distance as they fade in,
+ * which is legible whether or not the browser had an old snapshot to work
+ * with. Rows leaving go faster than rows arriving — the eye should follow
+ * what is coming, not what is going.
+ */
+@keyframes plop-row-enter {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+@keyframes plop-row-leave {
+  to {
+    opacity: 0;
+  }
+}
+
+::view-transition-new(*) {
+  animation: plop-row-enter 380ms var(--ease-plop-standard) both;
+}
+
+::view-transition-old(*) {
+  animation: plop-row-leave var(--duration-fast) var(--ease-plop-standard) both;
+}
+
+/**
+ * The root is put back to a plain cross-fade, and it has to be stated rather
+ * than left alone: the rules above are written with `*`, which matches the
+ * root too. Without this the whole document would inherit the rows' rise on
+ * every cross-document navigation on the site, and switching it off entirely
+ * would remove the page-to-page transition that `@view-transition` is here
+ * for in the first place.
+ */
+@keyframes plop-root-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes plop-root-out {
+  to {
+    opacity: 0;
+  }
+}
+
+::view-transition-group(root) {
+  animation-duration: var(--duration-fast);
+}
+
+::view-transition-new(root) {
+  animation: plop-root-in var(--duration-fast) var(--ease-plop-standard) both;
+}
+
+::view-transition-old(root) {
+  animation: plop-root-out var(--duration-fast) var(--ease-plop-standard) both;
+}
+
+/**
+ * Reduced motion keeps the transition and removes the movement.
+ *
+ * This block used to switch the animation off outright, which is a common
+ * reading of the setting and the wrong one: what it asks to remove is
+ * travel — the thing that provokes vestibular symptoms — not the feedback
+ * that tells you the list just changed. So the group stops morphing position
+ * and the rows stop rising, while old and new still cross-fade. Anyone with
+ * the setting on gets a calm dissolve rather than a blink.
+ */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*) {
+    animation: none;
+  }
+
+  ::view-transition-new(*) {
+    animation: plop-root-in var(--duration-fast) var(--ease-plop-standard) both;
+  }
+
+  ::view-transition-old(*) {
+    animation: plop-root-out var(--duration-fast) var(--ease-plop-standard) both;
+  }
+}
 
 @theme {
   /* The blue ramp. Every dark ground and every hairline on the site is a

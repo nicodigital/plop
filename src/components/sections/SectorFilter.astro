@@ -1,0 +1,49 @@
+---
+/**
+ * Sector filter for the projects table.
+ *
+ * These are controls, not navigation: clicking one rewrites what the table
+ * shows in place rather than fetching a page, so each is a `<button>` with
+ * `aria-pressed` — styled as a plain block link, which is what the design
+ * asks for, but announced to a screen reader as the toggle it actually is.
+ *
+ * Every project stays in the DOM on every state, so nothing here hides
+ * content from a crawler: the filter narrows what is displayed, never what
+ * was served.
+ */
+import Icon from "../ui/Icon.astro";
+import {
+  PROJECTS,
+  SECTOR_GROUPS,
+  usedSectorGroups,
+  type SectorGroupId,
+} from "../../data/projects.ts";
+
+const groups = usedSectorGroups();
+const countIn = (id: SectorGroupId) =>
+  PROJECTS.filter((project) => project.sectorGroup === id).length;
+
+const options = [
+  { id: "*", label: "Todos", count: PROJECTS.length },
+  ...groups.map((id) => ({ id, label: SECTOR_GROUPS[id], count: countIn(id) })),
+];
+---
+
+<div class="sector-filter" role="group" aria-label="Filtrar projetos por setor">
+  {
+    options.map((option) => (
+      <button
+        type="button"
+        class="sector-filter__link"
+        data-sector-filter={option.id}
+        aria-pressed={option.id === "*" ? "true" : "false"}
+      >
+        <Icon name="arrow-down" size={20} class="sector-filter__icon" />
+        <span class="sector-filter__label">{option.label}</span>
+        <span class="sector-filter__count" data-numeric>
+          {option.count}
+        </span>
+      </button>
+    ))
+  }
+</div>

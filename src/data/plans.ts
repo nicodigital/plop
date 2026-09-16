@@ -33,6 +33,7 @@ export const PLANS: Plan[] = [
       "Hospedagem inclusa",
       "Suporte técnico",
       "Manutenção e atualizações",
+      "1 conta de e-mail inclusa",
     ],
   },
   {
@@ -51,6 +52,7 @@ export const PLANS: Plan[] = [
       "Suporte técnico",
       "Manutenção e atualizações",
       "Publicação de 1 conteúdo por mês",
+      "1 conta de e-mail inclusa",
     ],
   },
   {
@@ -69,6 +71,7 @@ export const PLANS: Plan[] = [
       "Suporte técnico prioritário",
       "Manutenção e atualizações",
       "Publicação de 1 conteúdo por mês",
+      "1 conta de e-mail inclusa",
     ],
   },
 ];

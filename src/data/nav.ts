@@ -14,7 +14,9 @@ export type NavItem = {
 export const NAV_ITEMS: NavItem[] = [
   { label: "Início", href: "/#topo", watches: "topo" },
   { label: "Planos", href: "/#planos", watches: "planos" },
-  { label: "Projetos", href: "/#projetos", watches: "projetos" },
+  /* The only item that leaves the home for a page of its own: the slider on
+     `/#projetos` shows ten, and this is where the other twenty-three live. */
+  { label: "Projetos", href: "/projetos/" },
   { label: "Blog", href: "/blog/" },
   { label: "Contato", href: "/#contato", watches: "contato" },
 ];

@@ -1,0 +1,45 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageMasthead from "../../components/layout/PageMasthead.astro";
+import ProjectsTable from "../../components/sections/ProjectsTable.astro";
+import SectorFilter from "../../components/sections/SectorFilter.astro";
+import FinalCta from "../../components/sections/FinalCta.astro";
+import GooeyStack from "../../components/layout/GooeyStack.astro";
+import { PROJECTS } from "../../data/projects.ts";
+import { breadcrumbSchema, pageSchema, projectsSchema } from "../../data/schema.ts";
+
+const title = "Projetos";
+const description =
+  "Todos os sites entregues e no ar, apresentados por setor: arquitetura, saúde, comércio, estúdios criativos e mais.";
+
+const schema = [
+  pageSchema({
+    type: "CollectionPage",
+    name: title,
+    description,
+    path: "/projetos/",
+  }),
+  breadcrumbSchema([{ name: "Projetos" }]),
+  projectsSchema(),
+];
+---
+
+<BaseLayout title={title} description={description} schema={schema}>
+  <GooeyStack>
+    <PageMasthead
+      title="Trabalho no ar."
+      intro={`Cada projeto aqui é um site real de um cliente real. Mostramos o trabalho por setor; os nomes dos clientes ficam com eles.`}
+    >
+      <SectorFilter slot="aside" />
+    </PageMasthead>
+  </GooeyStack>
+
+  <ProjectsTable />
+
+  {/* The closing CTA is a blue mass on a light ground, so it needs that
+      ground: on the home it comes from the stack it shares with Plans and FAQ,
+      here from one of its own. */}
+  <GooeyStack tone="light" variant="b">
+    <FinalCta />
+  </GooeyStack>
+</BaseLayout>

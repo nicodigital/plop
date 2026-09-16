@@ -18,7 +18,7 @@ const year = new Date().getFullYear();
     <div class="shell py-[clamp(56px,10vw,150px)]">
       <div class="spine-grid">
         <div>
-          <h2 id="contato-titulo" class="text-[length:var(--text-h2)]">
+          <h2 id="contato-titulo" class="text-h1 xg:text-h2">
             Bora começar<br />
             o <span class="text-plop-lime">seu site</span>.
           </h2>
@@ -65,11 +65,11 @@ const year = new Date().getFullYear();
           </dl>
         </div>
 
-        <div class="rounded-[var(--radius-plop-xl)] bg-white/20 border border-blue-300 p-[clamp(40px,5vw,50px)] [corner-shape:squircle] backdrop-blur-xs anim" data-anim="bottom" data-delay="200">
-          <h3 id="contato-form-titulo" class="text-[length:var(--text-h3)] text-white">
+        <div class="rounded-[var(--radius-plop-xl)] xg:bg-white/20 xg:border xg:border-blue-300 xg:p-12 [corner-shape:squircle] backdrop-blur-xs max-w-full mt-20 mb-10 xg:my-0 anim" data-anim="bottom" data-delay="200">
+          <h3 id="contato-form-titulo" class="text-h2 xg:text-h3 text-white">
             Entre em contato
           </h3>
-          <p class="mt-3 text-white leading-[1.2]">
+          <p class="text-small xg:text-base mt-3 text-white leading-[1.2]">
             Todos os campos, menos o último, são necessários <br> para responder direito.
           </p>
           <div class="relative mt-7">
@@ -91,7 +91,7 @@ const year = new Date().getFullYear();
           </p>
         </div>
 
-        <div class="pt-2 lg:w-[50%] lg:pt-20">
+        <div class="pt-10 lg:w-[50%] lg:pt-20">
           <h4 class="balanced-breaks text-h2 xg:text-h3 text-white">
             Fale com a gente<br /> e coloque <span class="text-plop-lime"> seu negócio no ar.</span>
           </h4>
@@ -101,9 +101,12 @@ const year = new Date().getFullYear();
 
       {/* The fixed WhatsApp affordance lives in this corner, so the last line
           of the page keeps clear of it rather than sitting under it. */}
-      <div class="shell pb-9 pr-20 sm:pr-0">
-        <p class="muted text-small">
-          © {year} {SITE_NAME}
+      <div class="shell pb-9 flex justify-between">
+        <p class="muted text-small xg:w-[50%]">
+          © {year} {SITE_NAME} — Todos os direitos reservados.
+        </p>
+        <p class="muted text-small xg:w-[50%]">
+          Avda. Iguaçu 1455, ap. 34 C | CEP: 84.240-030 | Curitiba, Paraná, Brasil.
         </p>
       </div>
     </div>

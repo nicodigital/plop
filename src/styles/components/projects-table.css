@@ -1,0 +1,282 @@
+@layer components {
+  /**
+   * The full body of delivered work, as a table of rows rather than a grid of
+   * cards. Cards would ask the eye to compare thirty-three thumbnails; rows
+   * ask it to read a list and stop where it recognises itself. The screenshot
+   * is the reward for stopping, not the bait — it appears on hover, on
+   * pointers large enough to hover, and never on touch.
+   */
+  .projects-table {
+    position: relative;
+    border-block-end: 1px solid var(--color-plop-hairline);
+  }
+
+  .projects-row {
+    @apply relative border-t border-black/10;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: 0.5rem 1.5rem;
+    padding-block: clamp(14px, 1.6vw, 20px);
+    text-decoration: none;
+    color: inherit;
+    transition:
+      color var(--duration-fast) var(--ease-plop-out),
+      opacity var(--duration-fast) var(--ease-plop-out);
+
+      &:hover .projects-row__sector {
+        @apply text-blue-500;
+      }
+  }
+
+  /* Every row is its own grid, so the track list has to resolve to the same
+     widths in all of them: no `auto` track, or the widest status string in a
+     given row would set that row's columns and the table would stop lining
+     up column to column. */
+  @media (min-width: 1024px) {
+    .projects-row {
+      grid-template-columns:
+        minmax(0, 3.5fr) minmax(0, 6fr) minmax(0, 3fr) minmax(0, 3fr);
+      align-items: center;
+      gap: 1.5rem;
+    }
+  }
+
+  /* The heading row names the columns and is not a link. */
+  .projects-row--head {
+    border-block-start: 0;
+    padding-block-end: 0.75rem;
+    font-size: var(--text-small);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .projects-row__sector {
+    @apply text-black/60;
+    font-family: var(--font-display);
+    font-size: var(--text-ui-lg);
+    font-weight: 600;
+    min-width: 0;
+  }
+
+  .projects-row__desc,
+  .projects-row__build {
+    display: none;
+    min-width: 0;
+  }
+
+  @media (min-width: 1024px) {
+    .projects-row__desc,
+    .projects-row__build {
+      display: block;
+    }
+  }
+
+  .projects-row__status {
+    justify-self: end;
+    white-space: nowrap;
+  }
+
+  /* On mobile the description carries the row instead of a hidden column. */
+  .projects-row__desc-sm {
+    grid-column: 1 / -1;
+    font-size: var(--text-ui);
+  }
+
+  @media (min-width: 1024px) {
+    .projects-row__desc-sm {
+      display: none;
+    }
+  }
+
+  /**
+   * The hover screenshot. Absolutely positioned out of flow so it cannot
+   * change the row's height, and lifted above its neighbours only while its
+   * own row is hovered. The move is deliberately small — a short rise and a
+   * fade, nothing else: the image arriving is the event, not the way it
+   * arrives. No shadow anywhere near it; depth here is the tonal step
+   * between the shot and the white ground.
+   */
+  .projects-row__shot {
+    @apply absolute shadow-2xl rounded-3xl;
+    inset-block-start: 0;
+    inset-inline-start: 66%;
+    z-index: 100;
+    display: none;
+    width: 40%;
+    max-width: 500px;
+    aspect-ratio: 1600 / 787;
+    object-fit: cover;
+    object-position: top;
+    opacity: 0;
+    transform: translateY(-25%);
+    pointer-events: none;
+    corner-shape: squircle;
+    /* `--ease-plop-out` is an exponential ease-out: it spends ~80% of the
+       travel in the first fifth of the duration, which is right for settling
+       something already on screen and wrong for a reveal — the image would be
+       opaque in ~120ms of a 320ms fade and read as a pop. The standard curve
+       spreads the change across the whole duration, so the arrival is
+       something the eye can actually follow. */
+    transition:
+      opacity var(--duration-normal) var(--ease-plop-standard),
+      transform var(--duration-normal) var(--ease-plop-standard);
+  }
+
+  /* Hover previews need a real pointer and a row wide enough to hold one. */
+  @media (min-width: 1024px) and (hover: hover) and (pointer: fine) {
+    .projects-row__shot {
+      display: block;
+    }
+
+    .projects-table:hover .projects-row:not(:hover) {
+      opacity: 0.45;
+    }
+
+    .projects-row:hover,
+    .projects-row:focus-visible {
+      z-index: 10;
+    }
+
+    .projects-row:hover .projects-row__shot,
+    .projects-row:focus-visible .projects-row__shot {
+      opacity: 1;
+      transform: translateY(-33%);
+    }
+  }
+
+  /* Reduced motion drops the rise and keeps the fade: the screenshot still
+     arrives visibly, it just no longer travels to get there. Killing the
+     transition outright made the image snap in, which is more abrupt than the
+     motion the setting was asking to avoid. */
+  /* @media (prefers-reduced-motion: reduce) {
+    .projects-row__shot {
+      transform: translateY(-33%);
+      transition: opacity var(--duration-normal) var(--ease-plop-standard);
+    }
+  } */
+
+  .projects-table__reset {
+    font: inherit;
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+    cursor: pointer;
+  }
+
+  /**
+   * Sector filter. Plain block links stacked in the masthead rail, not a row
+   * of pills: the list is a quiet index beside the heading, and the arrow is
+   * what says it can be clicked.
+   */
+  .sector-filter {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sector-filter__link {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    /* WCAG 2.2 target size: the row is never shorter than a fingertip. */
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    font-family: var(--font-display);
+    font-size: var(--text-ui-lg);
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--color-plop-on-blue);
+    text-align: start;
+    cursor: pointer;
+    transition: color var(--duration-fast) var(--ease-plop-out);
+  }
+
+  /* The arrow is the affordance: absent at rest, arriving on hover and on the
+     pressed state. It points down and nudges down, because that is what the
+     click does — narrow the table and carry you to it. */
+  .sector-filter__icon {
+    flex: none;
+    opacity: 0;
+    transform: translateY(-0.25rem);
+    transition:
+      opacity var(--duration-fast) var(--ease-plop-standard),
+      transform var(--duration-fast) var(--ease-plop-standard);
+  }
+
+  .sector-filter__count {
+    font-size: var(--text-small);
+    font-variant-numeric: tabular-nums;
+    opacity: 0.7;
+  }
+
+  .sector-filter__link:hover .sector-filter__label,
+  .sector-filter__link:focus-visible .sector-filter__label {
+    text-decoration: underline;
+    text-underline-offset: 0.22em;
+    text-decoration-thickness: 2px;
+  }
+
+  .sector-filter__link:hover,
+  .sector-filter__link:focus-visible,
+  .sector-filter__link[aria-pressed="true"] {
+    color: var(--color-plop-white);
+  }
+
+  .sector-filter__link:hover .sector-filter__icon,
+  .sector-filter__link:focus-visible .sector-filter__icon,
+  .sector-filter__link[aria-pressed="true"] .sector-filter__icon {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Same treatment as the screenshot: the arrow stops nudging, it does not
+     stop appearing. */
+  @media (prefers-reduced-motion: reduce) {
+    .sector-filter__icon {
+      transform: translateY(0);
+      transition: opacity var(--duration-fast) var(--ease-plop-standard);
+    }
+  }
+}
+
+@layer components {
+  /**
+   * The capture on a project page. The video and the still are siblings in the
+   * same box: the still only takes over when the visitor has asked for less
+   * motion, which is the one case where a looping background is the wrong
+   * answer. `preload="metadata"` keeps the hidden video from pulling its whole
+   * body down before that decision is made.
+   */
+  .project-media {
+    @apply relative overflow-hidden rounded-3xl ;  
+    aspect-ratio: 1600 / 787;    
+    background-color: rgb(255 255 255 / 0.1);
+    corner-shape: squircle;
+  }
+
+  .project-media > video,
+  .project-media > img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .project-media__still {
+    display: none;
+  }
+
+  /* @media (prefers-reduced-motion: reduce) {
+    .project-media__video {
+      display: none;
+    }
+
+    .project-media__still {
+      display: block;
+    }
+  } */
+}

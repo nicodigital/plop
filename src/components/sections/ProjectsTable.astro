@@ -1,0 +1,89 @@
+---
+/**
+ * Every delivered site as one readable list.
+ *
+ * All projects are rendered on every state; the sector filter only sets
+ * `hidden` on the rows it excludes. That keeps the page one document for a
+ * crawler and makes filtering a repaint rather than a navigation — which is
+ * what lets the browser morph the rows into their new positions instead of
+ * replacing them.
+ */
+import { BUILD_LABELS, PROJECTS, STATUS_LABELS } from "../../data/projects.ts";
+---
+
+{/* The masthead hands the page over directly, so the top inset is smaller
+    than a full section space — but it has to clear the hover screenshot,
+    which rises out of the first row. */}
+<section id="trabalhos-table"
+  class="on-white relative bg-white pb-[var(--section-space)] pt-5"
+  aria-labelledby="trabalhos-titulo"
+>
+  <div class="shell">
+    <h2 id="trabalhos-titulo" class="sr-only">Todo o trabalho entregue</h2>
+
+    <div class="projects-table" data-projects-table>
+      <div class="projects-row projects-row--head muted" aria-hidden="true">
+        <span>Setor</span>
+        <span class="projects-row__desc">O que o site faz</span>
+        <span class="projects-row__build">Tipo</span>
+        <span class="projects-row__status">Status</span>
+      </div>
+
+      {
+        PROJECTS.map((project) => (
+          <a
+            class="projects-row"
+            href={`/projetos/${project.slug}/`}
+            data-sector-group={project.sectorGroup}
+          >
+            <span class="projects-row__sector">{project.sector}</span>
+            <span class="projects-row__desc muted text-small pr-10 xg:pr-20">{project.description}</span>
+            <span class="projects-row__build muted text-small">
+              {BUILD_LABELS[project.build]}
+            </span>
+            <span class="projects-row__status muted text-small">
+              {STATUS_LABELS[project.status]}
+            </span>
+            <span class="projects-row__desc-sm muted text-small">
+              {project.description}
+            </span>
+            {/* Always the still, never the video poster: a poster is the
+                first frame of a scroll capture, which on half these sites is
+                a dark hero before anything has scrolled into view. */}
+            <img
+              class="projects-row__shot"
+              src={`/assets/portfolio/project-${project.slug}-shot.webp`}
+              alt=""
+              width="1600"
+              height="787"
+              loading="lazy"
+              decoding="async"
+            />
+          </a>
+        ))
+      }
+    </div>
+
+    {
+      /* Only ever seen if a sector is emptied in the data — but a filter with
+         no possible empty state is a filter that has not been finished. */
+    }
+    <p class="projects-table__empty muted mt-12 text-[length:var(--text-lead)]" hidden>
+      Nenhum projeto neste setor por enquanto.
+      <button type="button" class="projects-table__reset" data-sector-filter="*">
+        Ver todos os projetos
+      </button>
+    </p>
+
+    <p class="muted mt-12 max-w-[58ch] text-ui">
+      Seu setor não está nesta lista? Isso não é um problema: a estrutura de um
+      bom site muda menos do que parece entre um ramo e outro.
+    </p>
+  </div>
+</section>
+
+<script>
+  import { initProjectsFilter } from "../../scripts/projects-filter.ts";
+
+  initProjectsFilter();
+</script>

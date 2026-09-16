@@ -18,7 +18,15 @@ import { getCollection, type CollectionEntry } from "astro:content";
 import { BLOG_CATEGORIES, BLOG_AUTHOR, formatPostDate } from "./blog.ts";
 import { FAQ } from "./faq.ts";
 import { PLANS, formatBRL } from "./plans.ts";
-import { PROJECTS } from "./projects.ts";
+import {
+  BUILD_LABELS,
+  FEATURED_PROJECTS,
+  PROJECTS,
+  SECTOR_GROUPS,
+  STATUS_LABELS,
+  projectsInGroup,
+  usedSectorGroups,
+} from "./projects.ts";
 import {
   CONTACT_EMAIL,
   HAS_WHATSAPP,
@@ -104,10 +112,15 @@ const homeBody = (): string =>
     "Sites reais de clientes reais, apresentados por setor — quem contratou não",
     "é nomeado. O link é a prova.",
     "",
-    PROJECTS.map(
+    /* The home slider shows the featured ten, so the mirror of the home shows
+       the same ten. The rest are on /projetos/, which has a mirror of its own
+       — a page's markdown must not claim content the page does not carry. */
+    FEATURED_PROJECTS.map(
       (project) =>
         `- **${project.sector}** — ${project.description}${project.url ? ` (${project.url})` : ""}`,
     ).join("\n"),
+    "",
+    `Os outros ${PROJECTS.length - FEATURED_PROJECTS.length} projetos entregues estão em ${abs(mdPathFor("/projetos/"))}.`,
     "",
     "## Perguntas frequentes",
     "",
@@ -120,6 +133,55 @@ const homeBody = (): string =>
     `- Formulário: ${abs("/#contato")}`,
     "- Atendimento em português, espanhol e inglês.",
   ].join("\n");
+
+/**
+ * The whole body of work as one document, grouped the way the page groups it.
+ *
+ * Each project has an HTML page of its own but no separate markdown mirror:
+ * thirty-three files of four lines each would bury the pages that carry the
+ * offer, and everything those pages say is already here. The links point at
+ * the HTML, which is where a reader should land.
+ */
+const projectsIndexPage = (): TextPage => ({
+  path: "/projetos/",
+  mdPath: mdPathFor("/projetos/"),
+  title: "Projetos",
+  description:
+    "Todos os sites entregues e no ar, apresentados por setor — quem contratou não é nomeado.",
+  meta: [
+    `Projetos: ${PROJECTS.length}`,
+    `Setores: ${usedSectorGroups().length}`,
+  ],
+  body: [
+    "Cada projeto abaixo é um site real de um cliente real, no ar no endereço",
+    "indicado. Apresentamos por setor: os nomes dos clientes ficam com eles, e",
+    "o link é a prova.",
+    "",
+    usedSectorGroups()
+      .map((group) =>
+        [
+          `## ${SECTOR_GROUPS[group]}`,
+          "",
+          projectsInGroup(group)
+            .map((project) =>
+              [
+                `### ${project.sector}`,
+                "",
+                project.description,
+                "",
+                `- Página: ${abs(`/projetos/${project.slug}/`)}`,
+                ...(project.url ? [`- Site: ${project.url}`] : []),
+                `- Tipo: ${BUILD_LABELS[project.build]}`,
+                `- Status: ${STATUS_LABELS[project.status]}`,
+              ].join("\n"),
+            )
+            .join("\n\n"),
+        ].join("\n"),
+      )
+      .join("\n\n"),
+  ].join("\n"),
+  section: "site",
+});
 
 const postPath = (post: CollectionEntry<"blog">) => `/blog/${post.id}/`;
 
@@ -185,6 +247,7 @@ export const textPages = async (): Promise<TextPage[]> => {
       body: homeBody(),
       section: "site",
     },
+    projectsIndexPage(),
     ...legal.map((entry) => ({
       path: `/${entry.id}/`,
       mdPath: mdPathFor(`/${entry.id}/`),

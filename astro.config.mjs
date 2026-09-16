@@ -81,8 +81,11 @@ const postDates = await (async () => {
  */
 const priorityFor = (pathname) => {
   if (pathname === "/") return 1.0;
+  if (pathname === "/projetos/") return 0.8;
   if (pathname === "/blog/") return 0.8;
   if (pathname.startsWith("/blog/")) return 0.7;
+  /* A project page is evidence for the offer, so it outranks the policy. */
+  if (pathname.startsWith("/projetos/")) return 0.6;
   return 0.3;
 };
 

@@ -1,0 +1,249 @@
+---
+/**
+ * One delivered site.
+ *
+ * The page's whole job is to hand the visitor the live link, so the outbound
+ * CTA is the loudest thing on it. Everything else is context for that click:
+ * what the site does, which sector it serves, how it was built.
+ *
+ * The client is not named here, the same as everywhere else on the site. The
+ * heading is the sector and the evidence is the link.
+ */
+import type { GetStaticPaths } from "astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import GooeyStack from "../../components/layout/GooeyStack.astro";
+import FinalCta from "../../components/sections/FinalCta.astro";
+import Button from "../../components/ui/Button.astro";
+import Icon from "../../components/ui/Icon.astro";
+import ShareBar from "../../components/ui/ShareBar.astro";
+import {
+  BUILD_LABELS,
+  PROJECTS,
+  SECTOR_GROUPS,
+  STATUS_LABELS,
+  type Project,
+} from "../../data/projects.ts";
+import {
+  breadcrumbSchema,
+  pageSchema,
+  projectSchema,
+  projectImage,
+} from "../../data/schema.ts";
+import { SITE_URL } from "../../data/site.ts";
+
+export const getStaticPaths: GetStaticPaths = () =>
+  PROJECTS.map((project, index) => ({
+    params: { slug: project.slug },
+    props: {
+      project,
+      /* The list wraps, so every project has somewhere to go next. A dead end
+         here would be a dead end for a crawler too. */
+      next: PROJECTS[(index + 1) % PROJECTS.length],
+    },
+  }));
+
+const { project, next } = Astro.props as { project: Project; next: Project };
+
+const path = `/projetos/${project.slug}/`;
+const pageUrl = new URL(path, SITE_URL).href;
+const groupLabel = SECTOR_GROUPS[project.sectorGroup];
+const image = projectImage(project);
+
+/* The visible domain, which is more legible than the full href and is the
+   thing a visitor actually recognises. */
+const host = project.url
+  ? new URL(project.url).host.replace(/^www\./, "")
+  : undefined;
+
+const title = `${project.sector} — projeto`;
+const description = project.description;
+
+const schema = [
+  pageSchema({
+    type: "ItemPage",
+    name: title,
+    description,
+    path,
+    primaryImage: image,
+  }),
+  breadcrumbSchema([
+    { name: "Projetos", path: "/projetos/" },
+    { name: project.sector },
+  ]),
+  projectSchema(project),
+];
+
+const facts = [
+  ...(host ? [{ term: "Endereço", value: host }] : []),
+  { term: "Setor", value: project.sector },
+  { term: "Tipo", value: BUILD_LABELS[project.build] },
+  { term: "Status", value: STATUS_LABELS[project.status] },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  schema={schema}
+  image={image}
+  imageAlt={`Captura do site: ${project.description}`}
+  imageWidth={1600}
+  imageHeight={787}
+  markdown={false}
+>
+  <GooeyStack>
+    <section class="on-blue" aria-labelledby="projeto-titulo">
+      <div class="shell pb-[clamp(48px,7vw,88px)] pt-[clamp(160px,20vh,300px)]">
+        <nav aria-label="Você está em" class="muted mb-6 text-ui">
+          <a href="/" class="underline-offset-4 hover:underline">Início</a>
+          <span aria-hidden="true"> / </span>
+          <a href="/projetos/" class="underline-offset-4 hover:underline">
+            Projetos
+          </a>
+          <span aria-hidden="true"> / </span>
+          <span>{groupLabel}</span>
+        </nav>
+
+        <div class="spine-grid">
+          <div>
+            <h1
+              id="projeto-titulo"
+              class="max-w-[16ch] text-[length:var(--text-h1)]"
+            >
+              {project.sector}
+            </h1>
+
+            <p class="muted measure mt-7 text-[length:var(--text-lead)] xg:max-w-[33ch]">
+              {project.description}
+            </p>
+
+            <dl class="mt-10 xg:mt-20 max-w-[28rem]">
+              {
+                facts.map((fact) => (
+                  <div class="flex justify-between gap-6 border-t border-white/25 py-3">
+                    <dt class="muted text-ui">{fact.term}</dt>
+                    <dd class="font-display text-ui font-semibold">
+                      {fact.value}
+                    </dd>
+                  </div>
+                ))
+              }
+            </dl>
+
+            
+          </div>
+
+          <div class="xg:-mt-20">
+            {
+              /*
+              The capture is the evidence. Muted and looping where one exists,
+              a still where it does not; either way it carries no information
+              that is not already written above it.
+            */
+            }
+            {
+              project.url && (
+                <Button
+                  href={project.url}
+                  size="lg"
+                  class="mt-10"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-track="project_visit"
+                  data-track-value={project.slug}
+                >
+                  Ver projeto
+                  <span class="sr-only"> (abre em uma nova aba)</span>
+                </Button>
+              )
+            }
+            <figure class="project-media mt-10">
+              {
+                project.media === "video" ? (
+                  <>
+                    <video
+                      class="project-media__video"
+                      poster={`/assets/portfolio/project-${project.slug}-poster.webp`}
+                      preload="metadata"
+                      autoplay
+                      muted
+                      loop
+                      playsinline
+                      aria-hidden="true"
+                    >
+                      <source
+                        src={`/assets/portfolio/project-${project.slug}.webm`}
+                        type="video/webm"
+                      />
+                      <source
+                        src={`/assets/portfolio/project-${project.slug}.mp4`}
+                        type="video/mp4"
+                      />
+                    </video>
+                    <img
+                      class="project-media__still"
+                      src={`/assets/portfolio/project-${project.slug}-poster.webp`}
+                      alt={`Captura do site: ${project.description}`}
+                      width="720"
+                      height="356"
+                      decoding="async"
+                    />
+                  </>
+                ) : (
+                  <img
+                    src={`/assets/portfolio/project-${project.slug}-shot.webp`}
+                    alt={`Captura do site: ${project.description}`}
+                    width="1600"
+                    height="787"
+                    decoding="async"
+                    fetchpriority="high"
+                  />
+                )
+              }
+            </figure>
+
+            <p class="muted mt-7 measure text-ui">
+              O plano mensal inclui hospedagem, suporte técnico e manutenção,
+              para que o site continue no ar e atualizado depois da entrega.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </GooeyStack>
+
+  <section class="on-white bg-white py-[var(--section-space)]">
+    <div class="shell">
+      <ShareBar url={pageUrl} title={`${project.sector} — projeto PLOP! Sites`} />
+
+      <div class="mt-14 flex flex-wrap items-center justify-between gap-6">
+        <a
+          href="/projetos/"
+          class="group inline-flex items-center gap-2 font-display font-semibold text-plop-ink no-underline hover:underline underline-offset-4"
+        >
+          <Icon
+            name="arrow-right"
+            size={20}
+            class="rotate-180 transition-transform duration-[var(--duration-fast)] ease-[var(--ease-plop-out)] group-hover:-translate-x-1"
+          />
+          Todos os projetos
+        </a>
+        <a
+          href={`/projetos/${next.slug}/`}
+          class="group inline-flex items-center gap-2 font-display font-semibold text-plop-ink no-underline hover:underline underline-offset-4"
+        >
+          Próximo: {next.sector}
+          <Icon
+            name="arrow-right"
+            size={20}
+            class="transition-transform duration-[var(--duration-fast)] ease-[var(--ease-plop-out)] group-hover:translate-x-1"
+          />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <GooeyStack tone="light" variant="b">
+    <FinalCta />
+  </GooeyStack>
+</BaseLayout>

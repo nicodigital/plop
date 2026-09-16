@@ -13,7 +13,7 @@
  */
 import { FAQ } from "./faq.ts";
 import { PLANS, entryPrice, formatBRL } from "./plans.ts";
-import { PROJECTS } from "./projects.ts";
+import { PROJECTS, type Project } from "./projects.ts";
 import {
   CONTACT_EMAIL,
   HAS_WHATSAPP,
@@ -206,14 +206,28 @@ export const plansSchema = (anchorOn = "/"): JsonLd => ({
  * clients are not named anywhere on this site, so they are not named here
  * either and the sector stands in for the title.
  */
-export const projectsSchema = (): JsonLd => ({
+/**
+ * A project's still. Every project has one, including the captured ten: a
+ * video poster is the first frame of a scroll-through, which is the wrong
+ * image to hand a social card or a crawler.
+ */
+export const projectImage = (project: Project): string =>
+  `/assets/portfolio/project-${project.slug}-shot.webp`;
+
+/**
+ * The delivered work as a list. Takes the projects to describe so a filtered
+ * `/projetos/setor/…` route advertises its own subset rather than the whole
+ * body, which would tell a crawler the page holds rows it does not have.
+ */
+export const projectsSchema = (projects: Project[] = PROJECTS): JsonLd => ({
   "@context": "https://schema.org",
   "@type": "ItemList",
   name: `Projetos entregues por ${SITE_NAME}`,
-  numberOfItems: PROJECTS.length,
-  itemListElement: PROJECTS.map((project, index) => ({
+  numberOfItems: projects.length,
+  itemListElement: projects.map((project, index) => ({
     "@type": "ListItem",
     position: index + 1,
+    url: abs(`/projetos/${project.slug}/`),
     item: {
       "@type": "WebSite",
       name: project.sector,
@@ -221,9 +235,41 @@ export const projectsSchema = (): JsonLd => ({
       ...(project.url ? { url: project.url } : {}),
       inLanguage: "pt-BR",
       creator: publisherRef,
-      thumbnailUrl: abs(`/assets/portfolio/project-${project.slug}-poster.webp`),
+      thumbnailUrl: abs(projectImage(project)),
     },
   })),
+});
+
+/**
+ * One delivered site. `CreativeWork` with the studio as `creator` says what is
+ * actually true — we made this — while `mainEntity` points at the live site so
+ * the claim and its evidence are one node apart. The client is not named here
+ * either: the page does not name them, and structured data that contradicted
+ * the page would be the kind of mismatch a crawler is built to catch.
+ */
+export const projectSchema = (project: Project): JsonLd => ({
+  "@context": "https://schema.org",
+  "@type": "CreativeWork",
+  "@id": abs(`/projetos/${project.slug}/#project`),
+  name: `${project.sector} — site desenvolvido por ${SITE_NAME}`,
+  description: project.description,
+  url: abs(`/projetos/${project.slug}/`),
+  image: abs(projectImage(project)),
+  inLanguage: "pt-BR",
+  creator: publisherRef,
+  isPartOf: { "@id": WEBSITE_ID },
+  genre: project.sector,
+  ...(project.url
+    ? {
+        mainEntity: {
+          "@type": "WebSite",
+          name: project.sector,
+          url: project.url,
+          inLanguage: "pt-BR",
+          creator: publisherRef,
+        },
+      }
+    : {}),
 });
 
 /**

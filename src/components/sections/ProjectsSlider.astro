@@ -1,5 +1,6 @@
 ---
-import { PROJECTS } from "../../data/projects.ts";
+import { FEATURED_PROJECTS } from "../../data/projects.ts";
+import Button from "../ui/Button.astro";
 
 interface Props {
   /** The home uses the short intro; /projetos/ supplies its own heading. */
@@ -10,7 +11,7 @@ interface Props {
 
 const {
   heading = "Sites otimizados para <span class='text-plop-lime'>inteligencia artifical.</span>",
-  intro = "Projetos reais, entregues e no ar. Mostramos por setor:<br> os nomes dos clientes ficam com eles.",
+  intro = "Projetos reais, entregues e no ar.<br> Com um design destacado para não parecer no resto.",
   headingLevel: Heading = "h2",
 } = Astro.props;
 
@@ -20,17 +21,20 @@ const {
  * something entering and something leaving, and the eye never settles into
  * the rhythm of a single strip.
  */
-const ROWS = [PROJECTS.slice(0, 5), PROJECTS.slice(5)];
+const HALF = Math.ceil(FEATURED_PROJECTS.length / 2);
+const ROWS = [FEATURED_PROJECTS.slice(0, HALF), FEATURED_PROJECTS.slice(HALF)];
 
 /** The lower band covers more ground in the same time, so it runs faster. */
 const ROW_SPEED = [9000, 6800];
 ---
 
-{/*
+{
+  /*
   The rail at its widest. For the whole page the argument obeys a column;
   here it takes the full viewport once, and that break is what keeps the
   spine from reading as a two-column template.
-*/}
+*/
+}
 <section
   id="projetos"
   class="on-blue relative flex flex-col justify-center py-[var(--section-space)] lg:min-h-svh lg:py-[clamp(72px,8vh,120px)]"
@@ -46,17 +50,23 @@ const ROW_SPEED = [9000, 6800];
       >
         <Fragment set:html={heading} />
       </Heading>
-      <p class="muted balanced-breaks mt-10 text-center text-[length:var(--text-lead)] anim" data-anim="bottom" data-delay="400">
+      <p
+        class="muted balanced-breaks mt-10 text-center text-[length:var(--text-lead)] anim"
+        data-anim="bottom"
+        data-delay="400"
+      >
         <Fragment set:html={intro} />
       </p>
     </div>
   </div>
 
-  {/*
+  {
+    /*
     Full-bleed breakout: the bands escape whatever column contains them and
     span the viewport, so the tiles are cut by the screen and not by a
     container edge.
-  */}
+  */
+  }
   <div
     class="relative left-1/2 mt-[clamp(32px,4vw,56px)] flex w-screen -translate-x-1/2 flex-col gap-8 overflow-hidden"
   >
@@ -80,7 +90,11 @@ const ROW_SPEED = [9000, 6800];
                  must not be rendered at all. */
               const Tile = project.url ? "a" : "div";
               const linkProps = project.url
-                ? { href: project.url, target: "_blank", rel: "noopener noreferrer" }
+                ? {
+                    href: project.url,
+                    target: "_blank",
+                    rel: "noopener noreferrer",
+                  }
                 : {};
 
               return (
@@ -118,10 +132,15 @@ const ROW_SPEED = [9000, 6800];
                         <h3 class="font-display text-ui-xl font-semibold text-white">
                           {project.sector}
                           {project.url && (
-                            <span class="sr-only"> — abrir o site em uma nova aba</span>
+                            <span class="sr-only">
+                              {" "}
+                              — abrir o site em uma nova aba
+                            </span>
                           )}
                         </h3>
-                        <p class="muted max-w-[46ch] text-small xg:text-ui">{project.description}</p>
+                        <p class="muted max-w-[46ch] text-small xg:text-ui">
+                          {project.description}
+                        </p>
                       </div>
                     </Tile>
                   </article>
@@ -132,6 +151,11 @@ const ROW_SPEED = [9000, 6800];
         </div>
       ))
     }
+  </div>
+  <div class="mt-20 flex justify-center">
+    <Button size="lg"  href="/projetos/">
+      Ver mais trabalhos
+    </Button>
   </div>
 </section>
 
@@ -185,7 +209,9 @@ const ROW_SPEED = [9000, 6800];
   import { Autoplay } from "swiper/modules";
   import "swiper/css";
 
-  const hosts = Array.from(document.querySelectorAll<HTMLElement>("[data-projects-swiper]"));
+  const hosts = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-projects-swiper]"),
+  );
 
   if (hosts.length) {
     /** At most this many tiles decode at once, however many are on screen. */
@@ -208,7 +234,11 @@ const ROW_SPEED = [9000, 6800];
         // a continuous crawl: always mid-transition, never resting. The two
         // bands differ here, which is the whole point of there being two.
         speed: Number(host.dataset.speed ?? 8000),
-        autoplay: { delay: 0, disableOnInteraction: false, pauseOnMouseEnter: false },
+        autoplay: {
+          delay: 0,
+          disableOnInteraction: false,
+          pauseOnMouseEnter: false,
+        },
         // The tile is a link, and a link has to survive a pointer press.
         // Swiper's touch layer treats any press on a band that is mid-travel
         // as the start of a drag and then cancels the click that follows, so
@@ -231,7 +261,9 @@ const ROW_SPEED = [9000, 6800];
        * transition running, so the wrapper has to be pinned where it is.
        */
       const freeze = () => {
-        const current = new DOMMatrix(getComputedStyle(swiper.wrapperEl).transform).m41;
+        const current = new DOMMatrix(
+          getComputedStyle(swiper.wrapperEl).transform,
+        ).m41;
         swiper.autoplay.stop();
         swiper.setTransition(0);
         swiper.setTranslate(current);
@@ -261,7 +293,9 @@ const ROW_SPEED = [9000, 6800];
      * look at and saves a phone several megabytes.
      */
     const bandVideos = hosts.map((host) =>
-      Array.from(host.querySelectorAll<HTMLVideoElement>("[data-project-video]")),
+      Array.from(
+        host.querySelectorAll<HTMLVideoElement>("[data-project-video]"),
+      ),
     );
     const videos = bandVideos.flat();
     const onScreen = new Set<HTMLVideoElement>();
@@ -271,12 +305,18 @@ const ROW_SPEED = [9000, 6800];
      * is the one measure that survives the travel: a band is always moving,
      * so DOM order says nothing about what the visitor is looking at.
      */
-    const nearestToCentre = (list: readonly HTMLVideoElement[], count: number) => {
+    const nearestToCentre = (
+      list: readonly HTMLVideoElement[],
+      count: number,
+    ) => {
       const centre = window.innerWidth / 2;
       return list
         .map((video) => {
           const box = video.getBoundingClientRect();
-          return { video, distance: Math.abs(box.left + box.width / 2 - centre) };
+          return {
+            video,
+            distance: Math.abs(box.left + box.width / 2 - centre),
+          };
         })
         .sort((a, b) => a.distance - b.distance)
         .slice(0, count)
@@ -348,16 +388,21 @@ const ROW_SPEED = [9000, 6800];
       }
     ).connection;
     const metered =
-      connection?.saveData === true || /(^|-)2g$/.test(connection?.effectiveType ?? "");
+      connection?.saveData === true ||
+      /(^|-)2g$/.test(connection?.effectiveType ?? "");
 
     if (!metered) {
       const warmLeadingTiles = () => {
-        bandVideos.forEach((list) => nearestToCentre(list, WARM_PER_BAND).forEach(warm));
+        bandVideos.forEach((list) =>
+          nearestToCentre(list, WARM_PER_BAND).forEach(warm),
+        );
       };
 
       const intents = ["scroll", "wheel", "touchstart", "keydown"] as const;
       const onFirstIntent = () => {
-        intents.forEach((intent) => window.removeEventListener(intent, onFirstIntent));
+        intents.forEach((intent) =>
+          window.removeEventListener(intent, onFirstIntent),
+        );
         // Off the input's own frame: a fetch must not compete with the scroll
         // that asked for it.
         if (typeof window.requestIdleCallback === "function") {
@@ -391,7 +436,9 @@ const ROW_SPEED = [9000, 6800];
     const sectionObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          const band = bands.find((candidate) => candidate.host === entry.target);
+          const band = bands.find(
+            (candidate) => candidate.host === entry.target,
+          );
           if (!band) return;
           if (entry.isIntersecting) {
             band.start();
