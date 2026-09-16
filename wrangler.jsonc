@@ -11,10 +11,14 @@
   },
   "main": "./worker/index.ts",
   // Not secrets: these only shape how the message reads in the inbox. The
-  // relay URL, its key and the destination mailbox are Worker secrets.
+  // relay URL, its key, the destination mailbox and the Turnstile secret are
+  // Worker secrets.
   "vars": {
     "MAIL_FROM_NAME": "PLOP! Sites",
-    "MAIL_SUBJECT": "Novo contato pelo site"
+    "MAIL_SUBJECT": "Novo contato pelo site",
+    // Hostnames siteverify may report. This is the production list, so it
+    // carries no localhost; .dev.vars overrides it for `wrangler dev`.
+    "TURNSTILE_HOSTNAMES": "plopsites.com.br"
   },
   "observability": {
     "enabled": true

@@ -15,6 +15,13 @@ export interface ContactEnv {
   MAIL_FROM_NAME?: string;
   /** Subject line. Not a secret; lives in wrangler vars. */
   MAIL_SUBJECT?: string;
+  /** Turnstile secret. Secret: it is what proves a token was issued to us. */
+  TURNSTILE_SECRET_KEY?: string;
+  /**
+   * Comma-separated hostnames siteverify is allowed to report. Not a secret,
+   * and deployment-specific: production must never accept localhost.
+   */
+  TURNSTILE_HOSTNAMES?: string;
 }
 
 type Submission = {
@@ -28,6 +35,12 @@ type Submission = {
 const MAX_FIELD = 2000;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const RELAY_TIMEOUT_MS = 10_000;
+
+const TURNSTILE_VERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
+/** Must match the `action` the widget is rendered with. */
+const TURNSTILE_ACTION = "contact";
+const TURNSTILE_TIMEOUT_MS = 10_000;
+const MAX_TOKEN = 2048;
 
 /** Friction, not a guarantee: the map lives in one isolate, and there are many. */
 const RATE_WINDOW_MS = 15 * 60 * 1000;
@@ -93,6 +106,80 @@ const isRateLimited = (ip: string): boolean => {
   recent.push(now);
   attempts.set(ip, recent);
   return false;
+};
+
+/**
+ * Canonical Turnstile siteverify. Fails closed: anything short of a clean
+ * success, for this action, on an approved hostname, is a rejection — including
+ * a siteverify call that never answers. A token is accepted exactly once, so a
+ * replay comes back as `timeout-or-duplicate` and lands here as false.
+ */
+const verifyTurnstile = async (
+  token: FormDataEntryValue | null,
+  ip: string,
+  env: ContactEnv,
+): Promise<boolean> => {
+  const secret = env.TURNSTILE_SECRET_KEY;
+  const hostnames = new Set(
+    (env.TURNSTILE_HOSTNAMES ?? "")
+      .split(",")
+      .map((hostname) => hostname.trim())
+      .filter(Boolean),
+  );
+
+  // Missing configuration must not become an open door.
+  if (!secret || hostnames.size === 0) {
+    console.error("[contato] turnstile not configured");
+    return false;
+  }
+
+  if (typeof token !== "string" || token.length === 0 || token.length > MAX_TOKEN) {
+    return false;
+  }
+
+  const body = new URLSearchParams({ secret, response: token });
+  // Only a real address helps siteverify score the request.
+  if (ip !== "unknown") body.append("remoteip", ip);
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), TURNSTILE_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(TURNSTILE_VERIFY_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      signal: controller.signal,
+      body,
+    });
+
+    if (!response.ok) throw new Error(`siteverify responded ${response.status}`);
+
+    const result = (await response.json()) as {
+      success?: boolean;
+      action?: string;
+      hostname?: string;
+      "error-codes"?: string[];
+    };
+
+    if (result.success !== true) {
+      console.error("[contato] turnstile rejected", result["error-codes"]);
+      return false;
+    }
+
+    // A valid token issued for another surface, or served from another host,
+    // is a token that was not meant for this endpoint.
+    if (result.action !== TURNSTILE_ACTION || !hostnames.has(result.hostname ?? "")) {
+      console.error("[contato] turnstile mismatch", result.action, result.hostname);
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error("[contato] turnstile verification failed", error);
+    return false;
+  } finally {
+    clearTimeout(timeout);
+  }
 };
 
 /** The relay takes one free-text body, so the fields are laid out as a letter. */
@@ -239,7 +326,9 @@ export async function handleContact(request: Request, env: ContactEnv): Promise<
     return reply(request, 403, { error: "bad_origin" }, FAILED);
   }
 
-  if (isRateLimited(clientIp(request))) {
+  const ip = clientIp(request);
+
+  if (isRateLimited(ip)) {
     return reply(
       request,
       429,
@@ -260,6 +349,20 @@ export async function handleContact(request: Request, env: ContactEnv): Promise<
       {
         title: "Faltam alguns dados",
         body: "Confira nome, negócio, e-mail e WhatsApp e envie de novo.",
+      },
+    );
+  }
+
+  // After field validation on purpose: a token is spendable once, and a
+  // submission stopped by a typo should not consume it.
+  if (!(await verifyTurnstile(form.get("cf-turnstile-response"), ip, env))) {
+    return reply(
+      request,
+      403,
+      { error: "verification_failed" },
+      {
+        title: "Verificação de segurança",
+        body: "Não conseguimos confirmar que o envio veio de uma pessoa. Recarregue a página e tente de novo.",
       },
     );
   }

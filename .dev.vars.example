@@ -10,3 +10,14 @@ MAIL_CONTACT_TO=
 # Optional overrides of the wrangler.jsonc vars.
 # MAIL_FROM_NAME=PLOP! Sites
 # MAIL_SUBJECT=Novo contato pelo site
+
+# TURNSTILE
+# The sitekey is public: the build bakes it into the HTML of every page.
+# The secret is a Worker secret in production:
+#   wrangler secret put TURNSTILE_SECRET_KEY
+TURNSTILE_SITE_KEY=
+TURNSTILE_SECRET_KEY=
+
+# Hostnames siteverify may report. Overrides the production value in
+# wrangler.jsonc, which must never list localhost.
+TURNSTILE_HOSTNAMES=localhost,127.0.0.1

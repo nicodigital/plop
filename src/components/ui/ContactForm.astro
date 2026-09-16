@@ -14,8 +14,11 @@ interface Props {
 }
 
 const { id = "contato", labelledBy } = Astro.props;
+/* Public by design: it is served in the HTML to every visitor. The matching
+   secret never leaves the Worker. */
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 const field =
-  "w-full rounded-[var(--radius-plop-md)] [corner-shape:squircle] bg-white px-4 py-3 border-2 border-transparent text-plop-ink transition-colors duration-[var(--duration-fast)] placeholder:text-plop-on-white/60 focus:border-plop-blue-700 focus:outline-none focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-plop-lime";
+  "w-full rounded-[var(--radius-plop-md)] [corner-shape:squircle] bg-white text-black px-4 py-3 border-2 border-transparent transition-colors duration-[var(--duration-fast)] placeholder:text-plop-on-white/60 focus:border-plop-blue-700 focus:outline-none focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-plop-lime";
 const label = "block font-semibold text-ui text-white";
 ---
 
@@ -126,6 +129,19 @@ const label = "block font-semibold text-ui text-white";
     <input id={`${id}-site`} name="site" type="text" tabindex="-1" autocomplete="off" />
   </div>
 
+  {/* Turnstile mounts here. The height is reserved because the widget arrives
+      in an iframe after first paint, and the submit row must not jump. */}
+  <div class="flex flex-col gap-2">
+    <div class="turnstile-slot" data-turnstile data-sitekey={turnstileSiteKey}></div>
+    <p
+      class="hidden text-small font-semibold text-plop-pink"
+      id={`${id}-turnstile-erro`}
+      aria-live="polite"
+      data-error-for="turnstile"
+    >
+    </p>
+  </div>
+
   <div class="flex flex-wrap items-center gap-4 pt-1">
     <Button type="submit" variant="primary" size="lg" icon="send" data-submit>
       <span>Enviar</span>
@@ -135,6 +151,13 @@ const label = "block font-semibold text-ui text-white";
     </p>
   </div>
 </form>
+
+<style>
+  /* Turnstile's own iframe is 65px tall in every responsive size it picks. */
+  .turnstile-slot {
+    min-block-size: 65px;
+  }
+</style>
 
 <script>
   type FieldName = "nome" | "negocio" | "email" | "whatsapp";
@@ -161,12 +184,102 @@ const label = "block font-semibold text-ui text-white";
   const FAILURES: Record<string, string> = {
     invalid_fields: "Confira os campos marcados acima.",
     rate_limited: "Muitas mensagens deste dispositivo. Tente de novo em alguns minutos.",
+    verification_failed:
+      "A verificação de segurança não passou. Recarregue a página e tente de novo.",
     default: "Não conseguimos enviar agora. Tente de novo ou chame no WhatsApp.",
+  };
+
+  /** Must match the action the Worker compares against on every submission. */
+  const TURNSTILE_ACTION = "contact";
+
+  type TurnstileApi = {
+    render: (container: HTMLElement, options: Record<string, unknown>) => string;
+    reset: (widgetId: string) => void;
+    getResponse: (widgetId: string) => string | undefined;
+  };
+
+  const turnstileWindow = window as Window & { turnstile?: TurnstileApi };
+
+  /**
+   * One script tag per page, however many forms are mounted. Explicit render is
+   * what lets each widget be reset on its own after a submission that keeps the
+   * visitor on the page.
+   */
+  let apiLoading: Promise<void> | null = null;
+  const loadTurnstileApi = (): Promise<void> => {
+    if (turnstileWindow.turnstile) return Promise.resolve();
+    if (apiLoading) return apiLoading;
+
+    apiLoading = new Promise<void>((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+      script.async = true;
+      script.addEventListener("load", () => resolve(), { once: true });
+      script.addEventListener(
+        "error",
+        () => reject(new Error("turnstile api failed to load")),
+        { once: true },
+      );
+      document.head.appendChild(script);
+    });
+
+    return apiLoading;
   };
 
   document.querySelectorAll<HTMLFormElement>("[data-contact-form]").forEach((form) => {
     const status = form.querySelector<HTMLElement>("[data-form-status]");
     const submit = form.querySelector<HTMLButtonElement>("[data-submit]");
+    const slot = form.querySelector<HTMLElement>("[data-turnstile]");
+    const turnstileError = form.querySelector<HTMLElement>('[data-error-for="turnstile"]');
+    let widgetId: string | undefined;
+
+    const showTurnstileError = (message: string) => {
+      if (!turnstileError) return;
+      turnstileError.textContent = message;
+      turnstileError.classList.toggle("hidden", message === "");
+    };
+
+    /**
+     * The form sits in the footer of every page, so the widget is mounted only
+     * once it is about to be seen or touched — the challenge costs a request
+     * and a third-party script, and most visits never reach the form.
+     */
+    const mountTurnstile = async () => {
+      if (widgetId !== undefined || !slot?.dataset.sitekey) return;
+      /* Claim the slot before awaiting, so a scroll and a focus racing each
+         other cannot both render a widget into it. */
+      widgetId = "";
+
+      try {
+        await loadTurnstileApi();
+        widgetId = turnstileWindow.turnstile?.render(slot, {
+          sitekey: slot.dataset.sitekey,
+          action: TURNSTILE_ACTION,
+          theme: "light",
+          size: "flexible",
+          language: "pt-BR",
+        });
+      } catch {
+        widgetId = undefined;
+        showTurnstileError("Não foi possível carregar a verificação. Recarregue a página.");
+      }
+    };
+
+    if (slot) {
+      form.addEventListener("focusin", mountTurnstile, { once: true });
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (!entries.some((entry) => entry.isIntersecting)) return;
+          observer.disconnect();
+          void mountTurnstile();
+        },
+        /* Mount a little before the form lands, so the challenge is already
+           solved by the time the fields are filled. */
+        { rootMargin: "300px" },
+      );
+      observer.observe(form);
+    }
 
     const showError = (name: FieldName, message: string) => {
       const slot = form.querySelector<HTMLElement>(`[data-error-for="${name}"]`);
@@ -202,6 +315,22 @@ const label = "block font-semibold text-ui text-white";
         (firstInvalid as HTMLInputElement).focus();
         if (status) status.textContent = "Confira os campos marcados acima.";
         return;
+      }
+
+      /* Fields are checked first on purpose: the token is single-use, and a
+         submission that stops on a typo should not burn it. */
+      if (slot) {
+        /* A visitor who submits the instant the form appears can arrive before
+           the widget does; mounting is idempotent, so this only ever helps. */
+        await mountTurnstile();
+
+        const token = widgetId ? turnstileWindow.turnstile?.getResponse(widgetId) : "";
+        if (!token) {
+          showTurnstileError("Aguarde a verificação de segurança terminar e envie de novo.");
+          if (status) status.textContent = "Verificação de segurança pendente.";
+          return;
+        }
+        showTurnstileError("");
       }
 
       submit?.setAttribute("disabled", "true");
@@ -242,6 +371,9 @@ const label = "block font-semibold text-ui text-white";
       } finally {
         submit?.removeAttribute("disabled");
         submit?.classList.remove("opacity-60", "pointer-events-none");
+        /* The token was redeemed at siteverify — or thrown away with a failed
+           request. Either way this one is spent, so a retry needs a fresh one. */
+        if (widgetId) turnstileWindow.turnstile?.reset(widgetId);
       }
     });
   });

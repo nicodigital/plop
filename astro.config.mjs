@@ -1,9 +1,51 @@
 // @ts-check
+import { readFileSync } from "node:fs";
+
 import { defineConfig } from "astro/config";
 import sitemap, { ChangeFreqEnum } from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 
 import { SITE_URL } from "./src/data/site.ts";
+
+/**
+ * Reads one key out of `.dev.vars`. That file belongs to the Worker runtime and
+ * Astro never looks at it on its own, but the Turnstile sitekey has to be baked
+ * into static markup at build time — so the build comes to fetch it, keeping
+ * the sitekey and its secret in a single place to rotate.
+ *
+ * @param {string} name
+ * @returns {string | undefined}
+ */
+const readDevVar = (name) => {
+  let source;
+  try {
+    source = readFileSync("./.dev.vars", "utf8");
+  } catch {
+    return undefined;
+  }
+
+  /* Commented lines start with `#`, so anchoring at the key name skips them. */
+  const match = source.match(new RegExp(`^${name}=(.*)$`, "m"));
+  return match?.[1].trim().replace(/^["']|["']$/g, "") || undefined;
+};
+
+/**
+ * The sitekey is public — it ships inside the HTML of every page — so baking it
+ * into the bundle leaks nothing. The environment wins over the file so a build
+ * host without `.dev.vars` can still supply it.
+ */
+const TURNSTILE_SITE_KEY =
+  process.env.TURNSTILE_SITE_KEY ?? readDevVar("TURNSTILE_SITE_KEY");
+
+/* A silent miss would ship a contact form nobody can submit, and the failure
+   would only surface in production. Better to never produce that build. */
+if (!TURNSTILE_SITE_KEY) {
+  throw new Error(
+    "TURNSTILE_SITE_KEY is missing. The contact form renders its widget from " +
+      "this key, so a build without it would ship a form that cannot be sent. " +
+      "Set it in .dev.vars or in the environment before building.",
+  );
+}
 
 /**
  * Last meaningful change per route, read from the content collections at
@@ -69,6 +111,11 @@ export default defineConfig({
   ],
   vite: {
     plugins: [tailwindcss()],
+    define: {
+      /* Substituted into both the page markup and the client script, so the
+         widget and its mount logic read the same key. */
+      "import.meta.env.PUBLIC_TURNSTILE_SITE_KEY": JSON.stringify(TURNSTILE_SITE_KEY),
+    },
   },
   build: {
     inlineStylesheets: "auto",
