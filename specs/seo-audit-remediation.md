@@ -89,15 +89,30 @@ departamento.
 - Revisar `src/components/layout/Footer.astro` para que el bloque `<address>` no
   quede con una coma o un separador huérfano.
 
-**Nota sobre el CEP — RESUELTO (2026-09-17).** El valor `84240-030` era de la
-región de Ponta Grossa. El dueño confirmó el correcto: **`80240-030`**, dentro
-del rango de Curitiba (80000-000 a 82999-999). Se conserva `postalCode` porque
-identifica una cuadra, no una puerta, y da la mayor precisión posible al
-`LocalBusiness` sin exponer el domicilio.
+**Estado final (2026-09-17) — la dirección ya no se publica en ninguna forma.**
 
-También se eliminó el export `MAP_URL` de `site.ts`: su único consumidor era el
-`hasMap` retirado. Vuelve en la Etapa 3 §6.1 apuntando al perfil de Google.
-`ADDRESS_LINE` quedó sin consumidores en todo `src/` — candidato a borrar.
+Se resolvió en dos pasos. Primero se retiraron `street` y `hasMap`, y se corrigió
+el CEP: el valor `84240-030` era de la región de Ponta Grossa y el dueño confirmó
+el correcto, `80240-030`. Después, **Google indicó retirar la dirección física**
+al publicar el Perfil de Empresa, así que también se eliminaron `postalCode` y
+`postalDisplay`.
+
+El `PostalAddress` publicado queda en su mínima expresión válida:
+
+```json
+{"@type":"PostalAddress","addressLocality":"Curitiba",
+ "addressRegion":"PR","addressCountry":"BR"}
+```
+
+Y el footer imprime `Curitiba, Paraná, Brasil.` Esto concuerda con un perfil de
+área de servicio con dirección oculta, que es la condición que Google pone para
+un negocio sin atención presencial. `LocalBusiness` no necesita calle ni CEP
+para seguir siendo elegible.
+
+Efectos colaterales, ya aplicados: se eliminaron los exports `MAP_URL` y
+`ADDRESS_LINE` de `site.ts` — el primero porque su único consumidor era el
+`hasMap` original, el segundo porque no lo consumía nadie en todo `src/`.
+`hasMap` volvió el mismo día apuntando al perfil (ver §6.1), no a una dirección.
 
 ### 3.2 Servir la página 404
 

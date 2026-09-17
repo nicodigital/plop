@@ -64,22 +64,62 @@ export const PHONE_NUMBER = WHATSAPP_NUMBER;
 export const PHONE_DISPLAY = "+55 (41) 99939-0088";
 
 /**
- * Registered address. Kept here rather than typed into the footer because two
- * consumers read it: the visible line at the end of the page and the
- * `PostalAddress` node inside `organizationSchema()`. A local result is only
- * as good as the agreement between those two — a crawler that finds one
- * locality in the markup and another in the JSON-LD trusts neither.
+ * Where the business is, at the only resolution it is published: city, state
+ * and country. Kept here rather than typed into the footer because two
+ * consumers read it — the visible line at the end of the page and the
+ * `PostalAddress` node inside `organizationSchema()` — and a crawler that
+ * finds one locality in the markup and another in the JSON-LD trusts neither.
  *
- * No street line: clients are served remotely and never visit, so publishing
- * the door number is exposure without a local-search return. City, state and
- * postcode are all a `LocalBusiness` needs to stay eligible.
- *
- * `postalCode` carries the plain digits form the Correios use; `postalDisplay`
- * is the dotted form the footer shows.
+ * No street and no postcode. Clients are served remotely and never visit, so
+ * the Business Profile runs as a service-area listing with its address hidden,
+ * and Google asks that the site not publish what the profile withholds. A
+ * `PostalAddress` needs neither field to keep `LocalBusiness` eligible.
  */
+/**
+ * What the studio does and where, in one line of prose.
+ *
+ * The Business Profile is a service-area listing, and Google corroborates a
+ * listing by reading the site. Until this existed the city lived only inside
+ * the JSON-LD and the footer address — retrieval runs over text, so neither
+ * was reachable. It is a plain visible line in the footer, never hidden
+ * markup: text served to a crawler and withheld from a reader is what a
+ * manual action is for.
+ *
+ * "Atendimento em todo o Brasil" is not padding — it is the honest half. The
+ * work is remote and the listing declares a service area, so a line naming
+ * only the city would describe a storefront that does not exist.
+ */
+export const LOCAL_SUMMARY =
+  "Desenvolvimento web de Curitiba para todo o Brasil.";
+
+/**
+ * The cities the Google Business Profile declares as its service areas.
+ *
+ * Kept in sync with the listing on purpose. The profile runs with its address
+ * hidden, so these areas are the only statement of reach Google holds for it —
+ * and `organizationSchema()` repeats them so the site corroborates the listing
+ * instead of describing a different business.
+ *
+ * Curitiba first, then its metropolitan neighbours, then São Paulo. The order
+ * is the order of proximity, which is also the order in which a local result is
+ * winnable: the pack weighs distance heavily, so the municipalities next door
+ * are reachable long before a different state's capital is.
+ *
+ * The profile and this list have to say the same thing. Change the profile
+ * first; a list that runs ahead of it publishes a reach Google cannot confirm.
+ * (Google accepts up to 20 areas, so there is room — but each one should be
+ * somewhere the work is genuinely delivered.)
+ */
+export const SERVICE_AREA_CITIES = [
+  "Curitiba",
+  "São José dos Pinhais",
+  "Pinhais",
+  "Colombo",
+  "Araucária",
+  "São Paulo",
+] as const;
+
 export const ADDRESS = {
-  postalCode: "80240-030",
-  postalDisplay: "80.240-030",
   city: "Curitiba",
   region: "PR",
   regionName: "Paraná",
@@ -87,6 +127,4 @@ export const ADDRESS = {
   countryCode: "BR",
 } as const;
 
-/** The address on one line, as the footer prints it. */
-export const ADDRESS_LINE = `${ADDRESS.city} — ${ADDRESS.regionName}, ${ADDRESS.country}. CEP ${ADDRESS.postalDisplay}`;
 

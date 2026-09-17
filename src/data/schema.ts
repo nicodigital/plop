@@ -21,6 +21,7 @@ import {
   HAS_WHATSAPP,
   OG_IMAGE,
   PHONE_NUMBER,
+  SERVICE_AREA_CITIES,
   SITE_NAME,
   SITE_URL,
   WHATSAPP_NUMBER,
@@ -68,14 +69,15 @@ export const organizationSchema = (): JsonLd => ({
     "@type": "PostalAddress",
     addressLocality: ADDRESS.city,
     addressRegion: ADDRESS.region,
-    postalCode: ADDRESS.postalCode,
     addressCountry: ADDRESS.countryCode,
   },
   hasMap: GOOGLE_BUSINESS_PROFILE,
+  /* The country is what the studio itself claims — the work is remote and the
+     footer says so. The cities are what the Business Profile declares, repeated
+     here so the two cannot describe a different reach. */
   areaServed: [
     { "@type": "Country", name: ADDRESS.country },
-    { "@type": "State", name: ADDRESS.regionName },
-    { "@type": "City", name: ADDRESS.city },
+    ...SERVICE_AREA_CITIES.map((name) => ({ "@type": "City", name })),
   ],
   serviceType: "Desenvolvimento de sites",
   knowsLanguage: ["pt-BR", "es", "en"],

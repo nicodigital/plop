@@ -2,11 +2,11 @@
 #
 # Read automatically by Workers Static Assets — no Worker code involved, so a
 # header here costs nothing at request time. The Content-Security-Policy is
-# NOT here: Astro emits it per page as a <meta> tag with the hashes of its own
-# inline scripts (see `security.csp` in astro.config.mjs), which stays correct
-# across rebuilds in a way a hand-written header cannot. `frame-ancestors` is
-# ignored inside a meta tag, so clickjacking is covered by X-Frame-Options
-# below instead.
+# NOT here: Astro emits it per page as a <meta> tag carrying the hashes of its
+# own inline scripts (see `security.csp` in astro.config.mjs), which stays
+# correct across rebuilds in a way a hand-written header cannot.
+# `frame-ancestors` is ignored inside a meta tag, so clickjacking is covered by
+# X-Frame-Options below instead.
 
 /*
   Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
@@ -15,3 +15,27 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=()
   Cross-Origin-Opener-Policy: same-origin
+
+# The text mirrors declare `charset=utf-8` in their endpoints, but prerendering
+# turns them into static files and the asset server labels those itself, losing
+# the charset. An HTML page survives that on its `<meta charset>`; plain text
+# and markdown have no such fallback, and `text/*` with no charset is decoded
+# as Latin-1 by anything that follows the spec — which mangles every accent in
+# exactly the files written to be read by machines.
+#
+# HTML is deliberately left alone: its routes carry no extension, so no pattern
+# here can single it out, and routing every page through the Worker to set one
+# header would spend an invocation per view to fix what browsers already
+# resolve from the meta tag.
+
+/*.md
+  Content-Type: text/markdown; charset=utf-8
+
+/llms.txt
+  Content-Type: text/plain; charset=utf-8
+
+/llms-full.txt
+  Content-Type: text/plain; charset=utf-8
+
+/robots.txt
+  Content-Type: text/plain; charset=utf-8

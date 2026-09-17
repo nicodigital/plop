@@ -114,7 +114,14 @@ export default defineConfig({
         "form-action 'self'",
       ],
       scriptDirective: {
-        resources: ["'self'", "https://challenges.cloudflare.com"],
+        /* Cloudflare injects its Web Analytics beacon at the edge, so it is
+           absent from the built HTML and easy to miss when listing origins —
+           it was, and the policy blocked it until this line existed. */
+        resources: [
+          "'self'",
+          "https://challenges.cloudflare.com",
+          "https://static.cloudflareinsights.com",
+        ],
       },
       styleDirective: {
         /* Hashes cover the <style> elements. A handful of style="" attributes

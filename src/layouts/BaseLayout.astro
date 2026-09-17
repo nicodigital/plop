@@ -32,6 +32,8 @@ interface Props {
   noindex?: boolean;
   /** False on routes with no markdown mirror (404, blog pages 2..n). */
   markdown?: boolean;
+  /** Above-the-fold image to preload, when the route has an LCP candidate. */
+  preloadImage?: string;
 }
 
 const {
@@ -46,6 +48,7 @@ const {
   schema,
   noindex = false,
   markdown = true,
+  preloadImage,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, SITE_URL).href;
@@ -123,7 +126,7 @@ const website = websiteSchema();
       <link rel="alternate" type="text/markdown" href={markdownHref} title={`${fullTitle} (markdown)`} />
     )}
     <link rel="describedby" type="text/plain" href={llmsHref} title={`${SITE_NAME} (llms.txt)`} />
-    <Preload />
+    <Preload image={preloadImage} />
 
     <script
       type="application/ld+json"

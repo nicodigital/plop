@@ -18,6 +18,18 @@
 import quicksandLatin from "@fontsource-variable/quicksand/files/quicksand-latin-wght-normal.woff2?url";
 import manropeLatin from "@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2?url";
 
+interface Props {
+  /**
+   * One above-the-fold image to fetch at high priority. The hero poster is
+   * the page's LCP element, and the browser only discovers it once it has
+   * parsed the <video> that carries it — by which time the slider's own
+   * posters are already competing for the same bandwidth.
+   */
+  image?: string;
+}
+
+const { image } = Astro.props;
+
 const fonts = [quicksandLatin, manropeLatin];
 ---
 
@@ -26,3 +38,4 @@ const fonts = [quicksandLatin, manropeLatin];
     <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />
   ))
 }
+{image && <link rel="preload" href={image} as="image" fetchpriority="high" />}

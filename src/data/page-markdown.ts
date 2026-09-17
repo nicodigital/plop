@@ -31,6 +31,7 @@ import {
   CONTACT_EMAIL,
   HAS_WHATSAPP,
   PHONE_DISPLAY,
+  LOCAL_SUMMARY,
   SITE_DESCRIPTION,
   SITE_NAME,
   SITE_URL,
@@ -131,6 +132,7 @@ const homeBody = (): string =>
     `- E-mail: ${CONTACT_EMAIL}`,
     ...(HAS_WHATSAPP ? [`- WhatsApp: ${PHONE_DISPLAY}`] : []),
     `- Formulário: ${abs("/#contato")}`,
+    `- ${LOCAL_SUMMARY}`,
     "- Atendimento em português, espanhol e inglês.",
   ].join("\n");
 
