@@ -1,8 +1,5 @@
 # BACKLOG
 
-## SINGLE PROJETO
-
-
 ## FOOTER
 Enriquecer dirección con rich snippets y atributos aria
 

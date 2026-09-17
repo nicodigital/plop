@@ -13,10 +13,18 @@ interface Props {
   url: string;
   title: string;
   label?: string;
+  /** `light` is the same bar on a blue ground: light label, light icons. */
+  variant?: "default" | "light";
   class?: string;
 }
 
-const { url, title, label = "Compartilhar", class: className = "" } = Astro.props;
+const {
+  url,
+  title,
+  label = "Compartilhar",
+  variant = "default",
+  class: className = "",
+} = Astro.props;
 
 type ShareTarget = {
   /** Also the analytics value, so a report reads by network. */
@@ -60,12 +68,22 @@ const targets: ShareTarget[] = [
     href: `https://wa.me/?text=${encodeURIComponent(`${title} ${url}`)}`,
   },
 ];
+
+/* Same bar, two grounds: white/paper inside an article, brand blue on the
+   project pages. Only the label tint, the icon surface and the drop change. */
+const isLight = variant === "light";
+
+const labelClass = isLight ? "text-white" : "text-blue-700";
+
+const linkClass = isLight
+  ? "btn--share-light border-white/70 text-white hover:border-white hover:bg-white hover:text-plop-ink"
+  : "btn--share border-plop-hairline text-plop-ink hover:border-plop-ink hover:bg-plop-ink hover:text-white";
 ---
 
 <div
-  class={`flex flex-wrap items-center justify-between gap-x-6 gap-y-4 pt-7 ${className}`}
+  class={`flex flex-col flex-wrap justify-between gap-x-6 gap-y-4 pt-7 ${className}`}
 >
-  <p class="eyebrow text-plop-on-white">{label}</p>
+  <p class={labelClass}>{label}</p>
 
   <ul class="flex flex-wrap items-center gap-2.5">
     {
@@ -73,7 +91,7 @@ const targets: ShareTarget[] = [
         <li>
           <a
             href={target.href}
-            class="btn btn--share inline-flex size-11 items-center justify-center rounded-full border-2 border-plop-hairline text-plop-ink no-underline hover:border-plop-ink hover:bg-plop-ink hover:text-white"
+            class={`btn inline-flex size-11 items-center justify-center rounded-full border-2 no-underline ${linkClass}`}
             target="_blank"
             rel="noopener noreferrer"
             data-track="post_share"

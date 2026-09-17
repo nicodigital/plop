@@ -48,7 +48,45 @@ export const whatsappHref = (message: string = WHATSAPP_MESSAGE): string =>
 
 export const CONTACT_EMAIL = "ola@plopsites.com.br";
 
+/**
+ * The Google Business Profile, addressed by its CID — the listing's stable id.
+ * A Maps URL copied out of the address bar carries a session build stamp and a
+ * UI language and stops resolving; this form does not. The CID also keeps the
+ * link pointing at the profile rather than at a pin on a street, which is what
+ * a service-area business wants.
+ */
+export const GOOGLE_BUSINESS_PROFILE =
+  "https://maps.google.com/?cid=10583425524771451781";
+
 /** Same number as WhatsApp, formatted for display and for a `tel:` href. */
 export const PHONE_NUMBER = WHATSAPP_NUMBER;
 
 export const PHONE_DISPLAY = "+55 (41) 99939-0088";
+
+/**
+ * Registered address. Kept here rather than typed into the footer because two
+ * consumers read it: the visible line at the end of the page and the
+ * `PostalAddress` node inside `organizationSchema()`. A local result is only
+ * as good as the agreement between those two — a crawler that finds one
+ * locality in the markup and another in the JSON-LD trusts neither.
+ *
+ * No street line: clients are served remotely and never visit, so publishing
+ * the door number is exposure without a local-search return. City, state and
+ * postcode are all a `LocalBusiness` needs to stay eligible.
+ *
+ * `postalCode` carries the plain digits form the Correios use; `postalDisplay`
+ * is the dotted form the footer shows.
+ */
+export const ADDRESS = {
+  postalCode: "80240-030",
+  postalDisplay: "80.240-030",
+  city: "Curitiba",
+  region: "PR",
+  regionName: "Paraná",
+  country: "Brasil",
+  countryCode: "BR",
+} as const;
+
+/** The address on one line, as the footer prints it. */
+export const ADDRESS_LINE = `${ADDRESS.city} — ${ADDRESS.regionName}, ${ADDRESS.country}. CEP ${ADDRESS.postalDisplay}`;
+

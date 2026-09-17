@@ -1,0 +1,17 @@
+# Response headers for every asset Cloudflare serves.
+#
+# Read automatically by Workers Static Assets — no Worker code involved, so a
+# header here costs nothing at request time. The Content-Security-Policy is
+# NOT here: Astro emits it per page as a <meta> tag with the hashes of its own
+# inline scripts (see `security.csp` in astro.config.mjs), which stays correct
+# across rebuilds in a way a hand-written header cannot. `frame-ancestors` is
+# ignored inside a meta tag, so clickjacking is covered by X-Frame-Options
+# below instead.
+
+/*
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=()
+  Cross-Origin-Opener-Policy: same-origin

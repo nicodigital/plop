@@ -23,18 +23,18 @@ import { CONTACT_ANCHOR, PLANS_ANCHOR } from "../../data/nav.ts";
       </h1>
 
       <p
-        class="muted mt-5 max-w-[40ch] text-[length:var(--text-lead)] lg:mt-7 anim" data-anim="bottom" data-delay="1200"
+        class="muted mt-5 max-w-[40ch] text-[length:var(--text-lead)] lg:mt-7 anim" data-anim="bottom" data-delay="800"
       >
         Sites modernos, rápidos e fáceis de gerenciar.<br> Design de alto desempenho com um preço que faz sentido — e já preparado para aparecer em buscadores e inteligência artificial.
       </p>
 
       <div class="flex flex-wrap items-center gap-3 mt-12 lg:mt-8">
-        <div class="anim" data-anim="bottom" data-delay="1400" >
+        <div class="anim" data-anim="bottom" data-delay="950" >
         <Button href={CONTACT_ANCHOR} size="lg" data-track="cta_primary_click">
           Quero meu site
         </Button>
         </div>
-        <div class="anim" data-anim="bottom" data-delay="1600">
+        <div class="anim" data-anim="bottom" data-delay="1100">
         <Button href={PLANS_ANCHOR} variant="outline" size="lg" icon="arrow-down">
           Ver planos
         </Button>
@@ -43,7 +43,7 @@ import { CONTACT_ANCHOR, PLANS_ANCHOR } from "../../data/nav.ts";
 
       {/* Separators are drawn, not listed, so a wrap never strands one. */}
       <ul
-        class="hidden muted mt-6 xg:flex flex-col xg:flex-row flex-wrap gap-x-5 gap-y-1 text-ui font-semibold lg:mt-9 lg:gap-x-4 anim" data-anim="bottom" data-delay="1800"
+        class="hidden muted mt-6 xg:flex flex-col xg:flex-row flex-wrap gap-x-5 gap-y-1 text-ui font-semibold lg:mt-9 lg:gap-x-4 anim" data-anim="bottom" data-delay="1250"
       >
         <li class="before:mr-5 xg:before:text-plop-on-blue/55 xg:before:content-['·'] first:before:hidden lg:before:mr-6">
           No ar em semanas
@@ -75,11 +75,10 @@ import { CONTACT_ANCHOR, PLANS_ANCHOR } from "../../data/nav.ts";
   <div class="hero-media relative -z-20 -mt-12 xg:mt-0" aria-hidden="true">
     <video
       class="hero-video"
-      autoplay
       muted
       loop
       playsinline
-      preload="metadata"
+      preload="none"
       poster="/assets/video/hero-laptop-alpha-poster.webp"
       data-hero-video
     >
@@ -214,15 +213,38 @@ import { CONTACT_ANCHOR, PLANS_ANCHOR } from "../../data/nav.ts";
   // bandwidth while it is off screen or while the tab is in the background.
   // It no longer stands down for prefers-reduced-motion: that call belongs
   // to the owner of the site, and it was made.
+  //
+  // It also must not be what the browser measures as the largest paint. With
+  // `autoplay` on the element, the first decoded frame replaced the poster as
+  // the LCP candidate and the metric waited on ~830 KB of video instead of a
+  // 54 KB image. So the element ships with `preload="none"` and no autoplay,
+  // and every path that could start playback goes through `resume()`, which
+  // stays shut until the page has finished loading. Without that single gate
+  // the IntersectionObserver below would fire on registration — the hero is on
+  // screen at load — and pull the video in anyway.
   const video = document.querySelector<HTMLVideoElement>("[data-hero-video]");
 
   if (video) {
-    void video.play().catch(() => {});
+    let unlocked = false;
+
+    const resume = () => {
+      if (!unlocked || document.hidden) return;
+      void video.play().catch(() => {});
+    };
+
+    const unlock = () => {
+      unlocked = true;
+      video.preload = "auto";
+      resume();
+    };
+
+    if (document.readyState === "complete") requestAnimationFrame(unlock);
+    else window.addEventListener("load", unlock, { once: true });
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) void video.play().catch(() => {});
+          if (entry.isIntersecting) resume();
           else video.pause();
         });
       },
@@ -232,7 +254,7 @@ import { CONTACT_ANCHOR, PLANS_ANCHOR } from "../../data/nav.ts";
 
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) video.pause();
-      else void video.play().catch(() => {});
+      else resume();
     });
   }
 </script>

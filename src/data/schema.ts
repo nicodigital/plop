@@ -15,7 +15,9 @@ import { FAQ } from "./faq.ts";
 import { PLANS, entryPrice, formatBRL } from "./plans.ts";
 import { PROJECTS, type Project } from "./projects.ts";
 import {
+  ADDRESS,
   CONTACT_EMAIL,
+  GOOGLE_BUSINESS_PROFILE,
   HAS_WHATSAPP,
   OG_IMAGE,
   PHONE_NUMBER,
@@ -57,7 +59,24 @@ export const organizationSchema = (): JsonLd => ({
     "Desenvolvimento de sites profissionais para negócios independentes, com hospedagem, suporte e manutenção mensal.",
   email: CONTACT_EMAIL,
   ...(HAS_WHATSAPP ? { telephone: PHONE_NUMBER } : {}),
-  areaServed: { "@type": "Country", name: "Brasil" },
+  /* The registered address, from the same constant the footer prints. A
+     LocalBusiness without a `PostalAddress` is not eligible for a local
+     result at all, however complete the rest of the node is — but it needs no
+     street line: clients are served remotely, and `hasMap` points at the
+     Business Profile rather than at a door nobody visits. */
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: ADDRESS.city,
+    addressRegion: ADDRESS.region,
+    postalCode: ADDRESS.postalCode,
+    addressCountry: ADDRESS.countryCode,
+  },
+  hasMap: GOOGLE_BUSINESS_PROFILE,
+  areaServed: [
+    { "@type": "Country", name: ADDRESS.country },
+    { "@type": "State", name: ADDRESS.regionName },
+    { "@type": "City", name: ADDRESS.city },
+  ],
   serviceType: "Desenvolvimento de sites",
   knowsLanguage: ["pt-BR", "es", "en"],
   /* The entry price of the cheapest plan upward — the figure the cards show,
@@ -72,9 +91,15 @@ export const organizationSchema = (): JsonLd => ({
           email: CONTACT_EMAIL,
           availableLanguage: ["Portuguese", "Spanish", "English"],
         },
-        sameAs: [`https://wa.me/${WHATSAPP_NUMBER.replace(/\D/g, "")}`],
       }
     : {}),
+  /* Profiles that resolve to the same business elsewhere. The Business
+     Profile leads: it ties this node to the listing Google already holds,
+     and a local result is decided there rather than here. */
+  sameAs: [
+    GOOGLE_BUSINESS_PROFILE,
+    ...(HAS_WHATSAPP ? [`https://wa.me/${WHATSAPP_NUMBER.replace(/\D/g, "")}`] : []),
+  ],
 });
 
 export const websiteSchema = (): JsonLd => ({
@@ -146,14 +171,16 @@ const planService = (plan: (typeof PLANS)[number], anchorOn: string): JsonLd => 
   offers: {
     "@type": "Offer",
     priceCurrency: "BRL",
-    price: plan.setup,
+    /* A plan whose entry is a floor says so with `minPrice`. Writing it as
+       `price` would publish a starting figure as a closed one. */
+    ...(plan.setupFrom ? { minPrice: plan.setup } : { price: plan.setup }),
     availability: "https://schema.org/InStock",
     description: `Entrada de ${formatBRL(plan.setup)} mais ${formatBRL(plan.monthly)} por mês.`,
     priceSpecification: [
       {
         "@type": "UnitPriceSpecification",
         name: plan.setupFrom ? "Entrada, a partir de" : "Entrada",
-        price: plan.setup,
+        ...(plan.setupFrom ? { minPrice: plan.setup } : { price: plan.setup }),
         priceCurrency: "BRL",
         valueAddedTaxIncluded: true,
       },

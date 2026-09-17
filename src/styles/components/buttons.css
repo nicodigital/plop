@@ -55,4 +55,10 @@
   .btn--share {
     --btn-lift-shadow: var(--color-plop-hairline);
   }
+
+  /* The same row on a blue ground: the hairline drop would vanish there, so
+     it casts the deepest step of the ramp instead. */
+  .btn--share-light {
+    --btn-lift-shadow: rgba(255, 255, 255, 0.5);
+  }
 }

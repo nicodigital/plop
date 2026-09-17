@@ -7,7 +7,10 @@
     "binding": "ASSETS",
     // The contact endpoint is not a file in ./dist, so the Worker has to see
     // that request before the asset server answers 404.
-    "run_worker_first": ["/api/contato"]
+    "run_worker_first": ["/api/contato"],
+    // Without this the asset server answers an empty 404 and the built
+    // 404 page never reaches a visitor.
+    "not_found_handling": "404-page"
   },
   "main": "./worker/index.ts",
   // Not secrets: these only shape how the message reads in the inbox. The

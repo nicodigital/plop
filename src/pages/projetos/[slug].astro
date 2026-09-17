@@ -113,7 +113,9 @@ const facts = [
               {project.sector}
             </h1>
 
-            <p class="muted measure mt-7 text-[length:var(--text-lead)] xg:max-w-[33ch]">
+            <p
+              class="muted measure mt-7 text-[length:var(--text-lead)] xg:max-w-[33ch]"
+            >
               {project.description}
             </p>
 
@@ -129,8 +131,6 @@ const facts = [
                 ))
               }
             </dl>
-
-            
           </div>
 
           <div class="xg:-mt-20">
@@ -146,6 +146,7 @@ const facts = [
                 <Button
                   href={project.url}
                   size="lg"
+                  variant="outline"
                   class="mt-10"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -208,40 +209,42 @@ const facts = [
             </p>
           </div>
         </div>
+
+        <div class="flex xg:justify-end mt-10 xg:mt-0">
+          <ShareBar
+            url={pageUrl}
+            title={`${project.sector} — projeto PLOP! Sites`}
+            variant="light"
+          />
+        </div>
+
+        <div class="mt-14 hidden xg:flex flex-wrap items-center justify-between gap-6">
+          <a
+            href="/projetos/"
+            class="group inline-flex items-center gap-2 font-display font-semibold no-underline hover:underline underline-offset-4"
+          >
+            <Icon
+              name="arrow-right"
+              size={20}
+              class="rotate-180 transition-transform duration-[var(--duration-fast)] ease-[var(--ease-plop-out)] group-hover:-translate-x-1"
+            />
+            Todos os projetos
+          </a>
+          <a
+            href={`/projetos/${next.slug}/`}
+            class="group inline-flex items-center gap-2 font-display font-semibold no-underline hover:underline underline-offset-4"
+          >
+            Próximo: {next.sector}
+            <Icon
+              name="arrow-right"
+              size={20}
+              class="transition-transform duration-[var(--duration-fast)] ease-[var(--ease-plop-out)] group-hover:translate-x-1"
+            />
+          </a>
+        </div>
       </div>
     </section>
   </GooeyStack>
-
-  <section class="on-white bg-white py-[var(--section-space)]">
-    <div class="shell">
-      <ShareBar url={pageUrl} title={`${project.sector} — projeto PLOP! Sites`} />
-
-      <div class="mt-14 flex flex-wrap items-center justify-between gap-6">
-        <a
-          href="/projetos/"
-          class="group inline-flex items-center gap-2 font-display font-semibold text-plop-ink no-underline hover:underline underline-offset-4"
-        >
-          <Icon
-            name="arrow-right"
-            size={20}
-            class="rotate-180 transition-transform duration-[var(--duration-fast)] ease-[var(--ease-plop-out)] group-hover:-translate-x-1"
-          />
-          Todos os projetos
-        </a>
-        <a
-          href={`/projetos/${next.slug}/`}
-          class="group inline-flex items-center gap-2 font-display font-semibold text-plop-ink no-underline hover:underline underline-offset-4"
-        >
-          Próximo: {next.sector}
-          <Icon
-            name="arrow-right"
-            size={20}
-            class="transition-transform duration-[var(--duration-fast)] ease-[var(--ease-plop-out)] group-hover:translate-x-1"
-          />
-        </a>
-      </div>
-    </div>
-  </section>
 
   <GooeyStack tone="light" variant="b">
     <FinalCta />

@@ -3,7 +3,7 @@ import GooeyStack from "./GooeyStack.astro";
 import Logo from "../ui/Logo.astro";
 import ContactForm from "../ui/ContactForm.astro";
 import Icon from "../ui/Icon.astro";
-import { CONTACT_EMAIL, HAS_WHATSAPP, PHONE_DISPLAY, PHONE_NUMBER, SITE_NAME, whatsappHref } from "../../data/site.ts";
+import { ADDRESS, CONTACT_EMAIL, HAS_WHATSAPP, PHONE_DISPLAY, PHONE_NUMBER, SITE_NAME, whatsappHref } from "../../data/site.ts";
 
 const year = new Date().getFullYear();
 ---
@@ -105,9 +105,16 @@ const year = new Date().getFullYear();
         <p class="muted text-small xg:w-[50%]">
           © {year} {SITE_NAME} — Todos os direitos reservados.
         </p>
-        <p class="muted text-small xg:w-[50%]">
-          Avda. Iguaçu 1455, ap. 34 C | CEP: 84.240-030 | Curitiba, Paraná, Brasil.
-        </p>
+        {/* The registered address is the visible half of the `PostalAddress`
+            in `organizationSchema()`: same constant, so the markup a crawler
+            reads and the JSON-LD it trusts can never drift apart. The pipes
+            are typography, not content, so they are kept out of the
+            accessibility tree and the line is read as one address. */}
+        <address class="muted text-small not-italic xg:w-[50%]" aria-label="Endereço">
+          <span>CEP: {ADDRESS.postalDisplay}</span>
+          <span aria-hidden="true"> | </span>
+          <span>{ADDRESS.city}, {ADDRESS.regionName}, {ADDRESS.country}.</span>
+        </address>
       </div>
     </div>
   </GooeyStack>

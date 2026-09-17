@@ -92,6 +92,38 @@ const priorityFor = (pathname) => {
 export default defineConfig({
   site: SITE_URL,
   trailingSlash: "always",
+  security: {
+    /* Astro hashes its own inline scripts and inline <style> at build time and
+       writes them into a per-page <meta> CSP, so the policy never drifts from
+       the bundle. Only the origins it cannot know about are listed by hand.
+       `frame-ancestors` is deliberately absent: a meta CSP ignores it, and
+       `public/_headers` carries X-Frame-Options for that job. */
+    csp: {
+      algorithm: "SHA-256",
+      directives: [
+        "default-src 'self'",
+        "img-src 'self' data:",
+        "font-src 'self'",
+        "media-src 'self'",
+        /* Turnstile loads its widget in an iframe and talks back to its own
+           origin; nothing else on this site reaches outside. */
+        "connect-src 'self' https://challenges.cloudflare.com",
+        "frame-src https://challenges.cloudflare.com",
+        "object-src 'none'",
+        "base-uri 'self'",
+        "form-action 'self'",
+      ],
+      scriptDirective: {
+        resources: ["'self'", "https://challenges.cloudflare.com"],
+      },
+      styleDirective: {
+        /* Hashes cover the <style> elements. A handful of style="" attributes
+           survive in the markup and cannot be hashed, so they are allowed on
+           the attribute directive alone — not on style-src at large. */
+        resources: ["'self'", { resource: "'unsafe-inline'", kind: "attribute" }],
+      },
+    },
+  },
   integrations: [
     sitemap({
       /* Astro drops /404/ on its own; this keeps out anything that is a slice

@@ -155,7 +155,7 @@
   --color-plop-blue-300: #8fc7ff;
   --color-plop-blue-400: #5aa8ff;
   --color-plop-blue-500: #3486fd;
-  --color-plop-blue-600: #1e66f2;
+  --color-plop-blue-600: Ac;
   --color-plop-blue-700: #005DFF;
   --color-plop-blue-800: #1650df;
   --color-plop-blue-900: #1948C7;
@@ -380,7 +380,7 @@
   }
 
   .muted {
-    @apply text-white/70;
+    @apply text-white/75;
   }
 
   .on-ink {

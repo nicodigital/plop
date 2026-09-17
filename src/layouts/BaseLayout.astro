@@ -49,6 +49,18 @@ const {
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, SITE_URL).href;
+/* The whole site condensed for a reader that arrives without a crawler. Same
+   file on every page, so landing anywhere still leads to the full offer. */
+const llmsHref = new URL("/llms.txt", SITE_URL).href;
+/* One robots tag rather than several: a crawler that meets the name twice
+   merges the directives, so keeping them together is what we can verify.
+   The `max-*` caps are lifted on purpose — they govern how much of a page an
+   AI answer may quote, and a short snippet is the difference between being
+   cited and being skipped. Same intent as the agents invited by robots.txt. */
+const robots = noindex
+  ? "noindex, nofollow"
+  : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1";
+
 const ogImage = new URL(image, SITE_URL).href;
 const fullTitle = title === SITE_NAME ? title : `${title} — ${SITE_NAME}`;
 
@@ -77,7 +89,7 @@ const website = websiteSchema();
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    {noindex && <meta name="robots" content="noindex,nofollow" />}
+    <meta name="robots" content={robots} />
 
     <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={SITE_NAME} />
@@ -110,6 +122,7 @@ const website = websiteSchema();
     {markdownHref && (
       <link rel="alternate" type="text/markdown" href={markdownHref} title={`${fullTitle} (markdown)`} />
     )}
+    <link rel="describedby" type="text/plain" href={llmsHref} title={`${SITE_NAME} (llms.txt)`} />
     <Preload />
 
     <script
