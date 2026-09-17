@@ -35,7 +35,9 @@ padarias". Recortar afasta quem não é seu cliente, e isso é bom: você gasta
 menos tempo em orçamento que não fecha.
 
 **4. Quanto custa, mesmo que seja uma faixa.** Este é o bloco que quase todo
-mundo pula, e é o que a pessoa foi procurar. "A partir de R$ X", "entre R$ X e
+mundo pula, e é o que a pessoa foi procurar. (A gente fez isso com o próprio
+preço: as faixas estão em [quanto custa um
+site](/blog/quanto-custa-um-site/).) "A partir de R$ X", "entre R$ X e
 R$ Y, depende de A e B", ou pelo menos "o que faz o preço mudar". Página sem
 nenhuma pista de preço é a página que perde para a que tem.
 
@@ -78,7 +80,8 @@ comparar com um concorrente.
 - **Preço escondido de propósito.** A ideia é que a pessoa ligue para descobrir.
   Na prática, ela liga para o concorrente que já respondeu.
 - **Texto dentro da imagem.** Não é lido pelo Google, não é lido por leitor de
-  tela, e some se a imagem demorar.
+  tela, e some se a imagem demorar. Vale para a página de serviços e vale
+  [para a primeira tela](/blog/o-que-nao-pode-faltar-na-primeira-tela/).
 
 ## O teste
 
@@ -87,3 +90,6 @@ perguntas: o que está sendo vendido, para quem, e quanto custa mais ou menos.
 
 Se a pessoa travar em qualquer uma delas, o problema não é o design da página.
 É o texto.
+
+Escrever esses blocos faz parte do trabalho quando a gente monta um site — dá
+para ver como ficou nos [projetos entregues](/projetos/).

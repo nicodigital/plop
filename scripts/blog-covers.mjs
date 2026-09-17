@@ -87,7 +87,7 @@ const MOTIFS = {
 
 const COVERS = [
   { slug: "o-que-nao-pode-faltar-na-primeira-tela", motif: "viewport", ground: 0, turn: 0 },
-  { slug: "quanto-custa-um-site-para-pequeno-negocio", motif: "ledger", ground: 1, turn: 180 },
+  { slug: "quanto-custa-um-site", motif: "ledger", ground: 1, turn: 180 },
   { slug: "site-lento-perde-cliente", motif: "gauge", ground: 2, turn: 90 },
   { slug: "aparecer-no-google-maps-em-curitiba", motif: "pin", ground: 1, turn: 270 },
   { slug: "seu-site-aguenta-a-temporada", motif: "peak", ground: 2, turn: 45 },

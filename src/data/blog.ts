@@ -3,7 +3,7 @@
  * collection; this module holds the things the collection references (category
  * keys) and the things the pages agree on (how many posts a surface shows).
  */
-import { SITE_NAME } from "./site.ts";
+import { AUTHOR } from "./site.ts";
 
 /** Category keys. The collection schema validates frontmatter against these. */
 export const BLOG_CATEGORY_KEYS = [
@@ -33,8 +33,13 @@ export const POSTS_PER_PAGE = 9;
 /** Teaser count on the home page. Matches the listing's row of three. */
 export const POSTS_ON_HOME = 3;
 
-/** Posts are published by the studio, not by a named person. */
-export const BLOG_AUTHOR = SITE_NAME;
+/**
+ * Posts are signed by the person who writes them, not by the studio. An
+ * article that asserts what makes a site slow is worth exactly as much as the
+ * accountability behind the assertion, and an organization is not
+ * accountability — it is a name with nobody standing behind it.
+ */
+export const BLOG_AUTHOR = AUTHOR.name;
 
 /**
  * Post dates are authored as bare `YYYY-MM-DD`, which parses as UTC midnight.

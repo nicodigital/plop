@@ -17,21 +17,26 @@
 import { getCollection, type CollectionEntry } from "astro:content";
 import { BLOG_CATEGORIES, BLOG_AUTHOR, formatPostDate } from "./blog.ts";
 import { FAQ } from "./faq.ts";
-import { PLANS, formatBRL } from "./plans.ts";
+import { PLANS, entryPrice, formatBRL } from "./plans.ts";
 import {
   BUILD_LABELS,
   FEATURED_PROJECTS,
   PROJECTS,
   SECTOR_GROUPS,
+  liveCount,
   STATUS_LABELS,
   projectsInGroup,
   usedSectorGroups,
 } from "./projects.ts";
 import {
+  ADDRESS,
+  AUTHOR,
+  CNPJ,
   CONTACT_EMAIL,
   HAS_WHATSAPP,
   PHONE_DISPLAY,
   LOCAL_SUMMARY,
+  SERVICE_AREA_CITIES,
   SITE_DESCRIPTION,
   SITE_NAME,
   SITE_URL,
@@ -96,9 +101,39 @@ const planSection = (plan: (typeof PLANS)[number]): string => {
   ].join("\n");
 };
 
+/** "a, b e c" — the list read as a sentence rather than as data. */
+const asSentence = (items: readonly string[]): string =>
+  items.join(", ").replace(/, ([^,]*)$/, " e $1");
+
+/**
+ * The studio's own paragraph, mirroring the `Studio` section on the page.
+ * It is the only place either surface states the city in prose, so the two
+ * are written from the same facts: the service areas come from the constant
+ * the Business Profile is kept in step with, and the entry price from the
+ * plans.
+ */
+const studioSection = (): string =>
+  [
+    "## O estúdio",
+    "",
+    `${SITE_NAME} é um estúdio de criação de sites em Curitiba, no Paraná. O`,
+    "trabalho é feito a distância, por mensagem e por chamada, e o atendimento é",
+    "em português, espanhol e inglês.",
+    "",
+    `A entrada começa em ${formatBRL(entryPrice())}, paga uma vez. A mensalidade cobre`,
+    "hospedagem, suporte técnico, manutenção e atualizações — e, nos planos com",
+    "blog, a publicação de um conteúdo por mês. O site vai ao ar em semanas, não",
+    "há painel para aprender nem plugin para atualizar, e o domínio fica no seu",
+    "nome.",
+    "",
+    `Áreas de atendimento: ${asSentence(SERVICE_AREA_CITIES)}.`,
+  ].join("\n");
+
 const homeBody = (): string =>
   [
     HOME_PROSE,
+    "",
+    studioSection(),
     "",
     "## Planos",
     "",
@@ -134,6 +169,7 @@ const homeBody = (): string =>
     `- Formulário: ${abs("/#contato")}`,
     `- ${LOCAL_SUMMARY}`,
     "- Atendimento em português, espanhol e inglês.",
+    `- CNPJ: ${CNPJ}`,
   ].join("\n");
 
 /**
@@ -148,16 +184,18 @@ const projectsIndexPage = (): TextPage => ({
   path: "/projetos/",
   mdPath: mdPathFor("/projetos/"),
   title: "Projetos",
-  description:
-    "Todos os sites entregues e no ar, apresentados por setor — quem contratou não é nomeado.",
+  description: `${liveCount()} sites de clientes reais no ar, apresentados por setor — quem contratou não é nomeado.`,
   meta: [
     `Projetos: ${PROJECTS.length}`,
+    `No ar: ${liveCount()}`,
+    `Em desenvolvimento: ${PROJECTS.length - liveCount()}`,
     `Setores: ${usedSectorGroups().length}`,
   ],
   body: [
-    "Cada projeto abaixo é um site real de um cliente real, no ar no endereço",
-    "indicado. Apresentamos por setor: os nomes dos clientes ficam com eles, e",
-    "o link é a prova.",
+    "Cada projeto abaixo é um site real de um cliente real. Os marcados como",
+    "\"No ar\" estão publicados no endereço indicado; os marcados como \"Em",
+    "desenvolvimento\" ainda estão sendo construídos. Apresentamos por setor:",
+    "os nomes dos clientes ficam com eles, e o link é a prova.",
     "",
     usedSectorGroups()
       .map((group) =>
@@ -181,6 +219,73 @@ const projectsIndexPage = (): TextPage => ({
         ].join("\n"),
       )
       .join("\n\n"),
+  ].join("\n"),
+  section: "site",
+});
+
+/**
+ * The about page as text.
+ *
+ * Like `HOME_PROSE`, this restates copy that lives inside a `.astro`
+ * component and cannot be read back out of it — the second and last exception
+ * in this module. The *numbers* are not restated: every figure below is
+ * interpolated from the same constants the page interpolates, so the page and
+ * its mirror can disagree about wording but never about a fact.
+ */
+const aboutPage = (): TextPage => ({
+  path: "/sobre/",
+  mdPath: mdPathFor("/sobre/"),
+  title: `Sobre o ${SITE_NAME}`,
+  description: `Quem faz os sites do ${SITE_NAME}: ${AUTHOR.name}, desenvolvedor em Curitiba há mais de ${AUTHOR.yearsBuilding} anos, com mais de ${AUTHOR.sitesBuilt} sites construídos.`,
+  meta: [
+    `Responsável: ${AUTHOR.name}`,
+    `Função: ${AUTHOR.role}`,
+    `Base: ${ADDRESS.city}, ${ADDRESS.regionName}, ${ADDRESS.country}`,
+    "Idiomas: português, espanhol, inglês",
+    `Anos construindo sites: mais de ${AUTHOR.yearsBuilding}`,
+    `Sites construídos: mais de ${AUTHOR.sitesBuilt}`,
+    ...AUTHOR.profiles.map((profile) => `Perfil: ${profile}`),
+    `Projetos no portfólio: ${PROJECTS.length}`,
+    `Desses, no ar: ${liveCount()}`,
+  ],
+  body: [
+    "## Quem faz",
+    "",
+    `${AUTHOR.name} é desenvolvedor web e é quem desenha, constrói, publica e`,
+    `mantém os sites do ${SITE_NAME}. Não há equipe de atendimento no meio: quem`,
+    "responde o primeiro e-mail é quem mexe no código.",
+    "",
+    `Faz sites há mais de ${AUTHOR.yearsBuilding} anos e já entregou mais de ${AUTHOR.sitesBuilt}. A maior`,
+    "parte não está no portfólio deste site: projetos mudam de mãos, são",
+    "refeitos por outra pessoa, saem do ar, ou são de clientes que preferem não",
+    "aparecer.",
+    "",
+    `O portfólio publicado tem ${PROJECTS.length} projetos — ${liveCount()} no ar agora e`,
+    `${PROJECTS.length - liveCount()} em desenvolvimento — em ${new Set(PROJECTS.map((p) => p.sector)).size} setores diferentes:`,
+    "arquitetura, farmacêutica, cinema, cibersegurança, saúde animal,",
+    "imobiliária, ensino, entre outros. A maior parte foi para clientes no",
+    `Uruguai, onde esse trabalho começou. O estúdio hoje é em ${ADDRESS.city}, e o`,
+    "atendimento é em português, espanhol e inglês.",
+    "",
+    `Áreas de atendimento declaradas no Perfil da Empresa: ${asSentence(SERVICE_AREA_CITIES)}.`,
+    "O trabalho é remoto, então o Brasil inteiro está dentro do alcance.",
+    "",
+    "## Como a gente trabalha",
+    "",
+    `O modelo cabe em duas parcelas: uma entrada para construir o site, a partir`,
+    `de ${formatBRL(entryPrice())}, e uma mensalidade que o mantém no ar, cuidado e`,
+    "atualizado. Não há orçamento por hora nem surpresa no terceiro mês.",
+    "",
+    "As páginas já saem prontas e são servidas do ponto mais próximo de quem as",
+    "abriu, o que é o que faz um site aguentar o mês de maior procura. O domínio",
+    "fica sempre no nome do cliente.",
+    "",
+    "## O que não fazemos",
+    "",
+    "- Entregar e sumir: um site sem manutenção não fica parado, fica velho.",
+    "- Prometer primeiro lugar no Google, que ninguém pode prometer.",
+    "- Esconder o preço: os três planos estão publicados, com os dois números",
+    "  de cada um.",
   ].join("\n"),
   section: "site",
 });
@@ -249,6 +354,7 @@ export const textPages = async (): Promise<TextPage[]> => {
       body: homeBody(),
       section: "site",
     },
+    aboutPage(),
     projectsIndexPage(),
     ...legal.map((entry) => ({
       path: `/${entry.id}/`,

@@ -1,0 +1,9 @@
+# Cloudflare Static Assets reads this file at the edge, before the asset
+# lookup. One rule per line: source, destination, status.
+#
+# The post kept its title and its text; only the slug changed, because
+# `pequeno-negocio` breaks the rule in AGENTS.md §13 — nobody wants to be
+# addressed as small. Moved while the URL still had nothing pointing at it,
+# which is the only cheap moment to move a URL.
+/blog/quanto-custa-um-site-para-pequeno-negocio/    /blog/quanto-custa-um-site/     301
+/blog/quanto-custa-um-site-para-pequeno-negocio.md  /blog/quanto-custa-um-site.md   301

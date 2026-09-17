@@ -1,5 +1,6 @@
 ---
 import logoSource from "../../assets/img/logo.svg?raw";
+import { SITE_NAME } from "../../data/site.ts";
 
 /**
  * The approved vector wordmark. Never rebuilt from a font, never recoloured.
@@ -54,7 +55,7 @@ const width = widthProp ?? Math.round(RATIO * height);
   fill="none"
   class={className || undefined}
   role={decorative ? undefined : "img"}
-  aria-label={decorative ? undefined : "PLOP! Sites"}
+  aria-label={decorative ? undefined : SITE_NAME}
   aria-hidden={decorative ? "true" : undefined}
   focusable="false"
   style={className

@@ -18,6 +18,9 @@ export const NAV_ITEMS: NavItem[] = [
      `/#projetos` shows ten, and this is where the other twenty live. */
   { label: "Projetos", href: "/projetos/" },
   { label: "Blog", href: "/blog/" },
+  /* The second page of its own. It is here because a visitor deciding whether
+     to trust a price looks for the person before the portfolio. */
+  { label: "Sobre", href: "/sobre/" },
   { label: "Contato", href: "/#contato", watches: "contato" },
 ];
 

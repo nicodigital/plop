@@ -21,7 +21,9 @@ O que aparece no mapa vem do **Perfil da Empresa no Google** — a ficha gratuit
 que você cria e administra. O seu site é outra coisa, e não substitui a ficha.
 
 Mas os dois se sustentam. A ficha leva a pessoa até você; o site é o que ela
-abre para confirmar que vale a pena. Ficha sem site parece improvisado. Site sem
+abre para confirmar que vale a pena — e [o que aparece na primeira
+tela](/blog/o-que-nao-pode-faltar-na-primeira-tela/) é o que decide se ela
+continua. Ficha sem site parece improvisado. Site sem
 ficha não aparece na busca local.
 
 ## O que o Google usa para escolher
@@ -70,7 +72,9 @@ segundos:
 - **O mesmo telefone da ficha**, clicável no celular.
 - **Horário e endereço**, se houver ponto físico.
 - **Carregamento rápido.** A pessoa chegou de um mapa, na rua, com pressa. Se a
-  página demora, ela volta e clica no concorrente que está logo abaixo.
+  página demora, ela volta e clica no concorrente que está logo abaixo — é
+  [velocidade virando cliente perdido](/blog/site-lento-perde-cliente/), sem
+  que você fique sabendo.
 
 ## O que não funciona
 
@@ -88,3 +92,6 @@ e responde à pergunta que a pessoa tinha?
 
 Cada "não" dessa lista é uma correção de poucos minutos — e é mais barata do que
 qualquer anúncio.
+
+Se o "não" for o site em si, é o que a gente faz: veja os
+[planos](/#planos) ou os [sites já entregues](/projetos/).

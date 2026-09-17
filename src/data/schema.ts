@@ -16,6 +16,8 @@ import { PLANS, entryPrice, formatBRL } from "./plans.ts";
 import { PROJECTS, type Project } from "./projects.ts";
 import {
   ADDRESS,
+  AUTHOR,
+  CNPJ,
   CONTACT_EMAIL,
   GOOGLE_BUSINESS_PROFILE,
   HAS_WHATSAPP,
@@ -32,6 +34,9 @@ export type JsonLd = Record<string, unknown>;
 /** Stable node identifiers. Referenced, never duplicated. */
 export const ORGANIZATION_ID = `${SITE_URL}/#organization`;
 export const WEBSITE_ID = `${SITE_URL}/#website`;
+/* The person lives on `/sobre`, so the node is anchored there: a reader and a
+   crawler both resolve the id to a page that actually describes him. */
+export const PERSON_ID = `${SITE_URL}/sobre/#person`;
 
 const abs = (path: string) => new URL(path, SITE_URL).href;
 
@@ -48,7 +53,10 @@ export const organizationSchema = (): JsonLd => ({
   "@type": "ProfessionalService",
   "@id": ORGANIZATION_ID,
   name: SITE_NAME,
-  alternateName: "PLOP",
+  /* The short form the copy uses in running prose. Declared so a crawler
+     resolves "Plop!" on a page and "Plop! Sites" in a directory to one
+     entity instead of to two businesses that happen to share a word. */
+  alternateName: ["Plop!", "PLOP"],
   url: SITE_URL,
   logo: {
     "@type": "ImageObject",
@@ -59,6 +67,16 @@ export const organizationSchema = (): JsonLd => ({
   description:
     "Desenvolvimento de sites profissionais para negócios independentes, com hospedagem, suporte e manutenção mensal.",
   email: CONTACT_EMAIL,
+  /* The company number, as the property Schema.org defines for exactly this
+     and as a named identifier besides — `taxID` is the correct field, and the
+     `PropertyValue` is what makes the value legible to a consumer that does
+     not know what a Brazilian tax id looks like. */
+  taxID: CNPJ,
+  identifier: {
+    "@type": "PropertyValue",
+    propertyID: "CNPJ",
+    value: CNPJ,
+  },
   ...(HAS_WHATSAPP ? { telephone: PHONE_NUMBER } : {}),
   /* The registered address, from the same constant the footer prints. A
      LocalBusiness without a `PostalAddress` is not eligible for a local
@@ -98,10 +116,52 @@ export const organizationSchema = (): JsonLd => ({
   /* Profiles that resolve to the same business elsewhere. The Business
      Profile leads: it ties this node to the listing Google already holds,
      and a local result is decided there rather than here. */
+  /* The studio is one person, and the graph says so rather than leaving the
+     business as an entity with nobody behind it. */
+  founder: { "@id": PERSON_ID },
   sameAs: [
     GOOGLE_BUSINESS_PROFILE,
     ...(HAS_WHATSAPP ? [`https://wa.me/${WHATSAPP_NUMBER.replace(/\D/g, "")}`] : []),
   ],
+});
+
+/** Every node that names the author points here. */
+export const authorRef = { "@id": PERSON_ID };
+
+/**
+ * The author, as one node the whole site references.
+ *
+ * `sameAs` is emitted only when `AUTHOR.profiles` has something in it. An
+ * empty array would be a valid but empty claim; a populated one with a dead
+ * URL would be a false claim, and the second is the expensive mistake.
+ */
+export const personSchema = (): JsonLd => ({
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": PERSON_ID,
+  name: AUTHOR.name,
+  jobTitle: AUTHOR.jobTitle,
+  /* The experience the portfolio cannot evidence. It is the one fact about
+     the author an answer engine is likely to quote, so it is stated as a
+     floor — the same wording the page uses — rather than as a round claim. */
+  description: `Desenvolvedor web em ${ADDRESS.city}. Mais de ${AUTHOR.yearsBuilding} anos construindo sites e mais de ${AUTHOR.sitesBuilt} projetos entregues.`,
+  email: AUTHOR.email,
+  url: abs("/sobre/"),
+  worksFor: publisherRef,
+  knowsLanguage: ["pt-BR", "es", "en"],
+  knowsAbout: [
+    "Desenvolvimento web",
+    "Performance web",
+    "SEO técnico",
+    "Core Web Vitals",
+  ],
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: ADDRESS.city,
+    addressRegion: ADDRESS.region,
+    addressCountry: ADDRESS.countryCode,
+  },
+  ...(AUTHOR.profiles.length ? { sameAs: [...AUTHOR.profiles] } : {}),
 });
 
 export const websiteSchema = (): JsonLd => ({
@@ -173,9 +233,12 @@ const planService = (plan: (typeof PLANS)[number], anchorOn: string): JsonLd => 
   offers: {
     "@type": "Offer",
     priceCurrency: "BRL",
-    /* A plan whose entry is a floor says so with `minPrice`. Writing it as
-       `price` would publish a starting figure as a closed one. */
-    ...(plan.setupFrom ? { minPrice: plan.setup } : { price: plan.setup }),
+    /* `price`, always — even for a plan whose entry is a floor. `minPrice` is
+       a property of `PriceSpecification`, not of `Offer`, so putting it here
+       left this Offer carrying no price at all. The "a partir de" nuance is
+       kept where the vocabulary allows it: in the nested
+       `UnitPriceSpecification` below, and in this offer's own description. */
+    price: plan.setup,
     availability: "https://schema.org/InStock",
     description: `Entrada de ${formatBRL(plan.setup)} mais ${formatBRL(plan.monthly)} por mês.`,
     priceSpecification: [

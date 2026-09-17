@@ -1,0 +1,117 @@
+---
+import { SERVICE_AREA_CITIES } from "../../data/site.ts";
+import Button from "../ui/Button.astro";
+import { CONTACT_ANCHOR, PLANS_ANCHOR } from "../../data/nav.ts";
+import { entryPrice, formatBRL } from "../../data/plans.ts";
+
+/**
+ * Who the studio is and where it works, in plain prose.
+ *
+ * Until this section existed, "Curitiba" appeared on the home only inside the
+ * JSON-LD and in the footer address. Both are machine-readable, and neither is
+ * text: retrieval — Google's local corroboration of the Business Profile, and
+ * an LLM answering "quem faz site em Curitiba" — runs over sentences a reader
+ * can also see. So this is visible body copy, never hidden markup.
+ *
+ * The heading inversion is deliberate: the `h2` is the small eyebrow line and
+ * the display line under it is a paragraph. It is the section label that has
+ * to name the city — a crawler and a screen-reader user both read the heading
+ * as the section's subject — while the large line is a statement, not a
+ * title. Do not "fix" this by promoting the big line to a heading.
+ *
+ * The service areas are read from `SERVICE_AREA_CITIES` rather than typed,
+ * because that constant is kept in step with what the Business Profile
+ * declares. A city listed here that the profile does not claim would be the
+ * site describing a reach Google cannot confirm.
+ */
+const areas = SERVICE_AREA_CITIES.join(", ").replace(/, ([^,]*)$/, " e $1");
+const entry = formatBRL(entryPrice());
+---
+
+<section
+  id="estudio"
+  class="py-[var(--section-space)]"
+  aria-labelledby="estudio-titulo"
+>
+  <div class="shell">
+    <h2
+      id="estudio-titulo"
+      class="eyebrow muted mb-4 anim"
+      data-anim="bottom"
+      data-delay="100"
+    >
+      De Curitiba para todo o Brasil
+    </h2>
+    {
+      /*
+      The break is composition, not punctuation: `balanced-breaks` hides it
+      below `lg`, where it would otherwise land mid-sentence in a narrow
+      column. Same treatment as the About heading and the footer line.
+    */
+    }
+    <p
+      class="balanced-breaks anim mb-20 font-display text-h1 font-bold leading-none tracking-tighter text-white"
+      data-anim="bottom"
+      data-delay="200"
+    >
+      Somos um <span class="text-plop-lime">estúdio</span> de criação de sites em&#32;<span
+        class="text-plop-lime">Curitiba</span
+      >, com atendimento remoto para clientes em <br /><span
+        class="text-plop-lime">todo o Brasil</span
+      >.
+    </p>
+    {
+      /*
+      Two columns of running text, so no paragraph may be cut by the gutter:
+      the middle one is the longest and is exactly the one that would split.
+    */
+    }
+    <div class="muted gap-10 [&>p]:break-inside-avoid xg:columns-2 xg:gap-30">
+      <p class="mb-4">
+        O trabalho é feito a distância, por mensagem e por chamada, então um
+        cliente em São Paulo recebe o mesmo acompanhamento de um cliente do
+        Batel. A distância nunca foi o que decidiu se um site ficou bom.
+      </p>
+      <p class="mb-4">
+        O começo é sempre uma conversa sobre o que o seu negócio precisa dizer,
+        e o site vai ao ar em semanas, não em meses. A entrada começa em <strong
+          class="font-semibold"
+          data-numeric>{entry}</strong
+        >, paga uma vez. A mensalidade cobre hospedagem, suporte técnico,
+        manutenção e atualizações — e, nos planos com blog, a publicação de um
+        conteúdo por mês. Não há painel para aprender, não há plugin para
+        atualizar, e o domínio fica no seu nome.
+      </p>
+      <p class="mb-4">
+        Áreas de atendimento: {areas}. Se o que você quer é
+        <a
+          class="font-semibold text-white underline decoration-plop-lime decoration-2 underline-offset-4"
+          href="/blog/aparecer-no-google-maps-em-curitiba/"
+          > aparecer no mapa da sua região </a
+        >, o site é metade do trabalho — a outra metade a gente explica antes de
+        começar.
+      </p>
+      <div class="flex flex-wrap items-center gap-3 mt-12 xg:mt-20">
+        <div class="anim" data-anim="bottom" data-delay="950">
+          <Button
+            href={CONTACT_ANCHOR}
+            size="lg"
+            data-track="cta_primary_click"
+          >
+            Quero meu site
+          </Button>
+        </div>
+        <div class="anim" data-anim="bottom" data-delay="1100">
+          <Button
+            href={PLANS_ANCHOR}
+            variant="outline"
+            size="lg"
+            icon="arrow-down"
+          >
+            Ver planos
+          </Button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

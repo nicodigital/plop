@@ -29,7 +29,7 @@ import {
   projectSchema,
   projectImage,
 } from "../../data/schema.ts";
-import { SITE_URL } from "../../data/site.ts";
+import { SITE_NAME, SITE_URL } from "../../data/site.ts";
 
 export const getStaticPaths: GetStaticPaths = () =>
   PROJECTS.map((project, index) => ({
@@ -213,7 +213,7 @@ const facts = [
         <div class="flex xg:justify-end mt-10 xg:mt-0">
           <ShareBar
             url={pageUrl}
-            title={`${project.sector} — projeto PLOP! Sites`}
+            title={`${project.sector} — projeto ${SITE_NAME}`}
             variant="light"
           />
         </div>

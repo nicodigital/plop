@@ -36,7 +36,15 @@ export const GET: APIRoute = () => {
        crawler should be POSTing to. */
     "Disallow: /api/",
     "",
-    ...AI_AGENTS.flatMap((agent) => [`User-agent: ${agent}`, "Allow: /", ""]),
+    /* Each named group repeats the disallow. A crawler that matches a group
+       by name ignores the wildcard group entirely, rules included, so without
+       this line every agent above is told /api/ is fair game. */
+    ...AI_AGENTS.flatMap((agent) => [
+      `User-agent: ${agent}`,
+      "Allow: /",
+      "Disallow: /api/",
+      "",
+    ]),
     "# Conteúdo em texto para leitura por IA:",
     `# ${SITE_URL}/llms.txt`,
     `# ${SITE_URL}/llms-full.txt`,

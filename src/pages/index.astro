@@ -4,12 +4,19 @@ import Hero from "../components/sections/Hero.astro";
 import ProjectsSlider from "../components/sections/ProjectsSlider.astro";
 import About from "../components/sections/About.astro";
 import HowItWorks from "../components/sections/HowItWorks.astro";
+import Studio from "../components/sections/Studio.astro";
 import Plans from "../components/sections/Plans.astro";
 import Faq from "../components/sections/Faq.astro";
 import BlogTeaser from "../components/sections/BlogTeaser.astro";
 import FinalCta from "../components/sections/FinalCta.astro";
 import GooeyStack from "../components/layout/GooeyStack.astro";
-import { faqSchema, pageSchema, plansSchema, projectsSchema } from "../data/schema.ts";
+import {
+  faqSchema,
+  pageSchema,
+  personSchema,
+  plansSchema,
+  projectsSchema,
+} from "../data/schema.ts";
 import { FEATURED_PROJECTS } from "../data/projects.ts";
 import { SITE_DESCRIPTION } from "../data/site.ts";
 
@@ -26,6 +33,10 @@ const description = SITE_DESCRIPTION;
  */
 const schema = [
   pageSchema({ type: "WebPage", name: title, description, path: "/" }),
+  /* The organization names a `founder` on every page, but the node it points
+     at was only defined on /sobre/. On the page that carries the whole offer
+     that reference resolved to nothing unless a crawler went looking. */
+  personSchema(),
   faqSchema(),
   plansSchema("/"),
   /* The home slider shows the featured ten, so its ItemList describes ten.
@@ -50,6 +61,7 @@ const schema = [
   <GooeyStack>
     <Hero />
     <ProjectsSlider />
+    <Studio />
     <About />
     <!-- <HowItWorks /> -->
   </GooeyStack>

@@ -39,3 +39,21 @@
 
 /robots.txt
   Content-Type: text/plain; charset=utf-8
+
+# Cache lifetimes. Cloudflare Pages applies immutable caching to hashed
+# filenames on its own; Workers Static Assets does not, so without these rules
+# every font, stylesheet, script and video revalidates on every repeat visit.
+#
+# The two directories are not the same and must not get the same rule.
+# `/_astro/` is Astro's build output: every filename carries a content hash, so
+# a changed file is a new URL and the old one can be cached forever safely.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# `/public/assets/` is copied through verbatim — `hero-laptop-alpha.webm` keeps
+# its name when its bytes change. `immutable` here would strand a replaced
+# video in browser caches for a year with no way to reach it. A month is long
+# enough to matter for repeat visits and short enough that a replacement lands
+# without anyone having to think about it.
+/assets/*
+  Cache-Control: public, max-age=2592000

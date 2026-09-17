@@ -11,7 +11,14 @@ import GooeyStack from "../../components/layout/GooeyStack.astro";
 import { SITE_URL } from "../../data/site.ts";
 import { PLANS_ANCHOR } from "../../data/nav.ts";
 import { BLOG_AUTHOR, BLOG_CATEGORIES, formatPostDate } from "../../data/blog.ts";
-import { ORGANIZATION_ID, WEBSITE_ID, breadcrumbSchema } from "../../data/schema.ts";
+import {
+  ORGANIZATION_ID,
+  WEBSITE_ID,
+  authorRef,
+  breadcrumbSchema,
+  pageSchema,
+  personSchema,
+} from "../../data/schema.ts";
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const posts = await getCollection("blog", ({ data }) => !data.draft);
@@ -68,12 +75,30 @@ const schema = {
   /* Authored as minutes on the post, so the reading time in the rich result
      and the one under the title can never disagree. ISO 8601 duration. */
   timeRequired: `PT${post.data.readingMinutes}M`,
-  author: { "@type": "Organization", name: BLOG_AUTHOR, url: SITE_URL },
+  /* A reference, not a copy: the author is one `Person` node for the whole
+     site, emitted below so it resolves inside this document too. An `author`
+     that restated the organization made every post look self-published by a
+     brand, which is the opposite of what the byline is for. */
+  author: authorRef,
   publisher: { "@id": ORGANIZATION_ID },
   isPartOf: { "@id": WEBSITE_ID },
-  mainEntityOfPage: { "@type": "WebPage", "@id": url },
+  /* The `WebPage` node `pageSchema()` emits below, by its real id. Pointing
+     at the bare URL named a node nothing defines, so the article claimed to be
+     the main entity of a page that did not exist in the graph. */
+  mainEntityOfPage: { "@id": `${url}#webpage` },
   url,
 };
+
+/* The only route that did not describe its own page node. `BlogPosting` says
+   what the article is; `WebPage` says what the URL is, and the rest of the
+   site emits both. */
+const page = pageSchema({
+  type: "WebPage",
+  name: post.data.title,
+  description: post.data.description,
+  path: `/blog/${post.id}/`,
+  primaryImage: cover.src,
+});
 
 const breadcrumbs = breadcrumbSchema([
   { name: "Blog", path: "/blog/" },
@@ -94,7 +119,7 @@ const breadcrumbs = breadcrumbSchema([
     modifiedTime,
     section: BLOG_CATEGORIES[post.data.category],
   }}
-  schema={[schema, breadcrumbs]}
+  schema={[page, schema, personSchema(), breadcrumbs]}
 >
   <article aria-labelledby="post-titulo">
     {/* The same liquid ground every other route opens on, instead of the flat

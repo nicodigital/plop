@@ -3,7 +3,7 @@ import GooeyStack from "./GooeyStack.astro";
 import Logo from "../ui/Logo.astro";
 import ContactForm from "../ui/ContactForm.astro";
 import Icon from "../ui/Icon.astro";
-import { ADDRESS, CONTACT_EMAIL, HAS_WHATSAPP, LOCAL_SUMMARY, PHONE_DISPLAY, PHONE_NUMBER, SITE_NAME, whatsappHref } from "../../data/site.ts";
+import { ADDRESS, CNPJ, CONTACT_EMAIL, HAS_WHATSAPP, LOCAL_SUMMARY, PHONE_DISPLAY, PHONE_NUMBER, SITE_NAME, whatsappHref } from "../../data/site.ts";
 
 const year = new Date().getFullYear();
 ---
@@ -102,9 +102,34 @@ const year = new Date().getFullYear();
       {/* The fixed WhatsApp affordance lives in this corner, so the last line
           of the page keeps clear of it rather than sitting under it. */}
       <div class="shell pb-9 flex justify-between">
-        <p class="muted text-small xg:w-[50%]">
-          © {year} {SITE_NAME} — Todos os direitos reservados.
-        </p>
+        {/* The policy used to be reachable from nowhere: it was in the
+            sitemap and in `llms.txt`, but no page on the site linked to it,
+            which is both an orphan URL and a document the LGPD expects a
+            visitor to be able to find. */}
+        <div class="xg:w-[50%] flex flex-col gap-2">
+          <p class="muted text-small">
+            © {year} {SITE_NAME} — Todos os direitos reservados.
+          </p>
+          {/* The one identifier a cautious Brazilian buyer looks for, and the
+              one a business client needs before it can be invoiced. Marked up
+              so the number is selectable and copyable as a unit. */}
+          <p class="muted text-small">
+            CNPJ <span data-numeric>{CNPJ}</span>
+          </p>
+          {/* 44px of vertical hit area, not 18. These are standalone nav links in a
+              flex row, so the inline-text exception to WCAG 2.2 SC 2.5.8 does not
+              cover them — the text size is unchanged, only the box around it. */}
+          <nav class="-my-2 flex flex-wrap gap-x-5" aria-label="Institucional">
+            <a
+              class="muted inline-flex min-h-[44px] items-center text-small transition-colors duration-[var(--duration-fast)] hover:text-white hover:underline"
+              href="/sobre/">Sobre</a
+            >
+            <a
+              class="muted inline-flex min-h-[44px] items-center text-small transition-colors duration-[var(--duration-fast)] hover:text-white hover:underline"
+              href="/privacidade/">Política de privacidade</a
+            >
+          </nav>
+        </div>
         {/* The visible half of the `PostalAddress` in `organizationSchema()`,
             read from the same constants, so the markup a crawler sees and the
             JSON-LD it trusts can never drift apart. `LOCAL_SUMMARY` sits above

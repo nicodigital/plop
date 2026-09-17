@@ -3,6 +3,7 @@ import Logo from "../ui/Logo.astro";
 import Icon from "../ui/Icon.astro";
 import Button from "../ui/Button.astro";
 import { NAV_ITEMS, PRIMARY_CTA, CONTACT_ANCHOR } from "../../data/nav.ts";
+import { SITE_NAME } from "../../data/site.ts";
 
 const pathname = Astro.url.pathname;
 
@@ -30,7 +31,7 @@ const isCurrentPage = (item: (typeof NAV_ITEMS)[number]) =>
     <a
       href="/#topo"
       class="inline-flex min-h-[44px] shrink-0 items-center rounded-lg transition-opacity duration-[var(--duration-fast)] hover:opacity-85"
-      aria-label="PLOP! Sites — início"
+      aria-label={`${SITE_NAME} — início`}
     >
       <Logo height={65} class="h-15 xg:h-11 w-auto sm:h-14 lg:h-[65px]" decorative />
     </a>

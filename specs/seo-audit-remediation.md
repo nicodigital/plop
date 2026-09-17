@@ -329,6 +329,33 @@ Dos o tres enlaces por post a `/projetos/`, a `/#planos` o a otro post.
   inerte porque no hay contenedor, pero la política tiene que estar corregida
   **antes** de que se cargue uno.
 
+**Estado al 2026-09-17**
+
+Hecho: §5.1 completa (post reescrito con tabla de rangos, slug movido a
+`/blog/quanto-custa-um-site/` con 301 en `public/_redirects`), §5.2 salvo
+`sameAs`, §5.3 completa (sección `Studio.astro` en la home + espejo markdown),
+§5.4 completa (20 enlaces internos, cada post emite y recibe), §5.5 salvo CNPJ.
+
+Bloqueado por datos que solo tiene el dueño del sitio:
+
+- **`AUTHOR.profiles` en `src/data/site.ts` tiene `https://nicolasgonzalez.dev/`**
+  —verificada, y publica el mismo teléfono que este sitio, que es lo que
+  convierte un `sameAs` en corroboración. Falta agregar LinkedIn / Instagram /
+  GitHub cuando existan. `personSchema()` emite `sameAs` solo con lo que haya:
+  una URL que da 404 es la única afirmación del grafo que cualquiera desmiente
+  en una sola petición.
+- ~~CNPJ~~ hecho: `46.793.328/0001-03`, en el footer, en `taxID` de
+  `organizationSchema()`, en la política y en el bloque de contacto de
+  `llms.txt`. **La razón social no se publica a propósito**: en un empresário
+  individual es el nombre completo del dueño, es más revelador que el número y
+  no es exigida por nada. El texto visible usa el nome fantasia.
+- **El proveedor de e-mail transaccional no está nombrado** en la política
+  (`src/content/legal/privacidade.md`, sección "Transferência internacional").
+  El art. 33 de la LGPD se cumple mejor nombrándolo.
+
+No tocado por decisión previa del dueño: el `<title>` y el H1 de la home. La
+ciudad entró por el H2 de la sección nueva, que era el objetivo real de §5.3.
+
 **Definición de hecho de la Etapa 2**
 
 - Preguntarle a un modelo cuánto cuesta un sitio en Brasil y que pueda citar una
@@ -406,7 +433,8 @@ ciudad en ningún encabezado rinde por debajo de lo que podría.
 ## 7. Etapa 4 — Arquitectura de páginas
 
 **Objetivo:** cubrir los tipos de página que hoy no existen.
-**Bloqueada por:** prueba de sector. Ver §7.2.
+**Bloqueada parcialmente:** solo §7.2, y solo por falta de un caso publicable
+—no por falta de trabajo en el sector. §7.1 y §7.3 no dependen de nada.
 
 ### 7.1 `/planos/` como URL canónica
 
@@ -425,15 +453,45 @@ Mantener el resumen en la home y enlazar. Dar de alta la página en
 
 En `site para clínica`, `site para advogado` y `site para imobiliária`,
 **0 de 9 resultados son homes** en las tres SERPs. No hay página que atienda a
-ese comprador: puntuó 36/100, la persona más débil.
+ese comprador: la persona del sector puntuó 36/100 en junio y 54/100 en la
+segunda pasada del 2026-09-17 — sigue entre las más débiles, aunque ya no es la
+última (esa es la del comprador B2B, 50/100, que se resuelve con §7.1).
 
-**Pero hay una dependencia que no se puede saltar.** Los proyectos entregados
-son movilidad eléctrica, arquitectura, farmacéutica, ciberseguridad, cine y
-salud animal. Cero solapamiento con esos verticales.
+**Corregido el 2026-09-17.** La versión anterior de este párrafo afirmaba que
+los proyectos entregados no tienen «cero solapamiento» con esos verticales. Es
+falso, y conviene no volver a creerlo:
 
-Condición de desbloqueo: **un caso real del sector**, publicable, con problema,
-qué se construyó y resultado medible. Una vertical sin caso propio es una
-página vacía compitiendo contra páginas llenas.
+| Vertical | Lo que hay en `projects.ts` |
+| --- | --- |
+| `site para advogado` | **dos** escritorios de abogados (`jorge-barrera`, `dellavalle-balbi`) |
+| `site para imobiliária` | uno (`pointer`) — pero sigue en staging, `status: "wip"` |
+| `site para clínica` | ninguno. Farmacêutica, dermocosmética y cuidado domiciliar son del mundo de la salud, pero quien busca una clínica quiere ver una clínica |
+
+Lo que bloquea no es el trabajo. Es otra cosa, y hay que nombrarla bien porque
+cambia lo que hay que hacer para desbloquearla:
+
+1. **La prueba es uruguaya.** Los nueve proyectos de esos rubros son `.com.uy`,
+   `.uy` o `.org`. Un abogado brasileño que entra a la vertical y hace clic en
+   la prueba aterriza en un estudio uruguayo. Es el problema del §9,
+   concentrado en la peor página posible para que aparezca.
+2. **El caso no existe como contenido.** Cada proyecto tiene una línea
+   factual; el comentario del tipo en `projects.ts` dice literalmente «No
+   results, no metrics», y los clientes no se nombran por política. Problema,
+   qué se construyó y resultado medible: las tres cosas están deliberadamente
+   ausentes.
+3. **La única inmobiliaria no está en el aire.**
+
+Condición de desbloqueo, entonces, no es un proyecto nuevo: es **permiso de uno
+de los dos estudios de abogados para nombrarlo, más un resultado contable**.
+Una cifra de contactos, o incluso un antes/después de tiempo de carga. Con eso
+`site para advogado` deja de estar bloqueada y el resto de la página es
+investigación —normas de la OAB, funciones del sector—, no experiencia.
+
+`site para clínica` sigue bloqueada de verdad.
+
+Una vertical sin caso propio es una página vacía compitiendo contra páginas
+llenas. El costo no es que no rankee: es sumar una página delgada más a un
+sitio que ya tiene 30 en esa condición (§7.3).
 
 Cuando se desbloquee, la estructura que usan las páginas que rankean es:
 problema del sector → funcionalidades del sector (agendamento online,

@@ -6,7 +6,7 @@ import { entryPrice, formatBRL } from "./plans.ts";
 
 export const SITE_URL = "https://plopsites.com.br";
 
-export const SITE_NAME = "Plop! sites";
+export const SITE_NAME = "Plop! Sites";
 
 /**
  * The one-line description of the business. Used as the blockquote in
@@ -27,7 +27,7 @@ export const OG_IMAGE = "/assets/og/plop-og.jpg";
 export const OG_IMAGE_WIDTH = 1200;
 export const OG_IMAGE_HEIGHT = 630;
 export const OG_IMAGE_ALT =
-  "PLOP! Sites — sites modernos, rápidos e fáceis de gerenciar.";
+  "Plop! Sites — sites modernos, rápidos e fáceis de gerenciar.";
 
 /**
  * Real business number in international format, digits only.
@@ -37,7 +37,7 @@ export const OG_IMAGE_ALT =
  */
 export const WHATSAPP_NUMBER = "+5541999390088";
 
-export const WHATSAPP_MESSAGE = "Oi! Quero saber mais sobre os sites do PLOP!";
+export const WHATSAPP_MESSAGE = "Oi! Quero saber mais sobre os sites do Plop!";
 
 export const HAS_WHATSAPP = WHATSAPP_NUMBER.length > 0;
 
@@ -57,6 +57,29 @@ export const CONTACT_EMAIL = "ola@plopsites.com.br";
  */
 export const GOOGLE_BUSINESS_PROFILE =
   "https://maps.google.com/?cid=10583425524771451781";
+
+/**
+ * The registered company number, in the punctuated form a Brazilian reader
+ * recognises at a glance.
+ *
+ * It is published deliberately. A CNPJ is not confidential — Receita Federal
+ * releases the whole register as open data and several sites mirror it with
+ * search by company name — so withholding it protects nothing and costs two
+ * real things: a business client cannot receive an invoice from a supplier it
+ * cannot identify, and a cautious buyer who looks for it and finds nothing
+ * reads the silence.
+ *
+ * It also works against impersonation rather than for it. A cloned profile
+ * asking a client for payment is defeated by the client having a canonical
+ * identity to compare against; a site that states nothing gives them nothing
+ * to check.
+ *
+ * What is deliberately *not* published is the razão social: for a sole
+ * proprietorship it is the owner's own full name, which is more revealing
+ * than the number and is required nowhere. Visible copy uses the trading
+ * name.
+ */
+export const CNPJ = "46.793.328/0001-03";
 
 /** Same number as WhatsApp, formatted for display and for a `tel:` href. */
 export const PHONE_NUMBER = WHATSAPP_NUMBER;
@@ -118,6 +141,49 @@ export const SERVICE_AREA_CITIES = [
   "Araucária",
   "São Paulo",
 ] as const;
+
+/**
+ * The person behind the studio.
+ *
+ * Every technical claim on this site — that a static site survives a traffic
+ * spike, that a monthly fee is not just hosting — was previously signed by an
+ * organization, which is a name with nobody accountable behind it. A reader
+ * deciding whether to trust an assertion, and a search engine weighing
+ * experience, are both looking for someone who can be checked.
+ *
+ * `profiles` is empty until a profile actually exists: `sameAs` pointing at a
+ * URL that 404s is worse than no `sameAs` at all, because it is the one claim
+ * in the graph a crawler can trivially falsify.
+ */
+export const AUTHOR = {
+  name: "Nicolás González",
+  role: "Desenvolvedor e fundador",
+  jobTitle: "Desenvolvedor web",
+  email: CONTACT_EMAIL,
+  /**
+   * The two figures the portfolio cannot show. `PROJECTS` holds thirty sites
+   * because thirty are publishable — sites change hands, get rebuilt by
+   * someone else, go offline, or belong to clients who would rather not be
+   * named. The career is an order of magnitude larger than the evidence for
+   * it, and a bio that quoted only the evidence would undersell by a decade.
+   *
+   * Both are floors, and every surface that renders them says "mais de".
+   * Raise them when the real number does; never round up to a figure that
+   * would need explaining.
+   */
+  yearsBuilding: 10,
+  sitesBuilt: 100,
+  /**
+   * Profiles that resolve to the same person. The personal site is first
+   * because it corroborates rather than merely coexists: it carries the same
+   * phone number this file publishes, which is the kind of agreement a
+   * crawler can check and a bare social handle never provides.
+   *
+   * Only add a URL that loads. A `sameAs` pointing at a 404 is the one claim
+   * in the graph anyone can falsify in a single request.
+   */
+  profiles: ["https://nicolasgonzalez.dev/"] as string[],
+} as const;
 
 export const ADDRESS = {
   city: "Curitiba",

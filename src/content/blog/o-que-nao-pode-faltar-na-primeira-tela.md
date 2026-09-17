@@ -30,7 +30,8 @@ paralisam.
 
 **4. Um motivo para confiar.** Não precisa ser prêmio nem número. Pode ser o
 bairro onde você atende, há quanto tempo existe, ou uma foto real do lugar —
-desde que seja verdade.
+desde que seja verdade. É o mesmo princípio dos nossos
+[projetos](/projetos/): o link do site é a prova, não o adjetivo.
 
 ## O erro mais comum
 
@@ -38,7 +39,8 @@ Colocar o texto principal dentro da imagem.
 
 Quando a frase que explica o negócio é parte de um arquivo de foto, ela não é
 lida pelo Google, não é lida por leitores de tela, não pode ser copiada, e some
-se a imagem demorar a carregar. Texto tem que ser texto.
+se a imagem demorar a carregar — e [imagem pesada é o motivo mais comum de um
+site demorar](/blog/site-lento-perde-cliente/). Texto tem que ser texto.
 
 ## Um teste rápido
 
@@ -46,3 +48,7 @@ Abra seu site no celular. Sem rolar, sem clicar, leia só o que aparece.
 
 Se uma pessoa que nunca ouviu falar de você não conseguir dizer o que você
 vende e para quem, a primeira tela ainda não está pronta.
+
+O passo seguinte costuma ser a [página de
+serviços](/blog/o-que-escrever-na-pagina-de-servicos/), que é onde a pessoa
+decide.

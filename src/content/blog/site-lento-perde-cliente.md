@@ -36,7 +36,8 @@ Quase sempre a mesma lista:
 - **Fontes demais.** Seis pesos de três famílias diferentes, e o texto some até
   todas carregarem.
 - **Plugins acumulados.** Cada um traz seu próprio código. Dez plugins depois, o
-  site carrega mais programação do que conteúdo.
+  site carrega mais programação do que conteúdo — e é também o que faz o site
+  [cair justo no mês cheio](/blog/seu-site-aguenta-a-temporada/).
 - **Vídeo rodando à toa.** Um vídeo de fundo não comprimido consome dados e
   bateria de quem só queria ver o horário de funcionamento.
 - **Rastreadores.** Cada pixel de anúncio adicionado é mais uma coisa para
@@ -49,10 +50,15 @@ endereço do seu site e olhe a aba de celular — não a de computador. É a de
 celular que descreve a experiência da maior parte das visitas.
 
 Se a nota estiver vermelha, o problema raramente é um só. Mas quase sempre
-começa pelas imagens.
+começa pelas imagens. Se a conta de arrumar tudo isso parecer maior que a de
+recomeçar, [os números de um site novo estão
+aqui](/blog/quanto-custa-um-site/).
 
 ## Velocidade não é detalhe técnico
 
 É a primeira coisa que a pessoa sente do seu negócio, antes de ler uma linha
 sobre o que você faz. Um site rápido não te faz vender sozinho. Um site lento
 faz você não ser visto.
+
+Os sites que a gente entrega são medidos com essa régua: estão todos em
+[projetos](/projetos/), com o link de cada um.

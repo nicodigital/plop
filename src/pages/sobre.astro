@@ -1,0 +1,154 @@
+---
+/**
+ * The page a reader reaches when they want to know who is behind the claims.
+ *
+ * It is also where the site's `Person` node lives: the id in `schema.ts`
+ * points at this URL, so every byline in the blog resolves to a page that
+ * actually describes someone instead of to a fragment nothing defines.
+ *
+ * Everything stated here is checkable from the work itself — the counts are
+ * read from `projects.ts` rather than written down, for the same reason the
+ * projects page reads them.
+ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageMasthead from "../components/layout/PageMasthead.astro";
+import GooeyStack from "../components/layout/GooeyStack.astro";
+import Button from "../components/ui/Button.astro";
+import { PROJECTS, liveCount } from "../data/projects.ts";
+import { AUTHOR, SERVICE_AREA_CITIES, SITE_NAME } from "../data/site.ts";
+import { entryPrice, formatBRL } from "../data/plans.ts";
+import { CONTACT_ANCHOR, PLANS_ANCHOR } from "../data/nav.ts";
+import {
+  breadcrumbSchema,
+  pageSchema,
+  personSchema,
+} from "../data/schema.ts";
+
+const title = `Sobre o ${SITE_NAME}`;
+const description = `Quem faz os sites do ${SITE_NAME}: ${AUTHOR.name}, desenvolvedor em Curitiba há mais de ${AUTHOR.yearsBuilding} anos, com mais de ${AUTHOR.sitesBuilt} sites construídos.`;
+
+const sectors = new Set(PROJECTS.map((project) => project.sector)).size;
+const areas = SERVICE_AREA_CITIES.join(", ").replace(/, ([^,]*)$/, " e $1");
+
+const schema = [
+  pageSchema({ type: "AboutPage", name: title, description, path: "/sobre/" }),
+  personSchema(),
+  breadcrumbSchema([{ name: "Sobre" }]),
+];
+---
+
+<BaseLayout title="Sobre" description={description} schema={schema}>
+  <GooeyStack>
+    <PageMasthead
+      title="Uma pessoa, não um departamento."
+      intro={`Mais de ${AUTHOR.yearsBuilding} anos e mais de ${AUTHOR.sitesBuilt} sites depois, você continua falando com quem constrói o seu — do orçamento à manutenção do terceiro ano.`}
+    />
+  </GooeyStack>
+
+  <section class="relative on-white bg-white pt-10 pb-20" aria-label="Sobre">
+    <div class="shell">
+
+      <div class="prose-plop">
+        <h2>Quem faz</h2>
+
+        <p>
+          Me chamo <strong>{AUTHOR.name}</strong> e sou desenvolvedor web. O
+          Plop! é o estúdio por onde passa o meu trabalho: eu desenho, construo,
+          publico e depois cuido dos sites todos os meses. Não há equipe de
+          atendimento no meio — quem responde o seu primeiro e-mail é quem vai
+          mexer no código.
+        </p>
+
+        <p>
+          Faço sites há <strong data-numeric
+            >mais de {AUTHOR.yearsBuilding} anos</strong
+          >, e já passaram de <strong data-numeric>{AUTHOR.sitesBuilt}</strong>.
+          A maior parte não está aqui: sites mudam de mãos, são refeitos por
+          outra pessoa, saem do ar, ou são de clientes que preferem não
+          aparecer.
+        </p>
+
+        <p>
+          O que dá para mostrar são estes <strong data-numeric
+            >{PROJECTS.length}</strong
+          >: <strong data-numeric>{liveCount()}</strong> no ar agora e {
+            PROJECTS.length - liveCount()
+          } em desenvolvimento, em  <strong data-numeric>{sectors}</strong> 
+          setores diferentes — arquitetura, farmacêutica, cinema,
+          cibersegurança, saúde animal, imobiliária, ensino. A maior parte foi
+          para clientes no Uruguai, onde esse trabalho começou. O estúdio hoje
+          é em <strong>Curitiba</strong>, e o atendimento é em português,
+          espanhol e inglês.
+        </p>
+
+        <p>
+          As áreas que o nosso Perfil da Empresa no Google declara são {areas} —
+          mas o trabalho é remoto, então o Brasil inteiro está dentro do
+          alcance. A distância nunca foi o que decidiu se um site ficou bom.
+        </p>
+
+        <h2>Como a gente trabalha</h2>
+
+        <p>
+          O modelo é sempre o mesmo, e cabe em duas parcelas: uma <strong>entrada</strong> para construir o site, a partir de
+          <strong data-numeric>{formatBRL(entryPrice())}</strong>, e uma <strong>mensalidade</strong> que mantém ele no ar, cuidado e
+          atualizado. Nada de orçamento por hora, nada de surpresa no terceiro
+          mês.
+        </p>
+
+        <p>
+          Os sites são construídos para carregar rápido e continuar rápidos: as
+          páginas já saem prontas, servidas do ponto mais próximo de quem abriu.
+          Isso não é detalhe técnico — é o que decide se o seu site aguenta o
+          mês em que você mais precisa dele, e é por isso que a hospedagem cabe
+          na mensalidade em vez de virar uma linha à parte.
+        </p>
+
+        <p>
+          O domínio fica no seu nome. Sempre. Se um dia você quiser levar o site
+          para outro lugar, ele vai com você.
+        </p>
+
+        <h2>O que a gente não faz</h2>
+
+        <ul>
+          <li>
+            <strong>Não entregamos e sumimos.</strong> Um site sem manutenção
+            não fica parado, fica velho — e destravar um site abandonado custa
+            quase o mesmo que fazer outro.
+          </li>
+          <li>
+            <strong>Não prometemos primeiro lugar no Google.</strong> Ninguém
+            pode. O que dá para fazer é construir um site que carrega rápido,
+            responde à pergunta certa e é fácil de ler por buscador e por
+            inteligência artificial — o resto é consequência e leva tempo.
+          </li>
+          <li>
+            <strong>Não escondemos o preço.</strong> Os três planos estão
+            publicados, com os dois números de cada um.
+          </li>
+        </ul>
+
+        <h2>Falar comigo</h2>
+
+        <p>
+          O jeito mais rápido é o <a href={CONTACT_ANCHOR}>formulário de
+          contato</a>, que cai direto no meu e-mail. Meu trabalho pessoal, fora
+          do estúdio, fica em <a href={AUTHOR.profiles[0]} rel="me"
+            >nicolasgonzalez.dev</a
+          >. Se preferir ver os números
+          antes, eles estão em <a href={PLANS_ANCHOR}>planos</a>; se preferir
+          ver o trabalho, está tudo em <a href="/projetos/">projetos</a>, com o
+          link de cada site.
+        </p>
+      </div>
+
+      <div class="mt-[clamp(40px,5vw,64px)] flex max-w-[68ch] flex-wrap gap-3">
+        <Button href={CONTACT_ANCHOR} variant="solid-ink" data-track="cta_primary_click">
+          Quero meu site
+        </Button>
+        <Button href={PLANS_ANCHOR}>Ver planos</Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

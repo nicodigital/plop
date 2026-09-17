@@ -40,7 +40,8 @@ banco de dados para consultar, não há plugin para executar. O custo de entrega
 a milésima visita é praticamente o mesmo da primeira.
 
 É por isso que aqui a gente constrói assim. Não é preferência técnica: é a parte
-do produto que aparece no mês em que você mais precisa dele.
+do produto que aparece no mês em que você mais precisa dele — e já vem incluída
+em qualquer [plano](/#planos), sem virar item de orçamento.
 
 ## O que ainda pode falhar
 
@@ -48,7 +49,9 @@ Site estático não é imune a tudo. Continua sendo problema:
 
 - **Formulário que depende de um serviço externo lento.** Se o envio trava, a
   pessoa acha que o site travou.
-- **Imagens pesadas.** Não importa de onde o arquivo vem se ele tem 4 MB.
+- **Imagens pesadas.** Não importa de onde o arquivo vem se ele tem 4 MB. É o
+  primeiro item da lista do que [deixa um site
+  lento](/blog/site-lento-perde-cliente/).
 - **Vídeo de fundo sem compressão**, consumindo o 4G de quem está na rua.
 - **Rastreadores acumulados.** Cada pixel de anúncio é mais uma coisa para
   baixar antes da página ficar utilizável.
@@ -60,10 +63,13 @@ Site estático não é imune a tudo. Continua sendo problema:
 Duas semanas antes do pico, não no meio dele:
 
 1. Abra o site no celular, no 4G, longe do wi-fi de casa.
-2. Confira horário, telefone e endereço. Feriado incluído.
+2. Confira horário, telefone e endereço. Feriado incluído — e confira que a
+   [sua ficha no Google](/blog/aparecer-no-google-maps-em-curitiba/) diz
+   exatamente a mesma coisa.
 3. Envie o formulário de contato você mesmo e veja se a mensagem chega.
-4. Confirme que o que você mais vai vender está na primeira tela, não enterrado
-   em uma página interna.
+4. Confirme que o que você mais vai vender está [na primeira
+   tela](/blog/o-que-nao-pode-faltar-na-primeira-tela/), não enterrado em uma
+   página interna.
 5. Se você anuncia, confira para onde o anúncio leva — e abra esse link.
 
 ## O resumo

@@ -20,6 +20,10 @@ export type SectorGroupId = keyof typeof SECTOR_GROUPS;
 /** Delivery state. Rendered in pt-BR; the source records it in English. */
 export type ProjectStatus = "live" | "wip";
 
+/** How many of the published projects are live, for copy that states it. */
+export const liveCount = (): number =>
+  PROJECTS.filter((project) => project.status === "live").length;
+
 export const STATUS_LABELS: Record<ProjectStatus, string> = {
   live: "No ar",
   wip: "Em desenvolvimento",
