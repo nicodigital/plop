@@ -16,7 +16,7 @@ const isCurrentPage = (item: (typeof NAV_ITEMS)[number]) =>
   !item.watches && (item.href === "/" ? pathname === "/" : pathname.startsWith(item.href));
 ---
 
-<header class="on-blue absolute inset-x-0 top-0 z-50" data-nav-root>
+<header class="on-blue fixed inset-x-0 top-0 z-50" data-nav-root>
   {/*
     The veil for the mobile drawer. It is a child of the header and sits on a
     negative step of the header's own stacking context: that puts it over the
@@ -27,109 +27,236 @@ const isCurrentPage = (item: (typeof NAV_ITEMS)[number]) =>
   */}
   <div class="nav-scrim fixed inset-0 -z-10" data-nav-scrim aria-hidden="true"></div>
 
-  <div class="shell relative flex items-center justify-between gap-4 py-4 sm:py-5 lg:gap-6 lg:py-7">
-    <a
-      href="/#topo"
-      class="inline-flex min-h-[44px] shrink-0 items-center rounded-lg transition-opacity duration-[var(--duration-fast)] hover:opacity-85"
-      aria-label={`${SITE_NAME} — início`}
-    >
-      <Logo height={65} class="h-15 xg:h-11 w-auto sm:h-14 lg:h-[65px]" decorative />
-    </a>
-
-    <nav class="hidden lg:block" aria-label="Principal">
-      <ul class="flex items-center gap-1">
-        {
-          NAV_ITEMS.map((item) => (
-            <li>
-              <a
-                href={item.href}
-                data-watches={item.watches}
-                aria-current={isCurrentPage(item) ? "page" : undefined}
-                class="nav-link relative inline-flex min-h-[44px] items-center rounded-full px-4 text-ui font-semibold text-white/85 no-underline transition-colors duration-[var(--duration-fast)] hover:text-white"
-              >
-                {item.label}
-                <span
-                  class="nav-bar absolute inset-x-4 bottom-[9px] h-[2px] rounded-full bg-plop-lime"
-                  aria-hidden="true"
-                />
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </nav>
-
-    <div class="flex items-center gap-3">
-
-      <div class="hidden xg:block" >
-        <Button href={CONTACT_ANCHOR} size="lg" data-track="cta_primary_click">
-            Quero meu site
-        </Button>
-      </div>
-
-      <button
-        type="button"
-        id="nav-toggle"
-        class="group inline-flex size-11 items-center justify-center rounded-full border-2 border-white/45 text-white transition-colors duration-[var(--duration-fast)] hover:border-white lg:hidden"
-        aria-expanded="false"
-        aria-controls="nav-drawer"
-      >
-        <span class="sr-only">Abrir menu</span>
-        {/* Both marks ship and `aria-expanded` decides which one is drawn, so
-            the control never waits on a script to say what it will do. The
-            switch is a utility rather than a rule in the block below: these
-            are child components, which the scoped stylesheet cannot reach. */}
-        <Icon name="menu" size={22} class="group-aria-expanded:hidden" />
-        <Icon name="close" size={22} class="hidden group-aria-expanded:block" />
-      </button>
-    </div>
-  </div>
-
   {/*
-    The drawer sits over the hero, so it needs a ground of its own: without
-    one the menu reads on top of the headline it is covering. Ink rather than
-    brand blue, because the hero behind it is brand blue and two identical
-    surfaces would not separate.
-
-    Open and closed are one attribute on the header, read by the block below,
-    so the panel and its veil can never disagree about which state they are in
-    halfway through a transition.
+    Everything the header actually draws travels as one piece, so the bar and
+    the drawer can never disagree about where the header is. The veil stays
+    outside it on purpose: a translated box becomes the containing block for
+    its fixed children, and a full-screen veil measured against a 76px bar is
+    no veil at all.
   */}
-  <div id="nav-drawer" class="shell relative pb-4" data-nav-drawer>
-    <nav
-      class="on-ink ml-auto w-full max-w-[min(100%,26rem)] rounded-[var(--radius-plop-lg)] bg-plop-ink px-3 pt-3 pb-6 [corner-shape:squircle]"
-      aria-label="Principal, mobile"
-    >
-      <ul class="flex flex-col gap-1">
-        {
-          NAV_ITEMS.map((item) => (
-            <li>
-              <a
-                href={item.href}
-                data-watches={item.watches}
-                aria-current={isCurrentPage(item) ? "page" : undefined}
-                class="nav-link flex min-h-[52px] items-center justify-between gap-4 rounded-[var(--radius-plop-sm)] px-4 font-display text-ui-xl font-semibold text-white/85 no-underline transition-colors duration-[var(--duration-fast)] hover:bg-white/10 hover:text-white"
-              >
-                {item.label}
-                <span class="nav-dot size-2 shrink-0 rounded-full bg-plop-lime" aria-hidden="true" />
-              </a>
-            </li>
-          ))
-        }
-        <li class="pt-2 xg:hidden">
-          <a
-            href={PRIMARY_CTA.href}
-            class="flex min-h-[52px] items-center justify-center rounded-full bg-plop-lime px-5 font-display font-semibold text-plop-ink no-underline"
+  <div data-nav-shell>
+    {/* The ground is a layer of its own because it has to reach both edges of
+        the screen while the bar keeps the shell's gutters. */}
+    <div data-nav-bar>
+      <div class="shell relative flex items-center justify-between gap-4 lg:gap-6">
+        <a
+          href="/#topo"
+          class="nav-logo-link inline-flex shrink-0 items-center rounded-lg transition-opacity duration-[var(--duration-fast)] hover:opacity-85"
+          aria-label={`${SITE_NAME} — início`}
+        >
+          <Logo height={65} class="h-full w-auto" decorative />
+        </a>
+
+        <nav class="hidden lg:block" aria-label="Principal">
+          <ul class="flex items-center gap-1">
+            {
+              NAV_ITEMS.map((item) => (
+                <li>
+                  <a
+                    href={item.href}
+                    data-watches={item.watches}
+                    aria-current={isCurrentPage(item) ? "page" : undefined}
+                    class="nav-link relative inline-flex min-h-[44px] items-center rounded-full px-4 text-ui font-semibold text-white/85 no-underline transition-colors duration-[var(--duration-fast)] hover:text-white"
+                  >
+                    {item.label}
+                    <span
+                      class="nav-bar absolute inset-x-4 bottom-[9px] h-[2px] rounded-full bg-plop-lime"
+                      aria-hidden="true"
+                    />
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+
+        <div class="flex items-center gap-3">
+
+          <div class="hidden xg:block" data-nav-cta>
+            <Button href={CONTACT_ANCHOR} size="lg" data-track="cta_primary_click">
+                Quero meu site
+            </Button>
+          </div>
+
+          <button
+            type="button"
+            id="nav-toggle"
+            class="group inline-flex size-11 items-center justify-center rounded-full border-2 border-white/45 text-white transition-colors duration-[var(--duration-fast)] hover:border-white lg:hidden"
+            aria-expanded="false"
+            aria-controls="nav-drawer"
           >
-            {PRIMARY_CTA.label}
-          </a>
-        </li>
-      </ul>
-    </nav>
+            <span class="sr-only">Abrir menu</span>
+            {/* Both marks ship and `aria-expanded` decides which one is drawn, so
+                the control never waits on a script to say what it will do. The
+                switch is a utility rather than a rule in the block below: these
+                are child components, which the scoped stylesheet cannot reach. */}
+            <Icon name="menu" size={22} class="group-aria-expanded:hidden" />
+            <Icon name="close" size={22} class="hidden group-aria-expanded:block" />
+          </button>
+        </div>
+      </div>
+    </div>
+
+    {/*
+      The drawer sits over the hero, so it needs a ground of its own: without
+      one the menu reads on top of the headline it is covering. Ink rather than
+      brand blue, because the hero behind it is brand blue and two identical
+      surfaces would not separate.
+
+      Open and closed are one attribute on the header, read by the block below,
+      so the panel and its veil can never disagree about which state they are in
+      halfway through a transition.
+    */}
+    <div id="nav-drawer" class="shell relative pb-4" data-nav-drawer>
+      <nav
+        class="on-ink ml-auto w-full max-w-[min(100%,26rem)] rounded-[var(--radius-plop-lg)] bg-plop-ink px-3 pt-3 pb-6 [corner-shape:squircle]"
+        aria-label="Principal, mobile"
+      >
+        <ul class="flex flex-col gap-1">
+          {
+            NAV_ITEMS.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  data-watches={item.watches}
+                  aria-current={isCurrentPage(item) ? "page" : undefined}
+                  class="nav-link flex min-h-[52px] items-center justify-between gap-4 rounded-[var(--radius-plop-sm)] px-4 font-display text-ui-xl font-semibold text-white/85 no-underline transition-colors duration-[var(--duration-fast)] hover:bg-white/10 hover:text-white"
+                >
+                  {item.label}
+                  <span class="nav-dot size-2 shrink-0 rounded-full bg-plop-lime" aria-hidden="true" />
+                </a>
+              </li>
+            ))
+          }
+          <li class="pt-2 xg:hidden">
+            <a
+              href={PRIMARY_CTA.href}
+              class="flex min-h-[52px] items-center justify-center rounded-full bg-plop-lime px-5 font-display font-semibold text-plop-ink no-underline"
+            >
+              {PRIMARY_CTA.label}
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
   </div>
 </header>
 
 <style>
+  /* ------------------------------------------------------ the bar and its travel
+
+     The header is fixed now, which gives it two jobs the absolute one never
+     had: it has to survive leaving the hero, and it has to get out of the way
+     of the page it is sitting on. Both hang off attributes the script below
+     sets on the header, the same way the drawer already works.
+
+     The two sizes are variables rather than a second set of utilities: the
+     resting bar and the travelling bar are one bar at two scales, and a second
+     set of classes would be a second bar to keep in sync. */
+  [data-nav-root] {
+    --nav-pad-y: 16px;
+    --nav-logo-h: 60px;
+  }
+
+  @media (width >= 40rem) {
+    [data-nav-root] {
+      --nav-pad-y: 20px;
+      --nav-logo-h: 56px;
+    }
+  }
+
+  @media (width >= 62rem) {
+    [data-nav-root] {
+      --nav-logo-h: 44px;
+    }
+  }
+
+  @media (width >= 64rem) {
+    [data-nav-root] {
+      --nav-pad-y: 28px;
+      --nav-logo-h: 65px;
+    }
+  }
+
+  /* Off the hero the bar stops being the crown of the page and becomes a
+     utility, so it comes back smaller — and on a ground of its own, because
+     the sections it now crosses are paper and white, where white text has
+     nothing to sit on. Ink rather than brand blue, for the same reason the
+     drawer panel is ink: the page under it is often blue already. The logo
+     never drops under 44px, which is also its touch target. */
+  [data-nav-root][data-nav-stuck] {
+    --nav-pad-y: 12px;
+    --nav-logo-h: 44px;
+  }
+
+  [data-nav-bar] {
+    background-color: transparent;
+    transition: background-color var(--duration-fast) var(--ease-plop-out);
+  }
+
+  [data-nav-root][data-nav-stuck] [data-nav-bar] {
+    background-color: var(--color-plop-ink);
+  }
+
+  /* An open menu takes the ground back off: the panel is ink too, and a bar of
+     the same ink welded to its top edge turns two shapes into one notched one.
+     The veil behind the bar is contrast enough for the wordmark and the close. */
+  [data-nav-root][data-nav-open] [data-nav-bar] {
+    background-color: transparent;
+  }
+
+  /* Condensing is a size change, so it animates size — padding here, the logo
+     below, the CTA under that. The usual objection is layout thrash, and it
+     does not apply: the header is fixed, so nothing in the document reflows
+     behind it, the subtree is four nodes, and the change fires once per
+     threshold crossing rather than per scrolled frame. Measured against the
+     same wheel pattern deeper in the page, the crossing is the cheaper of the
+     two. A transform would only fake the height and leave the ground wrong. */
+  [data-nav-bar] > .shell {
+    padding-block: var(--nav-pad-y);
+    transition: padding-block var(--duration-fast) var(--ease-plop-out);
+  }
+
+  .nav-logo-link {
+    height: var(--nav-logo-h);
+    transition: height var(--duration-fast) var(--ease-plop-out);
+  }
+
+  /* The CTA is the tallest thing in the bar, so the bar cannot condense unless
+     it does. Restating the button's own transitions is the price of reaching
+     into it from here: a component style is unlayered and would otherwise drop
+     the hover it already owns. */
+  [data-nav-cta] :global(.btn) {
+    transition:
+      background-color var(--duration-fast) var(--ease-plop-out),
+      transform var(--duration-fast) var(--ease-plop-out),
+      box-shadow var(--duration-fast) var(--ease-plop-out),
+      min-height var(--duration-fast) var(--ease-plop-out),
+      padding-inline var(--duration-fast) var(--ease-plop-out);
+  }
+
+  [data-nav-root][data-nav-stuck] [data-nav-cta] :global(.btn) {
+    min-height: 3rem;
+    padding-inline: 1.75rem;
+  }
+
+  /* Leaving and returning is one move on everything the header draws, at the
+     page's beat and on its own curve — the same pair the reveal uses, so the
+     bar arrives like the rest of the site rather than like a widget. */
+  [data-nav-shell] {
+    transition: translate var(--beat) var(--ease-plop-out);
+  }
+
+  [data-nav-root][data-nav-hidden] [data-nav-shell] {
+    translate: 0 -100%;
+  }
+
+  /* A bar that is off screen must not keep catching the taps meant for the
+     page under where it used to be. */
+  [data-nav-root][data-nav-hidden] {
+    pointer-events: none;
+  }
+
   /* The current item is marked twice over — colour and a drawn mark — so the
      state never rests on hue alone. Both marks are painted by the same
      attribute, whether the server set it (a real page) or the scroll spy did
@@ -235,12 +362,16 @@ const isCurrentPage = (item: (typeof NAV_ITEMS)[number]) =>
     const label = toggle.querySelector(".sr-only");
     if (label) label.textContent = open ? "Fechar menu" : "Abrir menu";
 
-    // The header is absolute, not fixed, so a page that keeps scrolling under
-    // an open drawer carries the menu off the top of the screen with it. Lenis
-    // holds the position while the drawer is the thing on screen, and its
-    // `lenis-stopped` class is what stops a finger doing the same.
+    // The page does not scroll under an open menu: with the veil over it there
+    // is nothing there to scroll, and a page moving behind a fixed drawer reads
+    // as the drawer sliding. Lenis holds the position, and its `lenis-stopped`
+    // class is what stops a finger doing the same.
     if (open) getLenis()?.stop();
     else getLenis()?.start();
+
+    // Opening the menu from a bar that had travelled away would animate the
+    // drawer down from nothing. The bar comes back first, in the same frame.
+    if (open) header.removeAttribute("data-nav-hidden");
 
     // With a veil over it the page is no longer reachable, so it leaves the
     // tab order and the accessibility tree too: an open menu that can still
@@ -372,5 +503,70 @@ const isCurrentPage = (item: (typeof NAV_ITEMS)[number]) =>
       window.addEventListener("scroll", schedule, { passive: true });
       window.addEventListener("resize", schedule, { passive: true });
     }
+  }
+
+  /**
+   * Travel. The bar follows the page down and out of sight, and comes back the
+   * moment the visitor scrolls up: on the way down they are reading, and on the
+   * way up they are going looking for something — usually the nav or the CTA.
+   *
+   * Two numbers and nothing else. Every state is an attribute on the header, so
+   * the stylesheet owns what any of it looks like.
+   */
+  if (header) {
+    /**
+     * One distance decides everything. Above the page's first 220px the bar is
+     * still the crown of the hero — full size, no ground, always there, and a
+     * nudge of the wheel does not paint a band across the opening image. Past
+     * it the bar has detached: it condenses, takes its ground, and is free to
+     * travel. Every route opens on a blue surface at least this deep, so the
+     * resting bar is never the white one over white.
+     */
+    const REST_UNTIL = 220;
+    /** A stray pixel from a trackpad or a rubber band is not a direction. */
+    const STEP = 6;
+
+    let last = window.scrollY;
+    let pending = false;
+
+    const travel = () => {
+      pending = false;
+      const y = Math.max(0, window.scrollY);
+
+      const resting = y <= REST_UNTIL;
+      header.toggleAttribute("data-nav-stuck", !resting);
+
+      const delta = y - last;
+      if (Math.abs(delta) < STEP) return;
+      last = y;
+
+      // Three ways the header is the thing being used rather than the thing in
+      // the way, and none of them may take it off the screen.
+      if (
+        resting ||
+        header.hasAttribute("data-nav-open") ||
+        header.contains(document.activeElement)
+      ) {
+        header.removeAttribute("data-nav-hidden");
+        return;
+      }
+
+      header.toggleAttribute("data-nav-hidden", delta > 0);
+    };
+
+    const queue = () => {
+      if (pending) return;
+      pending = true;
+      requestAnimationFrame(travel);
+    };
+
+    // A reload lands wherever the visitor left off, so the resting state is
+    // decided by the scroll position and not assumed to be the top.
+    travel();
+    window.addEventListener("scroll", queue, { passive: true });
+
+    // Tabbing into a bar that has travelled away would put the focus ring
+    // somewhere nobody can see.
+    header.addEventListener("focusin", () => header.removeAttribute("data-nav-hidden"));
   }
 </script>

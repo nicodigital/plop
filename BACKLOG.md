@@ -10,8 +10,6 @@
 ## WHATSAPP
 Fix WhatsApp Web
 
-## STICKY MENU
-
 ## CUENTAS DE CORREO
 
 ## RESEÑAS
