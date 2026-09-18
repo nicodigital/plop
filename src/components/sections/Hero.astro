@@ -1,5 +1,6 @@
 ---
 import Button from "../ui/Button.astro";
+import Modal from "../ui/Modal.astro";
 import { CONTACT_ANCHOR, PLANS_ANCHOR } from "../../data/nav.ts";
 ---
 
@@ -10,19 +11,41 @@ import { CONTACT_ANCHOR, PLANS_ANCHOR } from "../../data/nav.ts";
 >
   <div class="hero-body shell relative flex flex-1 flex-col justify-center">
     <div class="max-w-[42rem] lg:max-w-[54%]">
+      {/*
+        Three headlines in one box. All three are real, crawlable HTML and they
+        read in sequence: the question, the question after it, and the answer.
+        The cycle is CSS alone — the markup's only job is to name the terms
+        that travel and the direction they travel in.
+      */}
       <h1
         id="hero-titulo"
-        class="max-w-[20ch] text-[length:var(--text-h1)] [word-spacing:-0.1em]"
+        class="rotator max-w-[30ch] text-[length:var(--text-h1)] [word-spacing:-0.1em]"
+        data-rotator
       >
-        <span class="anim" data-anim="bottom" >Seu</span>&nbsp;<span class="text-plop-lime anim" data-anim="bottom" data-delay="200" >site</span>&nbsp;<span class="anim" data-anim="bottom" data-delay="400" >pronto</span> 
-        <br />
-        <span class="anim" data-anim="bottom" data-delay="500" > para </span>&nbsp;<span class="text-plop-lime anim" data-anim="bottom" data-delay="700">IA!</span> 
+    
+        <span class="rotator-phrase" data-anim="bottom">
+          <span class="rotator-term rotator-term--break">Seu site</span>
+          <span class="rotator-term">aparece na</span>
+          <span class="rotator-term text-plop-lime">IA?</span>
+        </span>
+
+        <span class="rotator-phrase" data-anim="bottom">
+          <span class="rotator-term rotator-term--break">Você quer</span>
+          <span class="rotator-term">aparecer,</span>
+          <span class="rotator-term text-plop-lime">não é?</span>
+        </span>
+
+        <span class="rotator-phrase" data-anim="bottom">
+          <span class="rotator-term rotator-term--break">Coloque seu site</span>
+          <span class="rotator-term">na era</span>
+          <span class="rotator-term text-plop-lime">da IA!</span>
+        </span>
       </h1>
 
       <p
         class="muted mt-5 max-w-[40ch] text-[length:var(--text-lead)] lg:mt-7 anim" data-anim="bottom" data-delay="800"
       >
-        Sites modernos, rápidos e fáceis de gerenciar.<br> Design de alto desempenho com um preço que faz sentido — e já preparado para aparecer em buscadores e inteligência artificial.
+        A internet mudou. A forma de buscar também. Criamos sites rápidos, inteligentes e preparados para serem encontrados por pessoas e pela IA.
       </p>
 
       <div class="flex flex-wrap items-center gap-3 mt-12 lg:mt-8">
@@ -52,6 +75,22 @@ import { CONTACT_ANCHOR, PLANS_ANCHOR } from "../../data/nav.ts";
           Cuidado todo mês
         </li>
       </ul>
+
+      {/*
+        The headline promises visibility in AI answers, and that is a promise
+        nobody controls end to end. The qualification belongs beside the
+        claim, but not inside it — so it opens the sheet instead of taking a
+        line of the hero.
+      */}
+      <p class="anim translate-y-[8rem]" data-anim="bottom" data-delay="1400">
+        <button
+          type="button"
+          class="hero-disclaimer text-small font-semibold underline cursor-pointer"
+          data-modal-open="disclaimer-ia"
+        >
+          Nossa promessa
+        </button>
+      </p>
     </div>
   </div>
 
@@ -89,11 +128,59 @@ import { CONTACT_ANCHOR, PLANS_ANCHOR } from "../../data/nav.ts";
       <source src="/assets/video/hero-laptop-blue.mp4" type="video/mp4" />
     </video>
   </div>
+
+  <Modal id="disclaimer-ia" title="Sobre a promessa de aparecer na IA">
+    <div class="prose-plop">
+      <p>
+        <strong>O que fazemos.</strong> Todo site que sai do nosso estúdio é construído
+        seguindo as práticas técnicas recomendadas por Google, Bing e pelas empresas
+        de inteligência artificial: conteúdo em HTML real e legível sem JavaScript,
+        estrutura semântica, dados estruturados, velocidade, sitemap, acesso liberado
+        para os robôs de busca e de IA.
+      </p>
+      <p>
+        <strong>O que ninguém pode garantir.</strong> Quem decide o que aparece em
+        uma busca ou em uma resposta de IA são os buscadores e os modelos — não nós,
+        e nem você. Os critérios mudam, a concorrência muda e nenhum estúdio sério
+        promete <strong data-numeric>100%</strong> de efetividade. Quem promete está
+        vendendo o que não controla.
+      </p>
+      <p>
+        <strong>Por que ainda assim vale.</strong> Sem essas práticas, a chance de
+        aparecer não fica menor: ela desaparece. Um site que os robôs não conseguem
+        ler simplesmente não entra na disputa. Nosso trabalho é colocar o seu site
+        na melhor posição possível para ser encontrado — por pessoas e pela IA.
+      </p>
+    </div>
+
+    <Button slot="actions" href={CONTACT_ANCHOR} variant="solid-ink" size="lg" data-track="cta_primary_click">
+      Quero meu site
+    </Button>
+  </Modal>
 </section>
 
 <style>
   .hero {
     min-height: max(620px, 100svh);
+  }
+
+  /* Quiet by design: it qualifies the headline, it does not compete with the
+     two CTAs above it. The vertical padding is what keeps the touch target
+     usable without adding a visible box around a line of text. */
+  .hero-disclaimer {
+    padding-block: 0.4rem;
+    color: color-mix(in oklab, var(--color-plop-on-blue) 72%, transparent);
+    text-decoration-color: color-mix(
+      in oklab,
+      var(--color-plop-on-blue) 40%,
+      transparent
+    );
+    transition: color 0.25s ease, text-decoration-color 0.25s ease;
+  }
+
+  .hero-disclaimer:hover {
+    color: var(--color-plop-lime);
+    text-decoration-color: currentColor;
   }
 
   .hero-media {
@@ -253,5 +340,35 @@ import { CONTACT_ANCHOR, PLANS_ANCHOR } from "../../data/nav.ts";
       if (document.hidden) video.pause();
       else resume();
     });
+  }
+
+  // The headline cycles forever, so the rule that governs the gooey grounds
+  // applies to it too: spend frames only while it is on screen and the tab is
+  // in front. The cycle itself is pure CSS — this does not time it, only
+  // switches it off.
+  const rotator = document.querySelector<HTMLElement>("[data-rotator]");
+
+  if (rotator) {
+    let onScreen = true;
+
+    // The CSS rule defaults to running: if this block never executes, the
+    // headline still cycles instead of freezing on a term that has already
+    // faded out.
+    const sync = () => {
+      if (onScreen && !document.hidden) rotator.style.removeProperty("--rot-state");
+      else rotator.style.setProperty("--rot-state", "paused");
+    };
+
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(
+        (entries) => {
+          onScreen = entries[entries.length - 1].isIntersecting;
+          sync();
+        },
+        { threshold: 0 },
+      ).observe(rotator);
+    }
+
+    document.addEventListener("visibilitychange", sync);
   }
 </script>

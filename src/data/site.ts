@@ -16,7 +16,7 @@ export const SITE_NAME = "Plop! Sites";
  * The entry price is read from `plans.ts` rather than typed: this string used
  * to quote a figure the plan cards had already moved past.
  */
-export const SITE_DESCRIPTION = `Sites modernos, rápidos e fáceis de gerenciar. Entrada a partir de ${formatBRL(entryPrice())} e mensalidade com hospedagem, suporte e manutenção incluídos.`;
+export const SITE_DESCRIPTION = `Desenvolvimento de sites modernos e rápidos de Curitiba para todo o Brasil. Mensalidade com hospedagem, suporte e manutenção incluídos.`;
 
 /**
  * Default social card. Root-relative; `BaseLayout` resolves it against
@@ -41,9 +41,27 @@ export const WHATSAPP_MESSAGE = "Oi! Quero saber mais sobre os sites do Plop!";
 
 export const HAS_WHATSAPP = WHATSAPP_NUMBER.length > 0;
 
+/**
+ * wa.me and web.whatsapp.com both reject anything but digits in the phone
+ * segment, so the `+` and any separators are stripped here instead of at each
+ * call site.
+ */
+const WHATSAPP_DIGITS = WHATSAPP_NUMBER.replace(/\D/g, "");
+
+/**
+ * Universal link: phones hand it straight to the installed app. Desktops get
+ * WhatsApp's "continue to chat" interstitial, which is why the dock upgrades
+ * this to `whatsappWebHref()` client-side once it knows it is on a desktop.
+ */
 export const whatsappHref = (message: string = WHATSAPP_MESSAGE): string =>
   HAS_WHATSAPP
-    ? `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`
+    ? `https://wa.me/${WHATSAPP_DIGITS}?text=${encodeURIComponent(message)}`
+    : "/#contato";
+
+/** WhatsApp Web, which opens the chat directly with no interstitial. */
+export const whatsappWebHref = (message: string = WHATSAPP_MESSAGE): string =>
+  HAS_WHATSAPP
+    ? `https://web.whatsapp.com/send?phone=${WHATSAPP_DIGITS}&text=${encodeURIComponent(message)}`
     : "/#contato";
 
 export const CONTACT_EMAIL = "ola@plopsites.com.br";

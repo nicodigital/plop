@@ -3,7 +3,7 @@ import GooeyStack from "./GooeyStack.astro";
 import Logo from "../ui/Logo.astro";
 import ContactForm from "../ui/ContactForm.astro";
 import Icon from "../ui/Icon.astro";
-import { ADDRESS, CNPJ, CONTACT_EMAIL, HAS_WHATSAPP, LOCAL_SUMMARY, PHONE_DISPLAY, PHONE_NUMBER, SITE_NAME, whatsappHref } from "../../data/site.ts";
+import { ADDRESS, CNPJ, CONTACT_EMAIL, HAS_WHATSAPP, LOCAL_SUMMARY, PHONE_DISPLAY, SITE_NAME, whatsappHref, whatsappWebHref } from "../../data/site.ts";
 
 const year = new Date().getFullYear();
 ---
@@ -35,14 +35,20 @@ const year = new Date().getFullYear();
           >
             <div>
               <dt class="muted flex items-center gap-2 font-semibold">
-                <Icon name={HAS_WHATSAPP ? "phone" : "send"} size={22} class="shrink-0" />
-                {HAS_WHATSAPP ? "Telefone" : "Formulário"}
+                <Icon name={HAS_WHATSAPP ? "whatsapp" : "send"} size={22} class="shrink-0" />
+                {HAS_WHATSAPP ? "WhatsApp" : "Formulário"}
               </dt>
               <dd class="mt-1">
+                {/* The number still reads as the label: it is the WhatsApp
+                    number, and seeing it is part of what makes the channel
+                    feel like a real business rather than a widget. */}
                 <a
-                  href={HAS_WHATSAPP ? `tel:${PHONE_NUMBER}` : whatsappHref()}
+                  href={whatsappHref()}
+                  data-whatsapp-web={HAS_WHATSAPP ? whatsappWebHref() : undefined}
+                  target={HAS_WHATSAPP ? "_blank" : undefined}
+                  rel={HAS_WHATSAPP ? "noopener" : undefined}
                   class="inline-flex min-h-[44px] items-center font-display text-ui-xl font-semibold text-white transition-colors duration-[var(--duration-fast)] hover:text-plop-lime"
-                  data-track="phone_click"
+                  data-track={HAS_WHATSAPP ? "whatsapp_click" : "cta_primary_click"}
                 >
                   {HAS_WHATSAPP ? PHONE_DISPLAY : "Preencher o formulário"}
                 </a>

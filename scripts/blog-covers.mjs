@@ -79,6 +79,18 @@ const MOTIFS = {
     <path d="M560 400 h480 M560 460 h420 M560 520 h300" ${line('opacity="0.45"')}/>
     <path d="M560 588 l52 52 l112 -142" ${lime()}/>
   `,
+  /** A browser standing on a city grid: the site as the point on the map. */
+  cityframe: `
+    <path d="M430 700 H1170 M470 620 H1130 M510 540 H1090" ${line('opacity="0.2"')}/>
+    <path d="M600 540 V700 M800 540 V700 M1000 540 V700" ${line('opacity="0.2"')}/>
+    <rect x="560" y="200" width="480" height="330" rx="36" ${line('opacity="0.55"')}/>
+    <path d="M560 280 H1040" ${line('opacity="0.55"')}/>
+    <circle cx="606" cy="240" r="9" ${line('opacity="0.7"')}/>
+    <circle cx="646" cy="240" r="9" ${line('opacity="0.7"')}/>
+    <path d="M620 345 h240 M620 405 h340 M620 465 h180" ${line('opacity="0.75"')}/>
+    <circle cx="800" cy="618" r="26" fill="#c7ff00"/>
+    <path d="M800 586 V516" ${lime('stroke-dasharray="4 18"')}/>
+  `,
 };
 
 /* ---------------------------------------------------------------- covers */
@@ -92,6 +104,7 @@ const COVERS = [
   { slug: "aparecer-no-google-maps-em-curitiba", motif: "pin", ground: 1, turn: 270 },
   { slug: "seu-site-aguenta-a-temporada", motif: "peak", ground: 2, turn: 45 },
   { slug: "o-que-escrever-na-pagina-de-servicos", motif: "copyblocks", ground: 0, turn: 215 },
+  { slug: "criacao-de-sites-em-curitiba", motif: "cityframe", ground: 1, turn: 130 },
 ];
 
 /** Ground pairs taken from the blue ramp in src/styles/global.css. */

@@ -17,6 +17,11 @@
    
    2. KEYFRAMES UTILIZADOS POR INTERSECTIONOBSERVER
       - Incluye keyframes de entrada y clip usados por .anim + .anim-on
+
+   3. ROTADOR DE FRASES (.rotator)
+      - Carrusel de titulares 100% CSS, sin JavaScript que lo temporice
+      - Tres frases apiladas en una grilla; cada término entra y sale por fase
+      - Uso: class="rotator" + .rotator-phrase[data-anim] + .rotator-term
    
    ============================================================================ */
 
@@ -114,3 +119,191 @@ span[data-anim] {
 }
 
 
+
+/* ============================================================================
+   3. ROTADOR DE FRASES (.rotator)
+   ============================================================================
+
+   Un carrusel de titulares hecho solo con CSS. Tres frases comparten la misma
+   celda de una grilla, así que la caja mide siempre por la más alta y el ciclo
+   entero no mueve un píxel de lo que viene abajo. Cada término —palabra o
+   grupo— corre una sola animación infinita que dura la vuelta completa: entra
+   desde abajo, se queda el tiempo de lectura, sale hacia arriba y espera su
+   turno fuera de vista.
+
+   Lo que distingue a un término de otro no es una animación distinta sino la
+   fase. `animation-delay` corre una frase entera por frase y medio beat por
+   término, y de ahí salen el escalonado de entrada y el de salida sin escribir
+   tres juegos de keyframes ni un solo temporizador en JavaScript.
+
+   El reloj es el del sitio: 16 beats de frase, 48 de vuelta. Los porcentajes
+   de los keyframes son esa misma cuenta vista desde el ciclo: la frase espera
+   hasta 3.333% (512ms), entra en 640ms, se queda quieta hasta 31.25% y sale
+   en 320ms justo en el 33.333%, que es el final de su turno. Esa espera
+   inicial es lo que mantiene limpia la entrega: el último término de la frase
+   que se va termina de salir 320ms después del cambio de turno —es el
+   escalonado—, y recién entonces aparece el primero de la que entra. Sin ella
+   las dos frases se pisan y el titular se lee como una mancha.
+
+   No hay recorte. La `h1` corre a `line-height: 0.98`, o sea que la caja de
+   línea es más baja que el em: cualquier `overflow: clip` cortaría los acentos
+   y la cola de "negócio". El término viaja y se desvanece; no se esconde
+   detrás de un borde que no existe.
+
+   Markup esperado:
+
+     <h1 class="rotator" data-rotator>
+       <span class="rotator-phrase" data-anim="bottom">
+         <span class="rotator-term rotator-term--break">Seu negócio</span>
+         <span class="rotator-term">está</span>
+         <span class="rotator-term text-plop-lime">online?</span>
+       </span>
+       ... dos frases más
+     </h1>
+
+   El `data-anim` de la frase elige la dirección, igual que en el sistema del
+   IntersectionObserver: "bottom" entra desde abajo y sale por arriba, que es
+   la opuesta. No lleva `.anim`, porque acá no hay nada que observar: el ciclo
+   arranca con la página. */
+
+.rotator {
+  /* 48 beats de vuelta, 16 por frase: ~5.1s de turno, de los cuales ~3.6 son
+     de lectura quieta y el resto se va en la entrada y la salida. */
+  --rot-cycle: calc(48 * var(--beat));
+  --rot-phrase: calc(16 * var(--beat));
+  --rot-step: calc(var(--beat) / 2);
+  --rot-travel: 0.4em;
+  /* El espacio entre términos se pinta acá y no en el markup: `compressHTML`
+     borra el blanco entre etiquetas en el build, así que un espacio escrito
+     entre dos <span> llega al navegador como nada. Es el ancho del espacio de
+     Quicksand ya descontado el `word-spacing: -0.1em` del titular, para que el
+     hueco entre términos sea el mismo que el de adentro. */
+  --rot-gap: 0.16em;
+
+  display: grid;
+}
+
+/* Después de `span[data-anim]`, que pondría `inline-flex` acá y rompería tanto
+   el apilado como el `text-wrap: balance` de cada frase. */
+.rotator > .rotator-phrase {
+  display: block;
+  grid-area: 1 / 1;
+}
+
+.rotator > .rotator-phrase:nth-child(2) {
+  --p: 1;
+}
+
+.rotator > .rotator-phrase:nth-child(3) {
+  --p: 2;
+}
+
+.rotator-term {
+  /* `inline-block` y no un ítem de flex: el corte de línea lo decide el
+     navegador entre términos, como en cualquier titular, y no una regla de
+     `flex-wrap` que además rompería el `text-wrap: balance`. */
+  display: inline-block;
+  animation-duration: var(--rot-cycle);
+  animation-iteration-count: infinite;
+  animation-fill-mode: both;
+  /* Cada tramo trae su propia curva desde los keyframes. */
+  animation-timing-function: linear;
+  /* La resta es la espera que los keyframes ponen al principio de cada turno
+     (3.333% del ciclo, una décima de frase). Restándola acá, la primera frase
+     empieza a entrar con la página en vez de dejar el titular medio segundo en
+     blanco —que en un héroe es medio segundo de LCP—, y como el corrimiento es
+     el mismo para los nueve términos, la entrega entre frases no se mueve. */
+  animation-delay: calc(
+    var(--rot-phrase) * var(--p, 0) + var(--rot-step) * var(--t, 0) -
+      var(--rot-phrase) / 10
+  );
+  /* Corre por defecto: si el script del héroe no llega nunca, el titular
+     sigue girando en lugar de congelarse en un término ya desvanecido. */
+  animation-play-state: var(--rot-state, running);
+}
+
+/* El corte de línea entre dos inline-block sigue siendo posible sin blanco
+   entre ellos, así que el margen da el espacio sin costar una oportunidad de
+   salto de línea. */
+.rotator-term:not(:last-child) {
+  margin-inline-end: var(--rot-gap);
+}
+
+/* El corte de línea del titular no se deja al ancho disponible. Las tres
+   frases tienen que ocupar las mismas dos líneas: si una entra en una sola,
+   la caja —que mide por la más alta— le queda media línea vacía debajo y el
+   titular parece flotar cada cinco segundos. El término marcado cierra su
+   línea, y el quiebre cae donde el texto ya quebraba solo en pantalla
+   angosta. */
+.rotator-term--break {
+  display: block;
+}
+
+.rotator-term:nth-child(2) {
+  --t: 1;
+}
+
+.rotator-term:nth-child(3) {
+  --t: 2;
+}
+
+.rotator-term:nth-child(4) {
+  --t: 3;
+}
+
+.rotator-phrase[data-anim="bottom"] .rotator-term {
+  animation-name: RotatorBottom;
+}
+
+.rotator-phrase[data-anim="top"] .rotator-term {
+  animation-name: RotatorTop;
+}
+
+/* Entra desde abajo, sale por arriba. El 100% no vuelve al punto de partida
+   del 0%, y no hace falta: los dos extremos están en opacidad 0, así que el
+   salto del bucle no se ve. */
+@keyframes RotatorBottom {
+  0%,
+  3.333% {
+    opacity: 0;
+    transform: translateY(var(--rot-travel));
+    animation-timing-function: var(--ease-plop-out);
+  }
+  7.5% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  31.25% {
+    opacity: 1;
+    transform: translateY(0);
+    animation-timing-function: var(--ease-plop-standard);
+  }
+  33.333%,
+  100% {
+    opacity: 0;
+    transform: translateY(calc(var(--rot-travel) * -1));
+  }
+}
+
+@keyframes RotatorTop {
+  0%,
+  3.333% {
+    opacity: 0;
+    transform: translateY(calc(var(--rot-travel) * -1));
+    animation-timing-function: var(--ease-plop-out);
+  }
+  7.5% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  31.25% {
+    opacity: 1;
+    transform: translateY(0);
+    animation-timing-function: var(--ease-plop-standard);
+  }
+  33.333%,
+  100% {
+    opacity: 0;
+    transform: translateY(var(--rot-travel));
+  }
+}
