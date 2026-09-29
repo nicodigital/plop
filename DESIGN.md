@@ -426,7 +426,7 @@ pequeñas.
   Solo sobre azul o ink; es la acción secundaria del héroe.
 - **Solid Ink:** fondo ink, texto blanco, hover a grafito. Es la acción sobre
   fondos claros, donde el lima quedaría ilegible en texto pequeño.
-- **Hover / Focus:** transición de color en 180ms con `ease-plop-out`; el icono
+- **Hover / Focus:** transición de color en `--duration-fast` (250ms) con `ease-plop-out`; el icono
   se desplaza 4px a la derecha; `active` baja 1px. Nada de rebote ni de escala.
   El foco es un anillo lima sólido de 3px con 3px de offset, global.
 - **Touch target:** 48px mínimo de alto; los controles circulares, 44–48px.
@@ -578,11 +578,23 @@ agrandan la región del filtro.
 
 ### Reveal (signature)
 
-Una sola animación de entrada, compartida por toda la página: `[data-reveal]`
-sube 18px y aparece en `calc(var(--beat) * 2)` con `ease-plop-out`. El estado
-oculto solo existe bajo `.js-reveal`, que se añade antes del primer pintado.
-Sin JavaScript, nada está oculto jamás, y `reveal.ts` desarma la clase si no
-hay `IntersectionObserver`.
+Una sola animación de entrada, compartida por toda la página:
+`class="anim" data-anim="bottom"` sube 1.3rem y aparece cuando el elemento
+tiene un 40% dentro del viewport. `src/scripts/animations.js` (un
+`IntersectionObserver` para toda la página) añade `.anim-on` y
+`src/styles/components/animations.css` anima con `AnimBottom`. La duración por
+defecto es 1s, escrita inline por el script; `data-speed` la cambia. La
+coreografía se escribe a mano en el markup con `data-delay` (escalones de
+150–200ms), y por defecto el elemento se vuelve a ocultar al salir del todo
+del viewport y repite al volver (`data-once` / `data-reset` lo limitan).
+
+El estado oculto (`opacity: 0`) no está condicionado a JavaScript: si el
+script no carga, los elementos `.anim` quedan invisibles. Por eso **nunca** va
+`.anim` sobre el elemento LCP ni sobre el `h1` del héroe, que es el rotador y
+no depende del script.
+
+La referencia completa de atributos, el código y los keyframes que faltan
+para las otras direcciones están en `ANIMATIONS.spec.md`.
 
 ### Scroll suave (Lenis)
 
@@ -625,20 +637,21 @@ Lo que sostiene la conformidad en su lugar:
   control vuelve. La regla `:root[data-motion-paused]` de `GooeyBackground`
   sigue ahí, ahora sin nadie que la active.
 - **Nada queda escondido.** El reveal corre para todos, y `scripts/a11y.mjs`
-  verifica que tras recorrer la página entera no quede un solo `[data-reveal]`
-  bajo opacidad 1.
+  verifica, con movimiento reducido activado, que tras recorrer la página
+  entera cada `.anim[data-anim]` haya recibido `.anim-on` al menos una vez.
 
 El video del héroe es la excepción sin control: es decorativo, mudo y va
-detrás del scrim. Si alguna vez se quiere volver atrás, el camino es envolver
-el bloque de reveal en `@media (prefers-reduced-motion: no-preference)` y
-devolver el guardia al script del `<head>` de `BaseLayout.astro`.
+detrás del scrim. Si alguna vez se quiere volver atrás, el camino es
+descomentar el bloque `prefers-reduced-motion` que abre `animations.css` (deja
+el contenido `.anim` visible y quieto), poner `respectReducedMotion: true` en
+Lenis y devolver los guardias a los scripts de video.
 
 ### Named Rules
 
 **La Regla del Beat.** El sitio tiene un reloj: `--beat: 320ms`. Las apariciones
 y las transiciones de riel corren en múltiplos del beat (640ms); el feedback
-inmediato de estado (hover, color de borde, foco) corre en la capa rápida de
-180ms. No se inventan duraciones fuera de estas dos.
+inmediato de estado (hover, color de borde, foco) corre en la capa rápida,
+`--duration-fast` (250ms). No se inventan duraciones fuera de estas dos.
 
 **La Regla del Contenido Primero.** Ningún contenido depende de JavaScript para
 existir. La animación, el slider y la validación son mejoras sobre un HTML que
@@ -685,7 +698,7 @@ ya es correcto y legible.
   añadirle efectos.
 - **Don't** usar glassmorphism, neón, estética gamer ni gradientes multicolor.
 - **Don't** animar elemento por elemento ni inventar duraciones fuera del beat de
-  320ms y la capa rápida de 180ms.
+  320ms y la capa rápida de 250ms.
 - **Don't** ocultar contenido detrás de JavaScript ni depender de él para que el
   slider, el formulario o la revelación muestren información.
 - **Don't** reintroducir la secuencia de storytelling de cuatro escenas con la

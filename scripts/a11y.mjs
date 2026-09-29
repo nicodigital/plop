@@ -198,19 +198,47 @@ await rp.waitForTimeout(1200);
 const heroRuns = await rp.evaluate(() => !document.querySelector("[data-hero-video]")?.paused);
 if (!heroRuns) fails.push("hero video did not start under reduced motion");
 
-// Walk the page: every reveal must finish, whatever the motion preference.
+// Walk the page: every reveal must fire, whatever the motion preference.
+// Opacity at the end proves nothing — `.anim` elements hide again once they
+// leave the viewport — so what is recorded is whether each one ever received
+// `.anim-on`. Elements with no box at this width (hidden by a breakpoint)
+// can never intersect and are left out.
+await rp.evaluate(() => {
+  const seen = new Set(document.querySelectorAll(".anim.anim-on"));
+  window.__revealed = seen;
+  new MutationObserver((records) => {
+    for (const record of records) {
+      if (record.target.classList.contains("anim-on")) seen.add(record.target);
+    }
+  }).observe(document.body, { subtree: true, attributes: true, attributeFilter: ["class"] });
+});
+
 const docHeight = await rp.evaluate(() => document.body.scrollHeight);
 for (let y = 0; y < docHeight; y += 400) {
   await rp.evaluate((y) => window.scrollTo(0, y), y);
   await rp.waitForTimeout(120);
 }
-await rp.waitForTimeout(1100);
-const stranded = await rp.evaluate(
-  () =>
-    [...document.querySelectorAll("[data-reveal]")].filter(
-      (el) => parseFloat(getComputedStyle(el).opacity) < 0.99,
-    ).length,
-);
+
+const pendingReveals = () =>
+  rp.evaluate(() =>
+    [...document.querySelectorAll(".anim[data-anim]")]
+      .map((el, index) => ({ el, index }))
+      .filter(({ el }) => el.getClientRects().length > 0 && !window.__revealed.has(el))
+      .map(({ index }) => index),
+  );
+
+// A quick walk scrolls past elements whose `data-delay` has not elapsed, and
+// the module cancels those on exit by design. Give each straggler a proper
+// visit — longer than the longest delay on the site — before calling it
+// stranded.
+for (const index of await pendingReveals()) {
+  await rp.evaluate(
+    (i) => document.querySelectorAll(".anim[data-anim]")[i].scrollIntoView({ block: "center" }),
+    index,
+  );
+  await rp.waitForTimeout(1600);
+}
+const stranded = (await pendingReveals()).length;
 if (stranded > 0) fails.push(`${stranded} elements never revealed under reduced motion`);
 
 // The pause control is what makes autoplay legitimate; it has to work.

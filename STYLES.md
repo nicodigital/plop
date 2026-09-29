@@ -10,6 +10,13 @@ can be copied into a new project and re-tuned by renaming the tokens.
 For *what* the values should be (palette, type, spacing), see `DESIGN.md`.
 This file only describes *how* the system is wired.
 
+`TYPE-CONTAINER.spec.md` is the exportable subset of this file: the type
+scale and the container width alone, self-contained, meant to be copied into
+another project. Keep the two in sync when a token is re-tuned.
+
+`ANIMATIONS.spec.md` is the same kind of export for `animations.css`, the
+motion tokens and the scripts that drive them.
+
 ## 1. Setup
 
 Tailwind 4 through the official Vite plugin. No `@astrojs/tailwind`, no
@@ -146,7 +153,7 @@ One pattern, used by both systems.
 
   /* 3 — nested rules LAST, ascending width order */
   @variant xg  { --container-plop: 80%; }
-  @variant lg  { --container-plop: 90%; }
+  @variant lg  { --container-plop: 93%; }
   @variant 2xl { --container-plop: 1440px; }
 }
 ```
@@ -210,8 +217,10 @@ this. Changing it at one breakpoint rescales the whole page at that width,
 proportionally, in one line:
 
 ```css
-@variant xg { --text-html: 14px; }  /* laptops: pull the whole page in */
-@variant lg { --text-html: 15px; }
+@variant xg  { --text-html: 12px; }  /* laptops: pull the whole page in */
+@variant lg  { --text-html: 13px; }
+@variant xl  { --text-html: 14px; }
+@variant 2xl { --text-html: 16px; }  /* full scale again on large desktops */
 ```
 
 This is the blunt instrument. Reach for it when a width feels globally too
@@ -228,10 +237,10 @@ sit at an awkward size between breakpoints:
 
 ```css
 --text-display: clamp(3.25rem, 7vw, 6.5rem);
---text-h1:      clamp(2.75rem, 4.5vw, 5.5rem);
---text-h2:      clamp(2.125rem, 4vw, 3.75rem);
+--text-h1:      clamp(2.5rem, 4.3vw, 5.5rem);
+--text-h2:      clamp(2.125rem, 3.6vw, 3.75rem);
 --text-h3:      clamp(1.375rem, 2.2vw, 2rem);
---text-lead:    clamp(1.125rem, 1.2vw, 1.375rem);
+--text-lead:    clamp(0.9rem, 1.3vw, 1.1rem);
 ```
 
 Because the bounds are in `rem`, they also ride `--text-html`.
@@ -245,7 +254,7 @@ fluid UI text reads as unstable next to fluid headlines:
 --text-h4: 1.625rem;        --text-ui-xl: 1.25rem;
 --text-h5: 1.375rem;        --text-ui-lg: 1.125rem;
 --text-article: 1.0625rem;  --text-base: 1rem;
---text-ui: 0.9375rem;       --text-small: 0.875rem;
+--text-ui: 1rem;            --text-small: 0.8rem;
 ```
 
 ### 6.4 Consuming the scale
@@ -279,7 +288,7 @@ One token, one consumer.
 :root {
   --container-plop: 1440px;
   @variant xg  { --container-plop: 80%; }
-  @variant lg  { --container-plop: 90%; }
+  @variant lg  { --container-plop: 93%; }
   @variant 2xl { --container-plop: 1440px; }
 }
 ```
@@ -344,7 +353,7 @@ Everything else stays in utilities.
 
 ```css
 /* ✗ @variant at the top level — no parent rule, silently dropped */
-@variant lg { --container-plop: 90%; }
+@variant lg { --container-plop: 93%; }
 
 /* ✗ responsive value in @theme — compiled config, not a cascade participant */
 @theme { --text-h1: 3rem; @variant lg { --text-h1: 5rem; } }
@@ -379,7 +388,7 @@ Expected shape — a base value plus one `:root` block per step:
 ```css
 :root{--container-plop:1440px}
 @media (width>=992px){:root{--container-plop:80%}}
-@media (width>=1024px){:root{--container-plop:90%}}
+@media (width>=1024px){:root{--container-plop:93%}}
 @media (width>=1440px){:root{--container-plop:1440px}}
 ```
 

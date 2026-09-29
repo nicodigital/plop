@@ -52,10 +52,10 @@ for (const vp of VIEWPORTS) {
     // photograph every below-the-fold section at opacity 0. Settle it first.
     if (process.env.FULL === "1") {
       await page.evaluate(() => {
-        document.documentElement.classList.remove("js-reveal");
-        document
-          .querySelectorAll("[data-reveal]")
-          .forEach((el) => el.classList.add("is-revealed"));
+        document.querySelectorAll(".anim[data-anim]").forEach((el) => {
+          el.style.animationDuration = "0s";
+          el.classList.add("anim-on");
+        });
       });
       await page.waitForTimeout(200);
     }

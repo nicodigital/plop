@@ -145,6 +145,10 @@ Tailwind is the primary styling system.
 
 `STYLES.md` documents how CSS is wired in this repository: file layout, the cascade-layer model, `@theme` vs `@theme inline`, and the responsive token recipe behind the type scale and the container width. Read it before adding or re-tuning a token.
 
+`TYPE-CONTAINER.spec.md` is the portable export of the two responsive systems (type scale and container width), kept in sync with `STYLES.md` so the same way of working can be carried to another project.
+
+`ANIMATIONS.spec.md` is the portable export of the motion system (the `.anim` reveal, the headline rotator, the motion tokens, Lenis and view transitions). Keep it in sync with `animations.js` / `animations.css` when the reveal API changes.
+
 For a new implementation, prefer **Tailwind CSS 4 through the official Vite plugin** used by current Astro versions.
 
 Do not use the legacy `@astrojs/tailwind` integration for a new Tailwind 4 setup.

@@ -1,0 +1,50 @@
+# Build and deploy to Cloudflare Workers on every push to master.
+#
+# Blog posts arrive here as commits from the n8n publisher (POST-BY-TIME),
+# so this is what turns "a new .md in src/content/blog" into a live page.
+# A broken build fails this job and nothing is deployed: the live site keeps
+# serving the previous version (AGENTS §25).
+#
+# Repository secrets required:
+#   CLOUDFLARE_API_TOKEN   token with "Workers Scripts: Edit" on the account
+#   CLOUDFLARE_ACCOUNT_ID  the account that owns the plop-sites Worker
+# Repository variable required (public, it ships in the HTML):
+#   TURNSTILE_SITE_KEY     astro.config.mjs refuses to build without it
+# Worker secrets (relay, Turnstile) already live in Cloudflare; deploy keeps them.
+name: Deploy
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.18.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm build
+        env:
+          TURNSTILE_SITE_KEY: ${{ vars.TURNSTILE_SITE_KEY }}
+
+      - run: pnpm exec wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
