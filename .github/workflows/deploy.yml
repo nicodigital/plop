@@ -5,11 +5,11 @@
 # A broken build fails this job and nothing is deployed: the live site keeps
 # serving the previous version (AGENTS §25).
 #
-# Repository secrets required:
-#   CLOUDFLARE_API_TOKEN   token with "Workers Scripts: Edit" on the account
-#   CLOUDFLARE_ACCOUNT_ID  the account that owns the plop-sites Worker
-# Repository variable required (public, it ships in the HTML):
-#   TURNSTILE_SITE_KEY     astro.config.mjs refuses to build without it
+# Settings → Secrets and variables → Actions:
+#   CLOUDFLARE_API_TOKEN   secret: token with "Workers Scripts: Edit" on the account
+#   CLOUDFLARE_ACCOUNT_ID  secret: the account that owns the plop-sites Worker
+#   TURNSTILE_SITE_KEY     variable or secret (it is public, it ships in the HTML);
+#                          astro.config.mjs refuses to build without it
 # Worker secrets (relay, Turnstile) already live in Cloudflare; deploy keeps them.
 name: Deploy
 
@@ -26,7 +26,27 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      # Accepted from either tab, so the job does not depend on where it was saved.
+      TURNSTILE_SITE_KEY: ${{ vars.TURNSTILE_SITE_KEY || secrets.TURNSTILE_SITE_KEY }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID || vars.CLOUDFLARE_ACCOUNT_ID }}
     steps:
+      # Fails in seconds with a readable message instead of deep inside the build.
+      # Only checks presence; never prints the values.
+      - name: Check configuration
+        run: |
+          missing=0
+          for name in TURNSTILE_SITE_KEY CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID; do
+            if [ -z "${!name}" ]; then
+              echo "::error::Falta $name. Cargarlo en Settings → Secrets and variables → Actions (repository, no environment)."
+              missing=1
+            else
+              echo "$name: ok"
+            fi
+          done
+          exit $missing
+
       - uses: actions/checkout@v4
 
       - uses: pnpm/action-setup@v4
@@ -41,10 +61,5 @@ jobs:
       - run: pnpm install --frozen-lockfile
 
       - run: pnpm build
-        env:
-          TURNSTILE_SITE_KEY: ${{ vars.TURNSTILE_SITE_KEY }}
 
       - run: pnpm exec wrangler deploy
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
