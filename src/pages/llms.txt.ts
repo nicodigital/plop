@@ -9,7 +9,7 @@
  */
 import type { APIRoute } from "astro";
 import { mdPathFor, textPages } from "../data/page-markdown.ts";
-import { PLANS, formatBRL } from "../data/plans.ts";
+import { PLANS, entryLabel, formatBRL } from "../data/plans.ts";
 import {
   ADDRESS,
   AUTHOR,
@@ -56,7 +56,7 @@ export const GET: APIRoute = async () => {
     "",
     ...PLANS.map(
       (plan) =>
-        `- **${plan.name}** — entrada ${plan.setupFrom ? "a partir de " : ""}${formatBRL(plan.setup)}, mensalidade ${formatBRL(plan.monthly)}. ${plan.audience}`,
+        `- **${plan.name}** — ${plan.setup > 0 ? "entrada " : ""}${entryLabel(plan)}, mensalidade ${formatBRL(plan.monthly)}. ${plan.audience}`,
     ),
     "",
     "## Contato",

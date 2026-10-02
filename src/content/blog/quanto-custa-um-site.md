@@ -2,7 +2,7 @@
 title: "Quanto custa um site (e por que ninguém te diz)"
 description: "As faixas reais do mercado brasileiro em 2026: construção, domínio, hospedagem e manutenção, com números, e o que de fato muda o preço."
 publishedAt: 2026-08-14
-updatedAt: 2026-09-17
+updatedAt: 2026-10-02
 readingMinutes: 8
 category: negocio
 cover: ../../assets/img/blog/quanto-custa-um-site-isometric.webp
@@ -16,7 +16,7 @@ custa entre **R$ 1.500 e R$ 12.000** de construção, pago uma vez. O domínio
 manutenção — que quase ninguém coloca na conta — costuma ficar entre **R$ 50 e
 R$ 500 por mês**. Uma página só, com formulário e WhatsApp, fica na parte de
 baixo dessas faixas; um catálogo com dezenas de produtos, na de cima. Aqui na
-Plop! o plano de entrada é **R$ 1.000 uma vez mais R$ 200 por mês**, e essa
+Plop! dá para começar **sem entrada, por R$ 297 por mês**, e essa
 mensalidade já cobre hospedagem, suporte e manutenção. O que muda o preço não é
 o número de páginas: é quanta decisão o site exige.
 
@@ -124,12 +124,15 @@ depois que ninguém cuida daquilo.
 Não adianta escrever um texto sobre transparência de preço e não dizer o
 próprio. Os nossos são estes:
 
-- **Essencial — R$ 1.000 de entrada e R$ 200 por mês.** Uma página sob medida,
+- **Básico — R$ 1.000 de entrada e R$ 200 por mês.** Uma página sob medida,
   formulário, botão de WhatsApp, hospedagem, suporte e manutenção inclusos.
-- **Profissional — R$ 1.500 de entrada e R$ 300 por mês.** O mesmo, com blog
-  completo e a publicação de um conteúdo por mês.
-- **Completo — a partir de R$ 3.000 de entrada e R$ 450 por mês.** Site de
+- **Promoção — sem entrada e R$ 297 por mês**, com fidelidade mínima de 12
+  meses. Uma página sob medida com blog completo e a publicação de um conteúdo
+  por mês.
+- **Customizado — a partir de R$ 3.000 de entrada e R$ 200 por mês.** Site de
   várias páginas, para quem tem mais de uma linha de serviço para explicar.
+
+E antes de qualquer um deles, dá para pedir uma prévia do seu site, de graça.
 
 Em todos, o domínio fica no seu nome. Os valores completos estão em
 [planos](/#planos), e os sites que a gente entregou estão em

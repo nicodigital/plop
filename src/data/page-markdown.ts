@@ -17,7 +17,7 @@
 import { getCollection, type CollectionEntry } from "astro:content";
 import { BLOG_CATEGORIES, BLOG_AUTHOR, formatPostDate } from "./blog.ts";
 import { FAQ } from "./faq.ts";
-import { PLANS, entryPrice, formatBRL } from "./plans.ts";
+import { PLANS, PLAN_NOTES, entryLabel, formatBRL, freeEntryMonthly, monthlyPrice } from "./plans.ts";
 import {
   BUILD_LABELS,
   FEATURED_PROJECTS,
@@ -82,22 +82,21 @@ e atualizações, e nos planos com blog a publicação de um conteúdo por mês.
 cuida do seu negócio e a gente cuida do seu site — no ar em semanas, sem painel
 para aprender e sem plugin para atualizar.`;
 
-const planSection = (plan: (typeof PLANS)[number]): string => {
-  const entry = plan.setupFrom
-    ? `a partir de ${formatBRL(plan.setup)}`
-    : formatBRL(plan.setup);
+/** The plans' note markers are literal asterisks, not emphasis. */
+const escapeMarks = (text: string): string => text.replace(/\*/g, "\\*");
 
+const planSection = (plan: (typeof PLANS)[number]): string => {
   return [
     `### ${plan.name}${plan.recommended ? " (mais escolhido)" : ""}`,
     "",
     plan.audience,
     "",
-    `- Entrada: ${entry}`,
+    `- Entrada: ${entryLabel(plan)}`,
     `- Mensalidade: ${formatBRL(plan.monthly)}`,
     "",
     "Inclui:",
     "",
-    ...plan.features.map((feature) => `- ${feature}`),
+    ...plan.features.map((feature) => `- ${escapeMarks(feature)}`),
   ].join("\n");
 };
 
@@ -109,7 +108,7 @@ const asSentence = (items: readonly string[]): string =>
  * The studio's own paragraph, mirroring the `Studio` section on the page.
  * It is the only place either surface states the city in prose, so the two
  * are written from the same facts: the service areas come from the constant
- * the Business Profile is kept in step with, and the entry price from the
+ * the Business Profile is kept in step with, and the monthly fee from the
  * plans.
  */
 const studioSection = (): string =>
@@ -120,8 +119,9 @@ const studioSection = (): string =>
     "trabalho é feito a distância, por mensagem e por chamada, e o atendimento é",
     "em português, espanhol e inglês.",
     "",
-    `A entrada começa em ${formatBRL(entryPrice())}, paga uma vez. A mensalidade cobre`,
-    "hospedagem, suporte técnico, manutenção e atualizações — e, nos planos com",
+    "O começo é uma prévia do site, de graça. No plano Promoção não há entrada, e",
+    `a mensalidade de ${formatBRL(freeEntryMonthly())} cobre hospedagem, suporte técnico,`,
+    "manutenção e atualizações — e, nos planos com",
     "blog, a publicação de um conteúdo por mês. O site vai ao ar em semanas, não",
     "há painel para aprender nem plugin para atualizar, e o domínio fica no seu",
     "nome.",
@@ -137,12 +137,15 @@ const homeBody = (): string =>
     "",
     "## Planos",
     "",
-    "Todos os planos têm duas parcelas e nada mais: uma entrada única e uma",
-    "mensalidade que cobre hospedagem, suporte e manutenção. O domínio fica no",
-    "seu nome.",
+    "Comece com uma prévia do seu site, de graça. Todos os planos têm uma",
+    `mensalidade, a partir de ${formatBRL(monthlyPrice())}, que cobre hospedagem, suporte e`,
+    "manutenção — e no plano Promoção não há entrada. O domínio fica no seu nome.",
     "",
     PLANS.map(planSection).join("\n\n"),
     "",
+    ...PLAN_NOTES.map((note) =>
+      note.mark ? `${escapeMarks(note.mark)} ${note.text}\n` : `${note.text}\n`,
+    ),
     "## Projetos entregues",
     "",
     "Sites reais de clientes reais, apresentados por setor — quem contratou não",
@@ -272,9 +275,9 @@ const aboutPage = (): TextPage => ({
     "",
     "## Como a gente trabalha",
     "",
-    `O modelo cabe em duas parcelas: uma entrada para construir o site, a partir`,
-    `de ${formatBRL(entryPrice())}, e uma mensalidade que o mantém no ar, cuidado e`,
-    "atualizado. Não há orçamento por hora nem surpresa no terceiro mês.",
+    "O começo é uma prévia do site, de graça, para ver antes de decidir. Depois,",
+    `uma mensalidade a partir de ${formatBRL(monthlyPrice())} o mantém no ar, cuidado e atualizado —`,
+    "e no plano Promoção não há entrada nenhuma. Não há orçamento por hora nem surpresa no terceiro mês.",
     "",
     "As páginas já saem prontas e são servidas do ponto mais próximo de quem as",
     "abriu, o que é o que faz um site aguentar o mês de maior procura. O domínio",

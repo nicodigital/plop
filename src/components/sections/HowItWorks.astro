@@ -10,12 +10,12 @@ import { PLANS, formatBRL } from "../../data/plans.ts";
  */
 const steps = [
   {
-    title: "Escolha um plano",
-    body: "Três tamanhos, preço fechado e mensalidade clara. Nada de orçamento sob consulta.",
+    title: "Peça sua prévia grátis",
+    body: "Chama no WhatsApp e a gente monta uma prévia do seu site, sem custo e sem compromisso. Gostou? Escolha o plano.",
   },
   {
-    title: "Personalize seu site",
-    body: "Você manda logo, textos e fotos. A gente monta, mostra e ajusta antes de publicar.",
+    title: "Aprove e personalize",
+    body: "Você manda logo, textos e fotos. Os ajustes são aprovados por WhatsApp ou videochamada, antes de publicar.",
   },
   {
     title: "Publique e cresça",
@@ -74,8 +74,7 @@ const briefing = ["Seu logo", "Textos e fotos", "Contato e horários", "Redes so
                             <li class="on-ink flex items-baseline justify-between gap-4 text-white">
                               <span class="font-display font-semibold">{plan.name}</span>
                               <span class="font-display font-semibold text-plop-lime" data-numeric>
-                                {plan.setupFrom ? "a partir de " : ""}
-                                {formatBRL(plan.setup)}
+                                {plan.setup === 0 ? "Sem entrada" : `${plan.setupFrom ? "a partir de " : ""}${formatBRL(plan.setup)}`}
                               </span>
                             </li>
                           ))}
@@ -119,7 +118,7 @@ const briefing = ["Seu logo", "Textos e fotos", "Contato e horários", "Redes so
               class="on-ink absolute inset-0 flex flex-col justify-center p-[clamp(28px,3vw,44px)] transition-opacity duration-[calc(var(--beat)*1.5)] ease-[var(--ease-plop-out)]"
               data-panel="0"
             >
-              <h3 class="font-display text-h5 font-semibold text-plop-lime">Preço fechado</h3>
+              <h3 class="font-display text-h5 font-semibold text-plop-lime">Planos</h3>
               <ul class="mt-7 flex flex-col">
                 {
                   PLANS.map((plan) => (
@@ -132,8 +131,7 @@ const briefing = ["Seu logo", "Textos e fotos", "Contato e horários", "Redes so
                           class="block font-display text-h5 font-semibold text-plop-lime"
                           data-numeric
                         >
-                          {plan.setupFrom ? "a partir de " : ""}
-                          {formatBRL(plan.setup)}
+                          {plan.setup === 0 ? "Sem entrada" : `${plan.setupFrom ? "a partir de " : ""}${formatBRL(plan.setup)}`}
                         </span>
                         <span class="block text-ui text-plop-on-ink" data-numeric>
                           + {formatBRL(plan.monthly)}/mês

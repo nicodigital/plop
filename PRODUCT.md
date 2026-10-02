@@ -42,15 +42,15 @@ Promise that must hold in the product and in the site itself: **Menos complexida
 
 ## Capabilities and Constraints
 
-- Commercial offer is three plans. The middle one is the recommended plan and the only one confirmed by the original spec:
+- Commercial offer is three plans, modelled on vb3.com.br (October 2026): a free site preview as the entry point, and a middle plan with no entry at all:
 
-  | Plan | For whom | Entry | Monthly |
-  |---|---|---|---|
-  | Essencial | one-page landing | R$ 900 | R$ 200/mês |
-  | Profissional *(recommended)* | one page + blog | R$ 1.500 | R$ 300/mês |
-  | Completo | multi-page site + blog | from R$ 3.000 | R$ 450/mês |
+  | Plan | For whom | Entry | Monthly | CTA |
+  |---|---|---|---|---|
+  | Básico | one-page landing | R$ 1.000 | R$ 200/mês | `Quero o Básico` → contact form |
+  | Promoção *(recommended)* | one page + blog | none, 12-month minimum term | R$ 297/mês | `Prévia do site de graça` → WhatsApp |
+  | Customizado | multi-page site + blog | from R$ 3.000 | R$ 200/mês | `Quero o Customizado` → contact form |
 
-  **Essencial and Completo prices are provisional**, proposed by the agent and accepted as a working structure; they are not yet commercially confirmed. Profissional (R$ 1.500 + R$ 300/mês) comes from the spec and is firm.
+  The free preview ("prévia do site de graça") is requested on WhatsApp with a pre-written message (`PREVIEW_MESSAGE` in `src/data/site.ts`) and carries no commitment.
 
 - The monthly fee may include hosting, technical support, maintenance, and publication of one piece of content per month. It must not be described as including full SEO copywriting unless that is explicitly decided.
 
@@ -71,7 +71,7 @@ Promise that must hold in the product and in the site itself: **Menos complexida
 - Name: **PLOP! Sites**. The `Sites` in the name is descriptive and deliberate.
 - Logo: the approved vector at `assets/img/logo.svg`. Never rebuilt with a font, never recolored, never given 3D effects or shadows.
 - Voice: direct, close, concrete Brazilian Portuguese. Banned register: `experiências digitais disruptivas`, `soluções 360º`, `transformação digital inovadora`. Aligned vocabulary: simples, rápido, resultado, negócio, crescer, presença, cuidado, suporte, performance.
-- Confirmed copy anchors: `Seu negócio em destaque.` (H1), `Sites modernos, rápidos e fáceis de gerenciar.`, `Seu site pronto. E cuidado todos os meses.`, `Você cuida do seu negócio. A gente cuida do seu site.`, CTAs `Quero meu site` / `Ver planos`.
+- Confirmed copy anchors: `Seu negócio em destaque.` (H1), `Sites modernos, rápidos e fáceis de gerenciar.`, `Seu site pronto. E cuidado todos os meses.`, `Você cuida do seu negócio. A gente cuida do seu site.`, CTAs `Prévia do site de graça` (WhatsApp) / `Ver planos`.
 - Personality: direct, memorable, optimistic, accessible, technical without corporate-tech coldness, fun without being childish. Explicitly not: cyberpunk, heavy glassmorphism, dark neon, gamer, rainbow gradients, AI-cliché imagery.
 
 ## Evidence on Hand

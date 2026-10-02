@@ -1,7 +1,8 @@
 ---
 import { Image } from "astro:assets";
 import Button from "../ui/Button.astro";
-import { CONTACT_ANCHOR, PLANS_ANCHOR } from "../../data/nav.ts";
+import { PRIMARY_CTA, PLANS_ANCHOR } from "../../data/nav.ts";
+import { formatBRL, freeEntryMonthly } from "../../data/plans.ts";
 import laptopFront from "../../assets/img/laptop-front.png";
 
 /**
@@ -45,14 +46,14 @@ import laptopFront from "../../assets/img/laptop-front.png";
           atualizada e profissional.
         </p>
         <p class="mb-10 mt-6 text-center lg:mb-20 lg:mt-10">
-          Comece com <span class="text-plop-lime">R$ 1.500 + R$ 300/mês.</span>
+          Comece <span class="text-plop-lime">sem entrada, por {formatBRL(freeEntryMonthly())}/mês.</span>
         </p>
       </div>
       <div
         class="mt-8 flex flex-wrap items-center justify-center gap-3 lg:mt-10"
       >
-        <Button href={CONTACT_ANCHOR} class="min-w-[75vw] xg:min-w-auto" size="lg" data-track="cta_primary_click">
-          Quero meu site
+        <Button {...PRIMARY_CTA.attrs} class="min-w-[75vw] xg:min-w-auto" size="lg" icon="whatsapp">
+          {PRIMARY_CTA.label}
         </Button>
         <Button href={PLANS_ANCHOR} class="min-w-[75vw] xg:min-w-auto" variant="outline" size="lg" icon="arrow-up">
           Comparar planos

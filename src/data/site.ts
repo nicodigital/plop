@@ -2,8 +2,6 @@
  * Canonical origin. Confirm before the first production deploy: the sitemap,
  * canonicals and Open Graph URLs are all built from this value.
  */
-import { entryPrice, formatBRL } from "./plans.ts";
-
 export const SITE_URL = "https://plopsites.com.br";
 
 export const SITE_NAME = "Plop! Sites";
@@ -12,9 +10,6 @@ export const SITE_NAME = "Plop! Sites";
  * The one-line description of the business. Used as the blockquote in
  * `llms.txt`, as the Organization description and as the fallback for any
  * surface that needs the offer in a sentence.
- *
- * The entry price is read from `plans.ts` rather than typed: this string used
- * to quote a figure the plan cards had already moved past.
  */
 export const SITE_DESCRIPTION = `Desenvolvimento de sites modernos e rápidos de Curitiba para todo o Brasil. Mensalidade com hospedagem, suporte e manutenção incluídos.`;
 
@@ -38,6 +33,14 @@ export const OG_IMAGE_ALT =
 export const WHATSAPP_NUMBER = "+5541999390088";
 
 export const WHATSAPP_MESSAGE = "Oi! Quero saber mais sobre os sites do Plop!";
+
+/**
+ * The ask behind the primary CTA. The free preview is requested in a
+ * conversation, not a form, so the button opens WhatsApp with this sentence
+ * already typed.
+ */
+export const PREVIEW_MESSAGE =
+  "Olá! Vi o site do Plop! e quero uma prévia do meu site de graça. Podemos conversar?";
 
 export const HAS_WHATSAPP = WHATSAPP_NUMBER.length > 0;
 

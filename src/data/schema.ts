@@ -12,7 +12,7 @@
  * of as a dozen unrelated businesses that happen to share a name.
  */
 import { FAQ } from "./faq.ts";
-import { PLANS, entryPrice, formatBRL } from "./plans.ts";
+import { PLANS, entryLabel, featureLabel, formatBRL, monthlyPrice } from "./plans.ts";
 import { PROJECTS, type Project } from "./projects.ts";
 import {
   ADDRESS,
@@ -99,9 +99,9 @@ export const organizationSchema = (): JsonLd => ({
   ],
   serviceType: "Desenvolvimento de sites",
   knowsLanguage: ["pt-BR", "es", "en"],
-  /* The entry price of the cheapest plan upward — the figure the cards show,
-     so the rich result and the page can never disagree. */
-  priceRange: `${formatBRL(entryPrice())}+`,
+  /* The lowest monthly fee upward — with a plan that has no entry, the
+     monthly fee is the figure to compare, read from the cards. */
+  priceRange: `A partir de ${formatBRL(monthlyPrice())}/mês`,
   ...(HAS_WHATSAPP
     ? {
         contactPoint: {
@@ -240,7 +240,7 @@ const planService = (plan: (typeof PLANS)[number], anchorOn: string): JsonLd => 
        `UnitPriceSpecification` below, and in this offer's own description. */
     price: plan.setup,
     availability: "https://schema.org/InStock",
-    description: `Entrada de ${formatBRL(plan.setup)} mais ${formatBRL(plan.monthly)} por mês.`,
+    description: `Entrada: ${entryLabel(plan)}. Mensalidade de ${formatBRL(plan.monthly)}.`,
     priceSpecification: [
       {
         "@type": "UnitPriceSpecification",
@@ -273,7 +273,7 @@ const planService = (plan: (typeof PLANS)[number], anchorOn: string): JsonLd => 
           name: `O que o plano ${plan.name} inclui`,
           itemListElement: plan.features.map((feature) => ({
             "@type": "Offer",
-            itemOffered: { "@type": "Service", name: feature },
+            itemOffered: { "@type": "Service", name: featureLabel(feature) },
           })),
         },
       }
@@ -284,7 +284,7 @@ export const plansSchema = (anchorOn = "/"): JsonLd => ({
   "@context": "https://schema.org",
   "@type": "ItemList",
   name: `Planos ${SITE_NAME}`,
-  itemListOrder: "https://schema.org/ItemListOrderAscending",
+  itemListOrder: "https://schema.org/ItemListUnordered",
   numberOfItems: PLANS.length,
   itemListElement: PLANS.map((plan, index) => ({
     "@type": "ListItem",

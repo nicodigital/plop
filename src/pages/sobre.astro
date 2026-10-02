@@ -16,8 +16,8 @@ import GooeyStack from "../components/layout/GooeyStack.astro";
 import Button from "../components/ui/Button.astro";
 import { PROJECTS, liveCount } from "../data/projects.ts";
 import { AUTHOR, SERVICE_AREA_CITIES, SITE_NAME } from "../data/site.ts";
-import { entryPrice, formatBRL } from "../data/plans.ts";
-import { CONTACT_ANCHOR, PLANS_ANCHOR } from "../data/nav.ts";
+import { formatBRL, monthlyPrice } from "../data/plans.ts";
+import { CONTACT_ANCHOR, PLANS_ANCHOR, PRIMARY_CTA } from "../data/nav.ts";
 import {
   breadcrumbSchema,
   pageSchema,
@@ -90,9 +90,9 @@ const schema = [
         <h2>Como a gente trabalha</h2>
 
         <p>
-          O modelo é sempre o mesmo, e cabe em duas parcelas: uma <strong>entrada</strong> para construir o site, a partir de
-          <strong data-numeric>{formatBRL(entryPrice())}</strong>, e uma <strong>mensalidade</strong> que mantém ele no ar, cuidado e
-          atualizado. Nada de orçamento por hora, nada de surpresa no terceiro
+          O começo é uma <strong>prévia do seu site, de graça</strong>, para você ver antes de decidir. Depois, uma
+          <strong>mensalidade</strong> a partir de <strong data-numeric>{formatBRL(monthlyPrice())}</strong> mantém ele no ar, cuidado e
+          atualizado — e no plano Promoção não há entrada nenhuma. Nada de orçamento por hora, nada de surpresa no terceiro
           mês.
         </p>
 
@@ -144,8 +144,8 @@ const schema = [
       </div>
 
       <div class="mt-[clamp(40px,5vw,64px)] flex max-w-[68ch] flex-wrap gap-3">
-        <Button href={CONTACT_ANCHOR} variant="solid-ink" data-track="cta_primary_click">
-          Quero meu site
+        <Button {...PRIMARY_CTA.attrs} variant="solid-ink" icon="whatsapp">
+          {PRIMARY_CTA.label}
         </Button>
         <Button href={PLANS_ANCHOR}>Ver planos</Button>
       </div>

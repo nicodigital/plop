@@ -1,3 +1,5 @@
+import { HAS_WHATSAPP, PREVIEW_MESSAGE, whatsappHref, whatsappWebHref } from "./site.ts";
+
 export type NavItem = {
   label: string;
   href: string;
@@ -24,7 +26,26 @@ export const NAV_ITEMS: NavItem[] = [
   { label: "Contato", href: "/#contato", watches: "contato" },
 ];
 
-export const PRIMARY_CTA = { label: "Quero meu site", href: "/#contato" } as const;
+/**
+ * The primary action everywhere: ask for a free preview on WhatsApp.
+ * `attrs` is spread onto the link so every placement carries the same desktop
+ * upgrade (`scripts/whatsapp.ts`), new-tab behaviour and tracking. Without a
+ * number, `whatsappHref` already falls back to the contact form.
+ */
+const previewHref = whatsappHref(PREVIEW_MESSAGE);
+
+export const PRIMARY_CTA = {
+  label: "Prévia do site de graça",
+  href: previewHref,
+  attrs: {
+    href: previewHref,
+    "data-whatsapp-web": HAS_WHATSAPP ? whatsappWebHref(PREVIEW_MESSAGE) : undefined,
+    target: HAS_WHATSAPP ? "_blank" : undefined,
+    rel: "noopener",
+    "data-track": "cta_primary_click",
+    "data-track-value": "preview",
+  },
+} as const;
 
 /** Where the two recurring secondary actions point. */
 export const PLANS_ANCHOR = "/#planos";

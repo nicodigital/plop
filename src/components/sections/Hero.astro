@@ -1,7 +1,7 @@
 ---
 import Button from "../ui/Button.astro";
 import Modal from "../ui/Modal.astro";
-import { CONTACT_ANCHOR, PLANS_ANCHOR } from "../../data/nav.ts";
+import { PRIMARY_CTA, PLANS_ANCHOR } from "../../data/nav.ts";
 ---
 
 <section
@@ -50,8 +50,8 @@ import { CONTACT_ANCHOR, PLANS_ANCHOR } from "../../data/nav.ts";
 
       <div class="flex flex-wrap items-center gap-3 mt-12 lg:mt-8">
         <div class="anim" data-anim="bottom" data-delay="950" >
-        <Button href={CONTACT_ANCHOR} size="lg" data-track="cta_primary_click">
-          Quero meu site
+        <Button {...PRIMARY_CTA.attrs} size="lg" icon="whatsapp">
+          {PRIMARY_CTA.label}
         </Button>
         </div>
         <div class="anim" data-anim="bottom" data-delay="1100">
@@ -66,7 +66,7 @@ import { CONTACT_ANCHOR, PLANS_ANCHOR } from "../../data/nav.ts";
         class="hidden muted mt-6 xg:flex flex-col xg:flex-row flex-wrap gap-x-5 gap-y-1 text-ui font-semibold lg:mt-9 lg:gap-x-4 anim" data-anim="bottom" data-delay="1250"
       >
         <li class="before:mr-5 xg:before:text-plop-on-blue/55 xg:before:content-['·'] first:before:hidden lg:before:mr-6">
-          No ar em semanas
+          Comece sem entrada
         </li>
         <li class="xg:before:mr-5 xg:before:text-plop-on-blue/55 xg:before:content-['·'] first:before:hidden xg:before:mr-6">
           Hospedagem inclusa
@@ -153,8 +153,8 @@ import { CONTACT_ANCHOR, PLANS_ANCHOR } from "../../data/nav.ts";
       </p>
     </div>
 
-    <Button slot="actions" href={CONTACT_ANCHOR} variant="solid-ink" size="lg" data-track="cta_primary_click">
-      Quero meu site
+    <Button slot="actions" {...PRIMARY_CTA.attrs} variant="solid-ink" size="lg" icon="whatsapp">
+      {PRIMARY_CTA.label}
     </Button>
   </Modal>
 </section>

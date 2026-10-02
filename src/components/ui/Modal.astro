@@ -10,7 +10,7 @@ import Icon from "./Icon.astro";
  *
  *   <Modal id="blog-importa" title="Por que um blog importa">
  *     <div class="prose-plop">…</div>
- *     <Button slot="actions" href="/#contato">Quero meu site</Button>
+ *     <Button slot="actions" {...PRIMARY_CTA.attrs}>{PRIMARY_CTA.label}</Button>
  *   </Modal>
  *
  * The content is server-rendered inside the dialog, so it ships in the HTML

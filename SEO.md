@@ -93,8 +93,8 @@ barrera de build — el build nunca falla por esto.
 
 ### Nunca reescribas a mano un dato que vive en los datos
 
-`SITE_DESCRIPTION`, en `src/data/site.ts`, se construye a partir de
-`entryPrice()` en `src/data/plans.ts`. Esto no es decoración: la meta
+Los precios que citan el home, `sobre`, el espejo markdown y el JSON-LD salen
+de `monthlyPrice()` y `entryLabel()` en `src/data/plans.ts`. Esto no es decoración: la meta
 description del home citó "a partir de R$ 900" durante mucho tiempo después de
 que el plan más barato pasara a R$ 1.000. Si una frase contiene un precio, un
 recuento o una fecha que ya existe en un módulo de datos, interpólalo.

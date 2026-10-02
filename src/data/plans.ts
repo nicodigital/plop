@@ -3,30 +3,34 @@ export type Plan = {
   name: string;
   /** Who the plan is for. Read before the price. */
   audience: string;
-  /** Entry payment in BRL. */
+  /** Entry payment in BRL. Zero means the plan has no entry at all. */
   setup: number;
   /** Recurring monthly fee in BRL. */
   monthly: number;
   /** True when the entry price is a starting point, not a closed figure. */
   setupFrom?: boolean;
+  /**
+   * Minimum term in months. What a plan with no entry asks in return: the
+   * build is paid back through the first months of the fee.
+   */
+  commitmentMonths?: number;
   features: string[];
   recommended?: boolean;
   /**
-   * Whether the price is commercially confirmed. Essencial and Completo are
-   * working figures awaiting confirmation; this flag is for the team and is
-   * never rendered to visitors.
+   * Where the card's button leads. `preview` opens WhatsApp asking for the
+   * free preview; `contact` scrolls to the form with the plan already named.
    */
-  priceConfirmed: boolean;
+  cta: { label: string; kind: "preview" | "contact" };
 };
 
 export const PLANS: Plan[] = [
   {
-    slug: "essencial",
-    name: "Essencial",
+    slug: "basico",
+    name: "Básico",
     audience: "Para quem precisa existir no Google e no WhatsApp, sem mais nada.",
     setup: 1000,
     monthly: 200,
-    priceConfirmed: false,
+    cta: { label: "Quero o Básico", kind: "contact" },
     features: [
       "Uma página, feita sob medida",
       "Otimizado para dispositivos móveis",
@@ -36,17 +40,19 @@ export const PLANS: Plan[] = [
       "Otimização básica de SEO",
       "Suporte técnico",
       "Manutenção e atualizações",
-      "1 conta de e-mail inclusa",
+      "1 conta de e-mail inclusa **",
     ],
   },
   {
-    slug: "profissional",
-    name: "Profissional",
-    audience: "Para quem quer aparecer no Google publicando com regularidade.",
-    setup: 1500,
-    monthly: 300,
+    slug: "promocao",
+    name: "Promoção",
+    audience:
+      "Seu site começa sem custo de criação. A Plop! desenvolve sua página inicial e você começa a pagar somente quando o site estiver pronto para entrar no ar.",
+    setup: 0,
+    monthly: 297,
+    commitmentMonths: 12,
     recommended: true,
-    priceConfirmed: true,
+    cta: { label: "Prévia do site de graça", kind: "preview" },
     features: [
       "Uma página, feita sob medida",
       "Otimizado para dispositivos móveis",
@@ -57,33 +63,52 @@ export const PLANS: Plan[] = [
       "Otimização básica de SEO",
       "Suporte técnico",
       "Manutenção e atualizações",
-      "Publicação de 1 conteúdo por mês",
-      "1 conta de e-mail inclusa",
+      "Publicação de 1 conteúdo por mês *",
+      "1 conta de e-mail inclusa **",
     ],
   },
   {
-    slug: "completo",
-    name: "Completo",
+    slug: "customizado",
+    name: "Customizado",
     audience: "Para quem tem várias linhas de serviço ou produto para explicar.",
     setup: 3000,
     setupFrom: true,
-    monthly: 450,
-    priceConfirmed: false,
+    monthly: 200,
+    cta: { label: "Quero o Customizado", kind: "contact" },
     features: [
       "Site de várias páginas",
       "Otimizado para dispositivos móveis",
       "Otimizado para IA",
-      "Blog completo",
       "Formulário e botão de WhatsApp",
       "Hospedagem inclusa",
       "Otimização básica de SEO",
       "Suporte técnico prioritário",
       "Manutenção e atualizações",
-      "Publicação de 1 conteúdo por mês",
-      "1 conta de e-mail inclusa",
+      "1 conta de e-mail inclusa **",
     ],
   },
 ];
+
+/**
+ * The notes printed under the cards. Each `mark` matches the asterisks a
+ * feature ends with above, so the limit sits next to the plan it qualifies.
+ */
+export const PLAN_NOTES: { mark?: string; text: string }[] = [
+  {
+    mark: "*",
+    text: "Publicação de 1 conteúdo por mês: 1 solicitação de atualização de conteúdo por mês, de até 30 minutos de trabalho.",
+  },
+  {
+    mark: "**",
+    text: "1 conta de e-mail inclusa: é possível contratar mais contas de e-mail separadamente.",
+  },
+  {
+    text: "O domínio fica no seu nome. Se um dia você quiser levar o site para outro lugar, ele vai com você.",
+  },
+];
+
+/** A feature without its note marker, for surfaces that do not print the notes. */
+export const featureLabel = (feature: string): string => feature.replace(/\s*\*+$/, "");
 
 export const formatBRL = (value: number): string =>
   new Intl.NumberFormat("pt-BR", {
@@ -94,8 +119,31 @@ export const formatBRL = (value: number): string =>
   }).format(value);
 
 /**
- * Entry price of the cheapest plan. The figure the home, the meta description
- * and the Organization graph all quote, derived once so they cannot disagree
- * with the cards.
+ * The lowest monthly fee — the "a partir de" figure the home, the meta copy and
+ * the Organization graph quote, derived once so they cannot disagree with the
+ * cards.
  */
-export const entryPrice = (): number => Math.min(...PLANS.map((plan) => plan.setup));
+export const monthlyPrice = (): number => Math.min(...PLANS.map((plan) => plan.monthly));
+
+/** The plan that starts with no entry, if there is one. */
+export const freeEntryPlan = (): Plan | undefined => PLANS.find((plan) => plan.setup === 0);
+
+/**
+ * The monthly fee of the no-entry plan. Sentences that name the Promoção quote
+ * this, not `monthlyPrice()`: the plans no longer share one fee.
+ */
+export const freeEntryMonthly = (): number => (freeEntryPlan() ?? PLANS[0]).monthly;
+
+/**
+ * The entry as a phrase, the way every text surface (markdown mirror,
+ * llms.txt, JSON-LD) states it. "R$ 0" reads as a typo; "sem entrada" is the
+ * offer.
+ */
+export const entryLabel = (plan: Plan): string => {
+  if (plan.setup === 0) {
+    return plan.commitmentMonths
+      ? `sem entrada (fidelidade mínima de ${plan.commitmentMonths} meses)`
+      : "sem entrada";
+  }
+  return `${plan.setupFrom ? "a partir de " : ""}${formatBRL(plan.setup)}`;
+};

@@ -1,8 +1,8 @@
 ---
 import { SERVICE_AREA_CITIES } from "../../data/site.ts";
 import Button from "../ui/Button.astro";
-import { CONTACT_ANCHOR, PLANS_ANCHOR } from "../../data/nav.ts";
-import { entryPrice, formatBRL } from "../../data/plans.ts";
+import { PRIMARY_CTA, PLANS_ANCHOR } from "../../data/nav.ts";
+import { formatBRL, freeEntryMonthly } from "../../data/plans.ts";
 
 /**
  * Who the studio is and where it works, in plain prose.
@@ -25,7 +25,7 @@ import { entryPrice, formatBRL } from "../../data/plans.ts";
  * site describing a reach Google cannot confirm.
  */
 const areas = SERVICE_AREA_CITIES.join(", ").replace(/, ([^,]*)$/, " e $1");
-const entry = formatBRL(entryPrice());
+const monthly = formatBRL(freeEntryMonthly());
 ---
 
 <section
@@ -74,10 +74,11 @@ const entry = formatBRL(entryPrice());
       </p>
       <p class="mb-4">
         O começo é sempre uma conversa sobre o que o seu negócio precisa dizer,
-        e o site vai ao ar em semanas, não em meses. A entrada começa em <strong
+        e a primeira coisa que você recebe é uma prévia do seu site, de graça. No plano
+        Promoção não há entrada, e a mensalidade é de <strong
           class="font-semibold"
-          data-numeric>{entry}</strong
-        >, paga uma vez. A mensalidade cobre hospedagem, suporte técnico,
+          data-numeric>{monthly}</strong
+        >. Ela cobre hospedagem, suporte técnico,
         manutenção e atualizações — e, nos planos com blog, a publicação de um
         conteúdo por mês. Não há painel para aprender, não há plugin para
         atualizar, e o domínio fica no seu nome.
@@ -94,11 +95,11 @@ const entry = formatBRL(entryPrice());
       <div class="flex flex-wrap items-center gap-3 mt-12 xg:mt-20">
         <div class="anim" data-anim="bottom" data-delay="950">
           <Button
-            href={CONTACT_ANCHOR}
+            {...PRIMARY_CTA.attrs}
             size="lg"
-            data-track="cta_primary_click"
+            icon="whatsapp"
           >
-            Quero meu site
+            {PRIMARY_CTA.label}
           </Button>
         </div>
         <div class="anim" data-anim="bottom" data-delay="1100">

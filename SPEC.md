@@ -85,7 +85,7 @@ La primera parte de Home utiliza un video de fondo (C:\Proyectos\PLOP\assets\vid
 - Eyebrow: `SITES PROFISSIONAIS PARA NEGÓCIOS INDEPENDENTES`
 - Copy orientativo:
   `Sites modernos, rápidos e fáceis de gerenciar. Design de alto desempenho com um preço que faz sentido.`
-- CTA primario: `Quero meu site`
+- CTA primario: `Prévia do site de graça` (abre WhatsApp con mensaje prellenado)
 - CTA secundario: `Ver planos`
 - Microbeneficios opcionales: rapidez, visibilidad, soporte.
 - El H1 y CTA nunca deben estar rasterizados dentro del asset.

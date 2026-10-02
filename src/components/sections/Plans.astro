@@ -1,8 +1,8 @@
 ---
 import Icon from "../ui/Icon.astro";
 import Button from "../ui/Button.astro";
-import { PLANS, formatBRL } from "../../data/plans.ts";
-import { CONTACT_ANCHOR } from "../../data/nav.ts";
+import { PLANS, PLAN_NOTES, formatBRL, monthlyPrice } from "../../data/plans.ts";
+import { CONTACT_ANCHOR, PRIMARY_CTA } from "../../data/nav.ts";
 
 interface Props {
   heading?: string;
@@ -11,8 +11,8 @@ interface Props {
 }
 
 const {
-  heading = "Preço justo, <br class='hidden lg:block' >sem complicação.",
-  intro = "Uma entrada para construir + uma mensalidade para manter no ar<br class='hidden lg:block' > e atualizado. Os dois números estão aqui.",
+  heading = "Site as a Service",
+  intro = `Peça uma prévia do seu site de graça. Gostou? Escolha o plano: mensalidade a partir de ${formatBRL(monthlyPrice())} com hospedagem, suporte e manutenção.`,
   headingLevel: Heading = "h2",
 } = Astro.props;
 ---
@@ -105,9 +105,9 @@ const {
                   "block font-display text-[clamp(2.5rem,4vw,3.25rem)] font-bold leading-none tracking-[-0.04em]",
                   plan.recommended ? "text-plop-lime" : "text-plop-ink",
                 ]}
-                data-numeric
+                data-numeric={plan.setup > 0 || undefined}
               >
-                {formatBRL(plan.setup)}
+                {plan.setup > 0 ? formatBRL(plan.setup) : "Sem entrada"}
               </span>
               <span
                 class:list={[
@@ -115,7 +115,9 @@ const {
                   plan.recommended ? "text-plop-on-ink" : "text-plop-on-white",
                 ]}
               >
-                entrada, uma vez
+                {plan.setup > 0
+                  ? "entrada, uma vez"
+                  : `fidelidade mínima de ${plan.commitmentMonths} meses`}
               </span>
             </div>
 
@@ -174,37 +176,66 @@ const {
             </ul>
 
             <div class="mt-8 flex pt-1">
-              <Button
-                href={CONTACT_ANCHOR}
-                variant={plan.recommended ? "primary" : "solid-ink"}
-                class="w-full"
-                data-plan-pick={plan.name}
-                data-track="plan_select"
-                data-track-value={plan.slug}
-              >
-                Quero o {plan.name}
-              </Button>
+              {plan.cta.kind === "preview" ? (
+                <Button
+                  {...PRIMARY_CTA.attrs}
+                  variant={plan.recommended ? "primary" : "solid-ink"}
+                  class="w-full whitespace-nowrap"
+                  icon="whatsapp"
+                  data-track="plan_select"
+                  data-track-value={plan.slug}
+                >
+                  {plan.cta.label}
+                </Button>
+              ) : (
+                <Button
+                  href={CONTACT_ANCHOR}
+                  variant={plan.recommended ? "primary" : "solid-ink"}
+                  class="w-full whitespace-nowrap"
+                  data-plan-pick={plan.name}
+                  data-track="plan_select"
+                  data-track-value={plan.slug}
+                >
+                  {plan.cta.label}
+                </Button>
+              )}
             </div>
           </li>
         ))
       }
     </ul>
 
-    <p class="muted balanced-breaks mx-auto mt-8 max-w-[62ch] text-center text-ui">
-      O domínio fica no seu nome. Se um dia você quiser levar o site<br />
-      para outro lugar, ele vai com você.
-    </p>
+    {/* Same columns as the cards, so each note reads as part of the table. */}
+    <ul class="plan-notes muted mt-8 text-ui" aria-label="Observações sobre os planos">
+      {
+        PLAN_NOTES.map((note) => (
+          <li class="flex gap-1.5">
+            {note.mark && <span aria-hidden="true">{note.mark}</span>}
+            <span>{note.text}</span>
+          </li>
+        ))
+      }
+    </ul>
   </div>
 </section>
 
 <style>
-  .plan-table {
+  .plan-table,
+  .plan-notes {
     display: grid;
     gap: clamp(16px, 2vw, 24px);
     list-style: none;
   }
 
+  .plan-notes {
+    row-gap: 0.75rem;
+  }
+
   @media (min-width: 900px) {
+    .plan-notes {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
     .plan-table {
       grid-template-columns: repeat(3, minmax(0, 1fr));
       /* name · audience · entry · monthly · features · action */

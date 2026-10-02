@@ -5,6 +5,16 @@ export type FaqItem = {
 
 export const FAQ: FaqItem[] = [
   {
+    question: "Como funciona a prévia grátis?",
+    answer:
+      "Você chama no WhatsApp e conta o que o seu negócio faz. A gente monta uma prévia do seu site, sem custo e sem compromisso. Se gostar, escolhe o plano e o site segue para a publicação; se não, não deve nada.",
+  },
+  {
+    question: "Tem taxa de entrada?",
+    answer:
+      "No plano Promoção, não: seu site começa sem custo de criação. A Plop! desenvolve sua página inicial e você começa a pagar a mensalidade somente quando o site estiver pronto para entrar no ar, com fidelidade mínima de 12 meses. No Básico a entrada é de R$ 1.000, e no Customizado começa em R$ 3.000. A mensalidade é de R$ 297 no Promoção e de R$ 200 no Básico e no Customizado.",
+  },
+  {
     question: "Em quanto tempo meu site fica pronto?",
     answer:
       "Depende do plano e de quão rápido você envia textos, fotos e logo. Assim que o material está completo, a construção começa e você acompanha o resultado antes de publicar.",
@@ -12,7 +22,7 @@ export const FAQ: FaqItem[] = [
   {
     question: "O que está incluído na mensalidade?",
     answer:
-      "Hospedagem, suporte técnico, manutenção e atualizações. Nos planos Profissional e Completo, também a publicação de um conteúdo por mês no blog.",
+      "Hospedagem, suporte técnico, manutenção e atualizações. Nos planos Promoção e Customizado, também a publicação de um conteúdo por mês no blog.",
   },
   {
     question: "Preciso saber mexer em alguma coisa?",
@@ -27,7 +37,7 @@ export const FAQ: FaqItem[] = [
   {
     question: "E se eu quiser cancelar?",
     answer:
-      "A mensalidade cobre hospedagem e cuidado contínuo. Ao cancelar, esses serviços param — o site publicado e o domínio continuam sendo seus.",
+      "Pode. Os planos Básico e Customizado não têm fidelidade; o Promoção, que começa sem entrada, tem fidelidade mínima de 12 meses. Ao cancelar, a hospedagem e o cuidado mensal param — o site publicado e o domínio continuam sendo seus.",
   },
   {
     question: "Vocês escrevem os textos do site?",
