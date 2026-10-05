@@ -28,8 +28,9 @@ export const PLANS: Plan[] = [
     slug: "basico",
     name: "Básico",
     audience: "Para quem precisa existir no Google e no WhatsApp, sem mais nada.",
-    setup: 1000,
+    setup: 0,
     monthly: 200,
+    commitmentMonths: 12,
     cta: { label: "Quero o Básico", kind: "contact" },
     features: [
       "Uma página, feita sob medida",
@@ -70,7 +71,7 @@ export const PLANS: Plan[] = [
   {
     slug: "customizado",
     name: "Customizado",
-    audience: "Para quem tem várias linhas de serviço ou produto para explicar.",
+    audience: "Para desenvolver sites mais complexos e com outras funcionalidades.",
     setup: 3000,
     setupFrom: true,
     monthly: 200,
@@ -125,8 +126,14 @@ export const formatBRL = (value: number): string =>
  */
 export const monthlyPrice = (): number => Math.min(...PLANS.map((plan) => plan.monthly));
 
-/** The plan that starts with no entry, if there is one. */
-export const freeEntryPlan = (): Plan | undefined => PLANS.find((plan) => plan.setup === 0);
+/**
+ * The no-entry plan the rest of the site quotes. Básico and Promoção both
+ * start with no entry and a 12-month term; the hero, the final CTA and the
+ * studio name the recommended one.
+ */
+export const freeEntryPlan = (): Plan | undefined =>
+  PLANS.find((plan) => plan.recommended && plan.setup === 0) ??
+  PLANS.find((plan) => plan.setup === 0);
 
 /**
  * The monthly fee of the no-entry plan. Sentences that name the Promoção quote

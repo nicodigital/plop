@@ -2,6 +2,9 @@
 import Button from "../ui/Button.astro";
 import Modal from "../ui/Modal.astro";
 import { PRIMARY_CTA, PLANS_ANCHOR } from "../../data/nav.ts";
+import { PLANS, formatBRL, freeEntryPlan } from "../../data/plans.ts";
+
+const offer = freeEntryPlan() ?? PLANS[0];
 ---
 
 <section
@@ -48,6 +51,29 @@ import { PRIMARY_CTA, PLANS_ANCHOR } from "../../data/nav.ts";
         A internet mudou. A forma de buscar também. Criamos sites rápidos, inteligentes e preparados para serem encontrados por pessoas e pela IA.
       </p>
 
+      {/*
+        The offer in one line, right under the promise and before the buttons:
+        what it costs to start, what it costs each month, and who looks after
+        it. Both figures are read from the plan with no entry, so the hero
+        cannot quote a price the cards have moved past.
+      */}
+      <ul
+        class="mt-6 flex flex-wrap items-baseline gap-x-3 gap-y-1 font-display text-ui-xl font-semibold text-white lg:mt-8 anim"
+        data-anim="bottom"
+        data-delay="900"
+        aria-label="Como funciona o plano Promoção"
+      >
+        <li>
+          <span class="text-plop-lime" data-numeric>{formatBRL(offer.setup)}</span> para começar
+        </li>
+        <li class="before:mr-3 before:text-plop-on-blue/55 before:content-['·']">
+          <span class="text-plop-lime" data-numeric>{formatBRL(offer.monthly)}</span>/mês
+        </li>
+        <li class="before:mr-3 before:text-plop-on-blue/55 before:content-['·']">
+          tudo cuidado pela Plop!
+        </li>
+      </ul>
+
       <div class="flex flex-wrap items-center gap-3 mt-12 lg:mt-8">
         <div class="anim" data-anim="bottom" data-delay="950" >
         <Button {...PRIMARY_CTA.attrs} size="lg" icon="whatsapp">
@@ -60,21 +86,6 @@ import { PRIMARY_CTA, PLANS_ANCHOR } from "../../data/nav.ts";
         </Button>
         </div>
       </div>
-
-      {/* Separators are drawn, not listed, so a wrap never strands one. */}
-      <ul
-        class="hidden muted mt-6 xg:flex flex-col xg:flex-row flex-wrap gap-x-5 gap-y-1 text-ui font-semibold lg:mt-9 lg:gap-x-4 anim" data-anim="bottom" data-delay="1250"
-      >
-        <li class="before:mr-5 xg:before:text-plop-on-blue/55 xg:before:content-['·'] first:before:hidden lg:before:mr-6">
-          Comece sem entrada
-        </li>
-        <li class="xg:before:mr-5 xg:before:text-plop-on-blue/55 xg:before:content-['·'] first:before:hidden xg:before:mr-6">
-          Hospedagem inclusa
-        </li>
-        <li class="xg:before:mr-5 xg:before:text-plop-on-blue/55 xg:before:content-['·'] first:before:hidden xg:before:mr-6">
-          Cuidado todo mês
-        </li>
-      </ul>
 
       {/*
         The headline promises visibility in AI answers, and that is a promise

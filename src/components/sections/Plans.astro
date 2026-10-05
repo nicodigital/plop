@@ -107,18 +107,20 @@ const {
                 ]}
                 data-numeric={plan.setup > 0 || undefined}
               >
-                {plan.setup > 0 ? formatBRL(plan.setup) : "Sem entrada"}
+                {plan.setup > 0 ? formatBRL(plan.setup) : "Site grátis"}
               </span>
-              <span
-                class:list={[
-                  "mt-2 block text-ui",
-                  plan.recommended ? "text-plop-on-ink" : "text-plop-on-white",
-                ]}
-              >
-                {plan.setup > 0
-                  ? "entrada, uma vez"
-                  : `fidelidade mínima de ${plan.commitmentMonths} meses`}
-              </span>
+              {(plan.setup > 0 || plan.commitmentMonths) && (
+                <span
+                  class:list={[
+                    "mt-2 block text-ui",
+                    plan.recommended ? "text-plop-on-ink" : "text-plop-on-white",
+                  ]}
+                >
+                  {plan.setup > 0
+                    ? "entrada, uma vez"
+                    : `fidelidade mínima de ${plan.commitmentMonths} meses`}
+                </span>
+              )}
             </div>
 
             <div

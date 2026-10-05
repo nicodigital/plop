@@ -124,7 +124,7 @@ depois que ninguém cuida daquilo.
 Não adianta escrever um texto sobre transparência de preço e não dizer o
 próprio. Os nossos são estes:
 
-- **Básico — R$ 1.000 de entrada e R$ 200 por mês.** Uma página sob medida,
+- **Básico — sem entrada e R$ 200 por mês**, com fidelidade mínima de 12 meses. Uma página sob medida,
   formulário, botão de WhatsApp, hospedagem, suporte e manutenção inclusos.
 - **Promoção — sem entrada e R$ 297 por mês**, com fidelidade mínima de 12
   meses. Uma página sob medida com blog completo e a publicação de um conteúdo
