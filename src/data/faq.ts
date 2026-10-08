@@ -12,7 +12,7 @@ export const FAQ: FaqItem[] = [
   {
     question: "Tem taxa de entrada?",
     answer:
-      "No Básico e no Promoção, não. Os dois começam sem entrada, com fidelidade mínima de 12 meses. No Promoção, a Plop! desenvolve sua página inicial e você começa a pagar a mensalidade somente quando o site estiver pronto para entrar no ar. No Customizado a entrada começa em R$ 3.000. A mensalidade é de R$ 297 no Promoção e de R$ 200 no Básico e no Customizado.",
+      "No Básico e no Promoção, não. Os dois começam sem entrada e sem período de carência. No Promoção, a Plop! desenvolve sua página inicial e você começa a pagar a mensalidade somente quando o site estiver pronto para entrar no ar. No Customizado a entrada começa em R$ 3.000. A mensalidade é de R$ 297 no Promoção, de R$ 200 no Básico e de R$ 100 no Customizado.",
   },
   {
     question: "Em quanto tempo meu site fica pronto?",
@@ -37,7 +37,7 @@ export const FAQ: FaqItem[] = [
   {
     question: "E se eu quiser cancelar?",
     answer:
-      "Pode. O Customizado não tem fidelidade; o Básico e o Promoção, que começam sem entrada, têm fidelidade mínima de 12 meses. Ao cancelar, a hospedagem e o cuidado mensal param — o site publicado e o domínio continuam sendo seus.",
+      "Pode. Nenhum plano tem período de carência. Ao cancelar, a hospedagem e o cuidado mensal param — o site publicado e o domínio continuam sendo seus.",
   },
   {
     question: "Vocês escrevem os textos do site?",

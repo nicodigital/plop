@@ -109,18 +109,14 @@ const {
               >
                 {plan.setup > 0 ? formatBRL(plan.setup) : "Site grátis"}
               </span>
-              {(plan.setup > 0 || plan.commitmentMonths) && (
-                <span
-                  class:list={[
-                    "mt-2 block text-ui",
-                    plan.recommended ? "text-plop-on-ink" : "text-plop-on-white",
-                  ]}
-                >
-                  {plan.setup > 0
-                    ? "entrada, uma vez"
-                    : `fidelidade mínima de ${plan.commitmentMonths} meses`}
-                </span>
-              )}
+              <span
+                class:list={[
+                  "mt-2 block text-ui",
+                  plan.recommended ? "text-plop-on-ink" : "text-plop-on-white",
+                ]}
+              >
+                {plan.setup > 0 ? "entrada, uma vez" : "sem período de carência"}
+              </span>
             </div>
 
             <div

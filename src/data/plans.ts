@@ -9,11 +9,6 @@ export type Plan = {
   monthly: number;
   /** True when the entry price is a starting point, not a closed figure. */
   setupFrom?: boolean;
-  /**
-   * Minimum term in months. What a plan with no entry asks in return: the
-   * build is paid back through the first months of the fee.
-   */
-  commitmentMonths?: number;
   features: string[];
   recommended?: boolean;
   /**
@@ -30,7 +25,6 @@ export const PLANS: Plan[] = [
     audience: "Para quem precisa existir no Google e no WhatsApp, sem mais nada.",
     setup: 0,
     monthly: 200,
-    commitmentMonths: 12,
     cta: { label: "Quero o Básico", kind: "contact" },
     features: [
       "Uma página, feita sob medida",
@@ -51,7 +45,6 @@ export const PLANS: Plan[] = [
       "Seu site começa sem custo de criação. A Plop! desenvolve sua página inicial e você começa a pagar somente quando o site estiver pronto para entrar no ar.",
     setup: 0,
     monthly: 297,
-    commitmentMonths: 12,
     recommended: true,
     cta: { label: "Prévia do site de graça", kind: "preview" },
     features: [
@@ -74,7 +67,7 @@ export const PLANS: Plan[] = [
     audience: "Para desenvolver sites mais complexos e com outras funcionalidades.",
     setup: 3000,
     setupFrom: true,
-    monthly: 200,
+    monthly: 100,
     cta: { label: "Quero o Customizado", kind: "contact" },
     features: [
       "Site de várias páginas",
@@ -128,8 +121,8 @@ export const monthlyPrice = (): number => Math.min(...PLANS.map((plan) => plan.m
 
 /**
  * The no-entry plan the rest of the site quotes. Básico and Promoção both
- * start with no entry and a 12-month term; the hero, the final CTA and the
- * studio name the recommended one.
+ * start with no entry; the hero, the final CTA and the studio name the
+ * recommended one.
  */
 export const freeEntryPlan = (): Plan | undefined =>
   PLANS.find((plan) => plan.recommended && plan.setup === 0) ??
@@ -147,10 +140,6 @@ export const freeEntryMonthly = (): number => (freeEntryPlan() ?? PLANS[0]).mont
  * offer.
  */
 export const entryLabel = (plan: Plan): string => {
-  if (plan.setup === 0) {
-    return plan.commitmentMonths
-      ? `sem entrada (fidelidade mínima de ${plan.commitmentMonths} meses)`
-      : "sem entrada";
-  }
+  if (plan.setup === 0) return "sem entrada, sem período de carência";
   return `${plan.setupFrom ? "a partir de " : ""}${formatBRL(plan.setup)}`;
 };

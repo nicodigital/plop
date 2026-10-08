@@ -124,12 +124,12 @@ depois que ninguém cuida daquilo.
 Não adianta escrever um texto sobre transparência de preço e não dizer o
 próprio. Os nossos são estes:
 
-- **Básico — sem entrada e R$ 200 por mês**, com fidelidade mínima de 12 meses. Uma página sob medida,
+- **Básico — sem entrada e R$ 200 por mês**, sem período de carência. Uma página sob medida,
   formulário, botão de WhatsApp, hospedagem, suporte e manutenção inclusos.
-- **Promoção — sem entrada e R$ 297 por mês**, com fidelidade mínima de 12
-  meses. Uma página sob medida com blog completo e a publicação de um conteúdo
+- **Promoção — sem entrada e R$ 297 por mês**, sem período de carência. Uma
+  página sob medida com blog completo e a publicação de um conteúdo
   por mês.
-- **Customizado — a partir de R$ 3.000 de entrada e R$ 200 por mês.** Site de
+- **Customizado — a partir de R$ 3.000 de entrada e R$ 100 por mês.** Site de
   várias páginas, para quem tem mais de uma linha de serviço para explicar.
 
 E antes de qualquer um deles, dá para pedir uma prévia do seu site, de graça.
