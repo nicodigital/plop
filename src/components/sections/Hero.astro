@@ -53,8 +53,8 @@ const offer = freeEntryPlan() ?? PLANS[0];
 
       {/*
         The offer in one line, right under the promise and before the buttons:
-        what it costs to start, what it costs each month, and who looks after
-        it. Both figures are read from the plan with no entry, so the hero
+        what it costs to start, what it costs each month, and that there is no
+        lock-in. Both figures are read from the plan with no entry, so the hero
         cannot quote a price the cards have moved past.
       */}
       <ul
@@ -70,7 +70,7 @@ const offer = freeEntryPlan() ?? PLANS[0];
           <span class="text-plop-lime" data-numeric>{formatBRL(offer.monthly)}</span>/mês
         </li>
         <li class="before:mr-3 before:text-plop-on-blue/55 before:content-['·']">
-          tudo cuidado pela Plop!
+          Sem carência
         </li>
       </ul>
 
