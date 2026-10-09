@@ -40,7 +40,7 @@ export const PLANS: Plan[] = [
   },
   {
     slug: "promocao",
-    name: "Promoção",
+    name: "Inteligente",
     audience:
       "Seu site começa sem custo de criação. A Plop! desenvolve sua página inicial e você começa a pagar somente quando o site estiver pronto para entrar no ar.",
     setup: 0,
@@ -58,6 +58,7 @@ export const PLANS: Plan[] = [
       "Suporte técnico",
       "Manutenção e atualizações",
       "Publicação de 1 conteúdo por mês *",
+      "Chatbot com IA",
       "1 conta de e-mail inclusa **",
     ],
   },
@@ -120,7 +121,7 @@ export const formatBRL = (value: number): string =>
 export const monthlyPrice = (): number => Math.min(...PLANS.map((plan) => plan.monthly));
 
 /**
- * The no-entry plan the rest of the site quotes. Básico and Promoção both
+ * The no-entry plan the rest of the site quotes. Básico and Inteligente both
  * start with no entry; the hero, the final CTA and the studio name the
  * recommended one.
  */
@@ -129,7 +130,7 @@ export const freeEntryPlan = (): Plan | undefined =>
   PLANS.find((plan) => plan.setup === 0);
 
 /**
- * The monthly fee of the no-entry plan. Sentences that name the Promoção quote
+ * The monthly fee of the no-entry plan. Sentences that name the Inteligente quote
  * this, not `monthlyPrice()`: the plans no longer share one fee.
  */
 export const freeEntryMonthly = (): number => (freeEntryPlan() ?? PLANS[0]).monthly;
@@ -140,6 +141,6 @@ export const freeEntryMonthly = (): number => (freeEntryPlan() ?? PLANS[0]).mont
  * offer.
  */
 export const entryLabel = (plan: Plan): string => {
-  if (plan.setup === 0) return "sem entrada, sem período de carência";
+  if (plan.setup === 0) return "sem entrada, sem fidelidade";
   return `${plan.setupFrom ? "a partir de " : ""}${formatBRL(plan.setup)}`;
 };

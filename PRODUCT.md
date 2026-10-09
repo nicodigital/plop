@@ -42,12 +42,12 @@ Promise that must hold in the product and in the site itself: **Menos complexida
 
 ## Capabilities and Constraints
 
-- Commercial offer is three plans, modelled on vb3.com.br (October 2026): a free site preview as the entry point. Básico and Promoção start with no entry and no lock-in period:
+- Commercial offer is three plans, modelled on vb3.com.br (October 2026): a free site preview as the entry point. Básico and Inteligente start with no entry and no fidelity period:
 
   | Plan | For whom | Entry | Monthly | CTA |
   |---|---|---|---|---|
-  | Básico | one-page landing | none, no lock-in | R$ 200/mês | `Quero o Básico` → contact form |
-  | Promoção *(recommended)* | one page + blog | none, no lock-in | R$ 297/mês | `Prévia do site de graça` → WhatsApp |
+  | Básico | one-page landing | none, no fidelity period | R$ 200/mês | `Quero o Básico` → contact form |
+  | Inteligente *(recommended)* | one page + blog, AI chatbot | none, no fidelity period | R$ 297/mês | `Prévia do site de graça` → WhatsApp |
   | Customizado | multi-page site + blog | from R$ 3.000 | R$ 100/mês | `Quero o Customizado` → contact form |
 
   The free preview ("prévia do site de graça") is requested on WhatsApp with a pre-written message (`PREVIEW_MESSAGE` in `src/data/site.ts`) and carries no commitment.
