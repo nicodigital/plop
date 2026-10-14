@@ -24,7 +24,7 @@ export const PLANS: Plan[] = [
     name: "Básico",
     audience: "Para quem precisa existir no Google e no WhatsApp, sem mais nada.",
     setup: 0,
-    monthly: 200,
+    monthly: 150,
     cta: { label: "Quero o Básico", kind: "contact" },
     features: [
       "Uma página, feita sob medida",
@@ -34,8 +34,7 @@ export const PLANS: Plan[] = [
       "Hospedagem inclusa",
       "Otimização básica de SEO",
       "Suporte técnico",
-      "Manutenção e atualizações",
-      "1 conta de e-mail inclusa **",
+      "Manutenção",
     ],
   },
   {
@@ -68,7 +67,7 @@ export const PLANS: Plan[] = [
     audience: "Para desenvolver sites mais complexos e com outras funcionalidades.",
     setup: 3000,
     setupFrom: true,
-    monthly: 100,
+    monthly: 150,
     cta: { label: "Quero o Customizado", kind: "contact" },
     features: [
       "Site de várias páginas",
@@ -121,9 +120,8 @@ export const formatBRL = (value: number): string =>
 export const monthlyPrice = (): number => Math.min(...PLANS.map((plan) => plan.monthly));
 
 /**
- * The no-entry plan the rest of the site quotes. Básico and Inteligente both
- * start with no entry; the hero, the final CTA and the studio name the
- * recommended one.
+ * The recommended no-entry plan. The final CTA and the studio quote its fee.
+ * The hero quotes the cheapest plan with no entry instead.
  */
 export const freeEntryPlan = (): Plan | undefined =>
   PLANS.find((plan) => plan.recommended && plan.setup === 0) ??

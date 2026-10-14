@@ -2,9 +2,13 @@
 import Button from "../ui/Button.astro";
 import Modal from "../ui/Modal.astro";
 import { PRIMARY_CTA, PLANS_ANCHOR } from "../../data/nav.ts";
-import { PLANS, formatBRL, freeEntryPlan } from "../../data/plans.ts";
+import { PLANS, formatBRL } from "../../data/plans.ts";
 
-const offer = freeEntryPlan() ?? PLANS[0];
+/* The line quotes the cheapest plan that starts at R$ 0. The recommended
+   plan can cost more; this figure has to match a card the visitor can find. */
+const offer =
+  PLANS.filter((plan) => plan.setup === 0).sort((a, b) => a.monthly - b.monthly)[0] ??
+  PLANS[0];
 ---
 
 <section
@@ -54,14 +58,13 @@ const offer = freeEntryPlan() ?? PLANS[0];
       {/*
         The offer in one line, right under the promise and before the buttons:
         what it costs to start, what it costs each month, and that there is no
-        fidelity period. Both figures are read from the plan with no entry, so the hero
-        cannot quote a price the cards have moved past.
+        fidelity period. Both figures come from the cheapest plan with no entry.
       */}
       <ul
         class="mt-6 flex flex-wrap items-baseline gap-x-3 gap-y-1 font-display text-ui-xl font-semibold text-white lg:mt-8 anim"
         data-anim="bottom"
         data-delay="900"
-        aria-label="Como funciona o plano Inteligente"
+        aria-label={`Como funciona o plano ${offer.name}`}
       >
         <li>
           <span class="text-plop-lime" data-numeric>{formatBRL(offer.setup)}</span> para começar

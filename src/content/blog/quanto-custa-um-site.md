@@ -124,12 +124,12 @@ depois que ninguém cuida daquilo.
 Não adianta escrever um texto sobre transparência de preço e não dizer o
 próprio. Os nossos são estes:
 
-- **Básico — sem entrada e R$ 200 por mês**, sem fidelidade. Uma página sob medida,
+- **Básico — sem entrada e R$ 150 por mês**, sem fidelidade. Uma página sob medida,
   formulário, botão de WhatsApp, hospedagem, suporte e manutenção inclusos.
 - **Inteligente — sem entrada e R$ 297 por mês**, sem fidelidade. Uma
   página sob medida com blog completo, a publicação de um conteúdo
   por mês e chatbot com IA.
-- **Customizado — a partir de R$ 3.000 de entrada e R$ 100 por mês.** Site de
+- **Customizado — a partir de R$ 3.000 de entrada e R$ 150 por mês.** Site de
   várias páginas, para quem tem mais de uma linha de serviço para explicar.
 
 E antes de qualquer um deles, dá para pedir uma prévia do seu site, de graça.

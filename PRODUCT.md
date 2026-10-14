@@ -46,9 +46,9 @@ Promise that must hold in the product and in the site itself: **Menos complexida
 
   | Plan | For whom | Entry | Monthly | CTA |
   |---|---|---|---|---|
-  | Básico | one-page landing | none, no fidelity period | R$ 200/mês | `Quero o Básico` → contact form |
+  | Básico | one-page landing | none, no fidelity period | R$ 150/mês | `Quero o Básico` → contact form |
   | Inteligente *(recommended)* | one page + blog, AI chatbot | none, no fidelity period | R$ 297/mês | `Prévia do site de graça` → WhatsApp |
-  | Customizado | multi-page site + blog | from R$ 3.000 | R$ 100/mês | `Quero o Customizado` → contact form |
+  | Customizado | multi-page site + blog | from R$ 3.000 | R$ 150/mês | `Quero o Customizado` → contact form |
 
   The free preview ("prévia do site de graça") is requested on WhatsApp with a pre-written message (`PREVIEW_MESSAGE` in `src/data/site.ts`) and carries no commitment.
 
