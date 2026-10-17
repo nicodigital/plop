@@ -81,8 +81,8 @@ export const organizationSchema = (): JsonLd => ({
   /* The registered address, from the same constant the footer prints. A
      LocalBusiness without a `PostalAddress` is not eligible for a local
      result at all, however complete the rest of the node is — but it needs no
-     street line: clients are served remotely, and `hasMap` points at the
-     Business Profile rather than at a door nobody visits. */
+     street line: the profile hides the address, and `hasMap` points at the
+     Business Profile rather than at a published door. */
   address: {
     "@type": "PostalAddress",
     addressLocality: ADDRESS.city,
@@ -90,9 +90,10 @@ export const organizationSchema = (): JsonLd => ({
     addressCountry: ADDRESS.countryCode,
   },
   hasMap: GOOGLE_BUSINESS_PROFILE,
-  /* The country is what the studio itself claims — the work is remote and the
-     footer says so. The cities are what the Business Profile declares, repeated
-     here so the two cannot describe a different reach. */
+  /* The country is what the studio itself claims — atendimento is remote and
+     in person, and the footer states national reach. The cities are what the
+     Business Profile declares, repeated here so the two cannot describe a
+     different reach. */
   areaServed: [
     { "@type": "Country", name: ADDRESS.country },
     ...SERVICE_AREA_CITIES.map((name) => ({ "@type": "City", name })),

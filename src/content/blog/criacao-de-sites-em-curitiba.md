@@ -104,7 +104,7 @@ na página de serviços](/blog/o-que-escrever-na-pagina-de-servicos/).
 
 ## Precisa ser uma empresa de Curitiba?
 
-Tecnicamente, não. O trabalho é remoto há anos e funciona bem assim.
+Tecnicamente, não. O atendimento é remoto e presencial, e as duas formas funcionam bem há anos.
 
 O que ajuda de verdade é quem conhece o contexto: entender que Curitiba tem
 bairros com perfis bem diferentes, que a sazonalidade do seu setor aqui não é a

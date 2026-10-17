@@ -114,10 +114,11 @@ export const PHONE_DISPLAY = "+55 (41) 99939-0088";
  * `PostalAddress` node inside `organizationSchema()` — and a crawler that
  * finds one locality in the markup and another in the JSON-LD trusts neither.
  *
- * No street and no postcode. Clients are served remotely and never visit, so
- * the Business Profile runs as a service-area listing with its address hidden,
- * and Google asks that the site not publish what the profile withholds. A
- * `PostalAddress` needs neither field to keep `LocalBusiness` eligible.
+ * No street and no postcode. The Business Profile runs as a service-area
+ * listing with its address hidden, and Google asks that the site not publish
+ * what the profile withholds. In-person meetings in Curitiba do not turn that
+ * into a published storefront. A `PostalAddress` needs neither field to keep
+ * `LocalBusiness` eligible.
  */
 /**
  * What the studio does and where, in one line of prose.
@@ -130,8 +131,8 @@ export const PHONE_DISPLAY = "+55 (41) 99939-0088";
  * manual action is for.
  *
  * "Atendimento em todo o Brasil" is not padding — it is the honest half. The
- * work is remote and the listing declares a service area, so a line naming
- * only the city would describe a storefront that does not exist.
+ * work is remote and in person, and the listing declares a service area, so a
+ * line naming only the city would describe a storefront that does not exist.
  */
 export const LOCAL_SUMMARY =
   "Desenvolvimento web de Curitiba para todo o Brasil.";
