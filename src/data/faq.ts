@@ -30,6 +30,11 @@ export const FAQ: FaqItem[] = [
       "Não. Você manda o que quer mudar e a alteração é feita. O site não exige painel, plugin nem atualização da sua parte.",
   },
   {
+    question: "O atendimento é presencial ou remoto?",
+    answer:
+      "Os dois. Em Curitiba pode ser presencial. No resto do Brasil o trabalho segue por mensagem e por chamada, e o acompanhamento é o mesmo.",
+  },
+  {
     question: "O domínio é meu?",
     answer:
       "Sim. O domínio fica no seu nome. Se um dia você quiser levar o site para outro lugar, ele vai com você.",
