@@ -3,7 +3,7 @@ import GooeyStack from "./GooeyStack.astro";
 import Logo from "../ui/Logo.astro";
 import ContactForm from "../ui/ContactForm.astro";
 import Icon from "../ui/Icon.astro";
-import { ADDRESS, CNPJ, CONTACT_EMAIL, HAS_WHATSAPP, LOCAL_SUMMARY, PHONE_DISPLAY, SITE_NAME, whatsappHref, whatsappWebHref } from "../../data/site.ts";
+import { ADDRESS, CNPJ, CONTACT_EMAIL, HAS_WHATSAPP, INSTAGRAM_HANDLE, INSTAGRAM_URL, LOCAL_SUMMARY, PHONE_DISPLAY, SITE_NAME, whatsappHref, whatsappWebHref } from "../../data/site.ts";
 
 const year = new Date().getFullYear();
 ---
@@ -65,6 +65,22 @@ const year = new Date().getFullYear();
                   class="inline-flex min-h-[44px] items-center font-display text-ui-xl font-semibold text-white transition-colors duration-[var(--duration-fast)] hover:text-plop-lime"
                 >
                   {CONTACT_EMAIL}
+                </a>
+              </dd>
+            </div>
+            <div>
+              <dt class="muted flex items-center gap-2 font-semibold">
+                <Icon name="instagram" size={22} class="shrink-0" />
+                Instagram
+              </dt>
+              <dd class="mt-1">
+                <a
+                  href={INSTAGRAM_URL}
+                  target="_blank"
+                  rel="noopener"
+                  class="inline-flex min-h-[44px] items-center font-display text-ui-xl font-semibold text-white transition-colors duration-[var(--duration-fast)] hover:text-plop-lime"
+                >
+                  {INSTAGRAM_HANDLE}
                 </a>
               </dd>
             </div>

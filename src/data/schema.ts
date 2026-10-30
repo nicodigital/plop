@@ -19,6 +19,7 @@ import {
   AUTHOR,
   CNPJ,
   CONTACT_EMAIL,
+  INSTAGRAM_URL,
   GOOGLE_BUSINESS_PROFILE,
   HAS_WHATSAPP,
   OG_IMAGE,
@@ -122,6 +123,7 @@ export const organizationSchema = (): JsonLd => ({
   founder: { "@id": PERSON_ID },
   sameAs: [
     GOOGLE_BUSINESS_PROFILE,
+    INSTAGRAM_URL,
     ...(HAS_WHATSAPP ? [`https://wa.me/${WHATSAPP_NUMBER.replace(/\D/g, "")}`] : []),
   ],
 });

@@ -69,6 +69,9 @@ export const whatsappWebHref = (message: string = WHATSAPP_MESSAGE): string =>
 
 export const CONTACT_EMAIL = "ola@plopsites.com.br";
 
+export const INSTAGRAM_URL = "https://www.instagram.com/plopsites/";
+export const INSTAGRAM_HANDLE = "@plopsites";
+
 /**
  * The Google Business Profile, addressed by its CID — the listing's stable id.
  * A Maps URL copied out of the address bar carries a session build stamp and a

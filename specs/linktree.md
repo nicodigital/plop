@@ -153,7 +153,7 @@ const links: LinkCard[] = [
   {
     title: "Instagram",
     detail: "@plopsites",
-    href: "https://www.instagram.com/plopsites/",
+    href: INSTAGRAM_URL,
     icon: "instagram",
     surface: "bg-white text-plop-ink hover:bg-plop-blue-50",
     detailTone: "text-plop-on-white",

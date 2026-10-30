@@ -149,7 +149,9 @@ Tailwind is the primary styling system.
 
 `ANIMATIONS.spec.md` is the portable export of the motion system (the `.anim` reveal, the headline rotator, the motion tokens, Lenis and view transitions). Keep it in sync with `animations.js` / `animations.css` when the reveal API changes.
 
-`LINKTREE.spec.md` is the portable export of the `/linktree/` link-in-bio page (anatomy, card data model, `bare` layout prop, noindex wiring and the dev trailing-slash redirect). Keep it in sync with `src/pages/linktree.astro`.
+`specs/linktree.md` is the portable export of the `/linktree/` link-in-bio page (anatomy, card data model, `bare` layout prop, noindex wiring and the dev trailing-slash redirect). Keep it in sync with `src/pages/linktree.astro`.
+
+**Specs always live in `/specs`.** Every new spec (a portable export or the description of a feature) is created as `specs/<kebab-case-name>.md`, never at the repository root.
 
 For a new implementation, prefer **Tailwind CSS 4 through the official Vite plugin** used by current Astro versions.
 
