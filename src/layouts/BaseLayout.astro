@@ -34,6 +34,8 @@ interface Props {
   markdown?: boolean;
   /** Above-the-fold image to preload, when the route has an LCP candidate. */
   preloadImage?: string;
+  /** No header, footer or WhatsApp dock: a page that is only its own links. */
+  bare?: boolean;
 }
 
 const {
@@ -49,6 +51,7 @@ const {
   noindex = false,
   markdown = true,
   preloadImage,
+  bare = false,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, SITE_URL).href;
@@ -172,7 +175,7 @@ const website = websiteSchema();
       </filter>
     </svg>
 
-    <Header />
+    {!bare && <Header />}
 
     {/* `tabindex="-1"` so the skip link actually moves focus and not only the
         scroll position: `<main>` is not focusable on its own. */}
@@ -180,8 +183,8 @@ const website = websiteSchema();
       <slot />
     </main>
 
-    <Footer />
-    <WhatsAppDock />
+    {!bare && <Footer />}
+    {!bare && <WhatsAppDock />}
 
     <script>
       import animations from "../scripts/animations.js";

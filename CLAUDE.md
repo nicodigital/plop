@@ -149,6 +149,8 @@ Tailwind is the primary styling system.
 
 `ANIMATIONS.spec.md` is the portable export of the motion system (the `.anim` reveal, the headline rotator, the motion tokens, Lenis and view transitions). Keep it in sync with `animations.js` / `animations.css` when the reveal API changes.
 
+`LINKTREE.spec.md` is the portable export of the `/linktree/` link-in-bio page (anatomy, card data model, `bare` layout prop, noindex wiring and the dev trailing-slash redirect). Keep it in sync with `src/pages/linktree.astro`.
+
 For a new implementation, prefer **Tailwind CSS 4 through the official Vite plugin** used by current Astro versions.
 
 Do not use the legacy `@astrojs/tailwind` integration for a new Tailwind 4 setup.
@@ -700,6 +702,11 @@ type Project = {
 ```
 
 Keep data separate from presentation when content is expected to grow.
+
+Google Business Profile summaries of the blog live in `src/content/google/`
+and follow `GBP-POSTS.spec.md`. They are a queue for the profile dashboard,
+not pages: do not route them, and do not add them to the sitemap or to
+`llms.txt`.
 
 ## 19. Cloudflare Workers deployment
 

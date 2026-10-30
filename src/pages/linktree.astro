@@ -1,0 +1,139 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Logo from "../components/ui/Logo.astro";
+import Icon from "../components/ui/Icon.astro";
+import type { IconName } from "../components/ui/Icon.astro";
+import {
+  HAS_WHATSAPP,
+  LOCAL_SUMMARY,
+  PHONE_DISPLAY,
+  whatsappHref,
+  whatsappWebHref,
+} from "../data/site.ts";
+
+/**
+ * Link-in-bio page for the Instagram profile. Three destinations and nothing
+ * else: no header, footer or dock competing for the tap. WhatsApp is the
+ * action, so it alone takes the lime.
+ */
+type LinkCard = {
+  title: string;
+  detail: string;
+  href: string;
+  icon: IconName;
+  surface: string;
+  detailTone: string;
+  attrs?: Record<string, string | undefined>;
+};
+
+const links: LinkCard[] = [
+  {
+    title: "WhatsApp",
+    detail: HAS_WHATSAPP ? PHONE_DISPLAY : "Fale com a gente",
+    href: whatsappHref(),
+    icon: "whatsapp",
+    surface: "bg-plop-lime text-plop-ink hover:bg-plop-lime-bright",
+    detailTone: "text-plop-ink/75",
+    attrs: {
+      "data-whatsapp-web": HAS_WHATSAPP ? whatsappWebHref() : undefined,
+      "data-track": HAS_WHATSAPP ? "whatsapp_click" : "cta_primary_click",
+    },
+  },
+  {
+    title: "Instagram",
+    detail: "@plopsites",
+    href: "https://www.instagram.com/plopsites/",
+    icon: "instagram",
+    surface: "bg-white text-plop-ink hover:bg-plop-blue-50",
+    detailTone: "text-plop-on-white",
+  },
+  {
+    title: "Site",
+    detail: "Planos, projetos e blog",
+    href: "/",
+    icon: "desktop",
+    surface: "bg-plop-blue-950 text-white hover:bg-plop-blue-900",
+    detailTone: "text-white/75",
+  },
+];
+---
+
+<BaseLayout
+  title="Links"
+  description="Fale com a Plop! Sites no WhatsApp, acompanhe o Instagram ou conheça os planos de sites modernos, rápidos e fáceis de gerenciar."
+  noindex
+  markdown={false}
+  bare
+>
+  <section
+    class="on-blue relative isolate flex min-h-svh flex-col overflow-hidden bg-plop-blue-deep"
+    aria-labelledby="links-titulo"
+  >
+    {/* Two still liquid masses, the same tonal radial the 404 uses. No goo
+        filter here: this page is opened from a phone's in-app browser and
+        has to be instant. */}
+    <div
+      class="pointer-events-none absolute -right-[18%] -top-[30%] -z-10 size-[min(110vw,760px)] rounded-full bg-[radial-gradient(circle_at_44%_58%,color-mix(in_srgb,var(--color-plop-blue)_85%,transparent),transparent_70%)]"
+      aria-hidden="true"
+    >
+    </div>
+    <div
+      class="pointer-events-none absolute -bottom-[36%] -left-[24%] -z-10 size-[min(120vw,820px)] rounded-full bg-[radial-gradient(circle_at_50%_50%,color-mix(in_srgb,var(--color-plop-blue-800)_90%,transparent),transparent_70%)]"
+      aria-hidden="true"
+    >
+    </div>
+
+    <div class="shell flex flex-1 flex-col py-[clamp(32px,6vh,72px)]">
+      <a href="/" class="w-fit rounded-plop-sm" aria-label="Plop! Sites — início">
+        <Logo height={56} class="h-11 w-auto md:h-14" decorative />
+      </a>
+
+      <div class="my-auto pt-[clamp(48px,10vh,120px)] pb-[clamp(32px,6vh,64px)]">
+        <h1 id="links-titulo" class="max-w-[12ch] text-[length:var(--text-h1)] text-balance">
+          Sites que fazem acontecer.
+        </h1>
+        <p class="muted mt-5 text-[length:var(--text-lead)]">Por onde você quer seguir?</p>
+
+        <ul class="mt-10 grid gap-3 md:mt-14 md:grid-cols-3 md:gap-5" role="list">
+          {
+            links.map((link, index) => (
+              <li class="anim" data-anim="bottom" data-once data-delay={index * 150}>
+                <a
+                  href={link.href}
+                  class:list={[
+                    "group relative flex min-h-[5.5rem] items-center gap-4 rounded-plop-lg [corner-shape:squircle] p-4 pr-5 no-underline transition-[background-color,translate] duration-[var(--duration-fast)] ease-[var(--ease-plop-out)] hover:-translate-y-1",
+                    "md:min-h-[clamp(15rem,30vh,20rem)] md:flex-col md:items-start md:justify-between md:p-7",
+                    link.surface,
+                  ]}
+                  {...link.attrs}
+                >
+                  <span class="grid size-14 shrink-0 place-items-center rounded-full bg-current/10 md:size-16">
+                    <Icon name={link.icon} size={28} />
+                  </span>
+                  <span class="min-w-0 flex-1 md:flex-none">
+                    <span class="block font-display text-[length:var(--text-h3)] font-bold leading-[0.98] tracking-[-0.035em]">
+                      {link.title}
+                    </span>
+                    <span
+                      class:list={["mt-1.5 block truncate text-ui font-semibold md:mt-2.5", link.detailTone]}
+                      data-numeric={link.icon === "whatsapp" ? "" : undefined}
+                    >
+                      {link.detail}
+                    </span>
+                  </span>
+                  <Icon
+                    name="arrow-right"
+                    size={24}
+                    class="shrink-0 transition-transform duration-[var(--duration-fast)] ease-[var(--ease-plop-out)] group-hover:translate-x-1 md:absolute md:right-7 md:top-7 md:size-7"
+                  />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <p class="muted text-small">{LOCAL_SUMMARY}</p>
+    </div>
+  </section>
+</BaseLayout>

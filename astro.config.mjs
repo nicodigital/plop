@@ -89,6 +89,39 @@ const priorityFor = (pathname) => {
   return 0.3;
 };
 
+/**
+ * `trailingSlash: "always"` makes the dev server answer `/linktree` with a 404,
+ * while Workers Static Assets redirects it to `/linktree/` in production. This
+ * mirrors that redirect in dev, for page navigations only, so a link typed
+ * without the slash behaves the same in both places.
+ *
+ * @type {import("vite").Plugin}
+ */
+const devTrailingSlash = {
+  name: "plop:dev-trailing-slash",
+  apply: "serve",
+  configureServer(server) {
+    /** @type {import("vite").Connect.NextHandleFunction} */
+    const redirect = (req, res, next) => {
+      const [pathname, query] = (req.url ?? "").split("?");
+      const isPageRequest =
+        req.method === "GET" && req.headers.accept?.includes("text/html");
+      if (!isPageRequest || pathname.endsWith("/") || pathname.includes(".")) {
+        return next();
+      }
+      res.statusCode = 301;
+      res.setHeader("Location", `${pathname}/${query ? `?${query}` : ""}`);
+      res.end();
+    };
+    /* Astro unshifts its trailing-slash 404 onto the stack in a post hook.
+       This plugin is registered after Astro's, so its post hook runs later
+       and its unshift lands in front. */
+    return () => {
+      server.middlewares.stack.unshift({ route: "", handle: redirect });
+    };
+  },
+};
+
 export default defineConfig({
   site: SITE_URL,
   trailingSlash: "always",
@@ -134,8 +167,12 @@ export default defineConfig({
   integrations: [
     sitemap({
       /* Astro drops /404/ on its own; this keeps out anything that is a slice
-         of another page rather than a page of its own. */
-      filter: (page) => !/\/blog\/\d+\/$/.test(new URL(page).pathname),
+         of another page rather than a page of its own, plus the noindexed
+         link-in-bio page. */
+      filter: (page) => {
+        const pathname = new URL(page).pathname;
+        return !/\/blog\/\d+\/$/.test(pathname) && pathname !== "/linktree/";
+      },
       serialize: (item) => {
         const pathname = new URL(item.url).pathname;
         const lastmod = postDates.get(pathname);
@@ -152,7 +189,7 @@ export default defineConfig({
     }),
   ],
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [tailwindcss(), devTrailingSlash],
     define: {
       /* Substituted into both the page markup and the client script, so the
          widget and its mount logic read the same key. */

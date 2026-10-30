@@ -5,10 +5,11 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "npm run check:google && astro build",
     "preview": "astro preview",
     "dev:worker": "npm run build && wrangler dev",
-    "check": "astro check",
+    "check": "astro check && npm run check:google",
+    "check:google": "node --experimental-strip-types scripts/check-google-posts.ts",
     "deploy": "npm run build && wrangler deploy",
     "check:worker": "tsc -p worker/tsconfig.json --noEmit",
     "covers": "node scripts/blog-covers.mjs",

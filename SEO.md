@@ -335,3 +335,14 @@ Conviene revisar a mano después de un cambio de contenido o de precios:
   de build (§2).
 - No hay feed RSS. Si se añade, enlázalo desde el head del layout y desde
   `/llms.txt`.
+
+## 12. Publicaciones del Perfil de Empresa
+
+Los resúmenes para el Perfil de Empresa de Google viven en
+`src/content/google/*.md` y siguen `GBP-POSTS.spec.md`. Son la cola para
+pegar en el panel. No son páginas: no tienen ruta, no entran en el sitemap
+y no se listan en `llms.txt`. El artículo del blog sigue siendo el documento
+público.
+
+`npm run check:google` cuenta el cuerpo (máximo 1.500 caracteres) y corre
+antes de `npm run build`. Nada en el build llama a la API de Google.
