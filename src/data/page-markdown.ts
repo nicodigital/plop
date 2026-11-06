@@ -151,9 +151,9 @@ const homeBody = (): string =>
     "Sites reais de clientes reais, apresentados por setor — quem contratou não",
     "é nomeado. O link é a prova.",
     "",
-    /* The home slider shows the featured ten, so the mirror of the home shows
-       the same ten. The rest are on /projetos/, which has a mirror of its own
-       — a page's markdown must not claim content the page does not carry. */
+    /* The home slider shows the featured projects, so the mirror of the home
+       shows the same set. The rest are on /projetos/, which has a mirror of
+       its own — a page's markdown must not claim content the page does not carry. */
     FEATURED_PROJECTS.map(
       (project) =>
         `- **${project.sector}** — ${project.description}${project.url ? ` (${project.url})` : ""}`,

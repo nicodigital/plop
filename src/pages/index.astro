@@ -38,9 +38,9 @@ const schema = [
   personSchema(),
   faqSchema(),
   plansSchema("/"),
-  /* The home slider shows the featured ten, so its ItemList describes ten.
-     Structured data that listed all thirty-three would describe a page the
-     crawler cannot see. */
+  /* The home slider shows the featured projects, so its ItemList describes
+     that set. Structured data that listed every project would describe a page
+     the crawler cannot see. */
   projectsSchema(FEATURED_PROJECTS),
 ];
 ---

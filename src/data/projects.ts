@@ -51,7 +51,7 @@ export type Project = {
   /** Whether the tile and the project page lead with the scroll capture or a
    *  still screenshot. Only the captured projects have `.webm`/`.mp4`. */
   media: "video" | "shot";
-  /** On the home slider. Ten of them, split across the two bands. */
+  /** On the home slider, split across the two bands. */
   featured: boolean;
   status: ProjectStatus;
   build: ProjectBuild;
@@ -71,20 +71,7 @@ export type Project = {
  * another brand and the domain now redirects elsewhere.
  */
 export const PROJECTS: Project[] = [
-  /* --- Featured: the ten with a scroll capture, shown on the home slider. --- */
-  {
-    slug: "moviruta",
-    url: "https://moviruta.nicolasgonzalez.dev/",
-    sector: "Mobilidade elétrica",
-    sectorGroup: "arquitetura-imoveis-industria",
-    description:
-      "Catálogo de veículos elétricos com pontos de venda e solicitação de orçamento.",
-    media: "video",
-    featured: true,
-    status: "wip",
-    build: "dynamic",
-    duration: 26,
-  },
+  /* --- Featured: scroll captures shown on the home slider. --- */
   {
     slug: "bercetche",
     url: "https://bercetche.com/",
@@ -204,6 +191,19 @@ export const PROJECTS: Project[] = [
   },
 
   /* --- The rest of the delivered work, shown on /projetos/ only. --- */
+  {
+    slug: "moviruta",
+    url: "https://moviruta.nicolasgonzalez.dev/",
+    sector: "Mobilidade elétrica",
+    sectorGroup: "arquitetura-imoveis-industria",
+    description:
+      "Catálogo de veículos elétricos com pontos de venda e solicitação de orçamento.",
+    media: "video",
+    featured: false,
+    status: "wip",
+    build: "dynamic",
+    duration: 26,
+  },
   {
     slug: "mitra",
     url: "https://mitra.com.uy/",
@@ -445,7 +445,7 @@ export const PROJECTS: Project[] = [
   },
 ];
 
-/** The home slider's ten, in the order they were curated. */
+/** The home slider, in the order the featured projects were curated. */
 export const FEATURED_PROJECTS = PROJECTS.filter((project) => project.featured);
 
 /** Sector groups that actually hold a project, in `SECTOR_GROUPS` order. */
