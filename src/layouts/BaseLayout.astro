@@ -145,12 +145,12 @@ const website = websiteSchema();
     {/* For the handful of head tags only one route knows about — the blog
         listing's rel=prev/next, so far. */}
     <slot name="head" />
-    <script async src="https://www.googletagmanager.com/gtm.js?id=AW-859949125"></script>
-    <!-- adwords -->
+    {/* Google Tag Manager. The start event is what fires GTM's "All Pages"
+        triggers; its origins are allowed in `security.csp` (astro.config.mjs). */}
+    <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-W9JWFW6B"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+      window.dataLayer.push({ "gtm.start": Date.now(), event: "gtm.js" });
     </script>
   </head>
 

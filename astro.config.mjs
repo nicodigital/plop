@@ -135,13 +135,16 @@ export default defineConfig({
       algorithm: "SHA-256",
       directives: [
         "default-src 'self'",
-        "img-src 'self' data:",
-        "font-src 'self'",
+        /* Google origins: GTM (incl. Preview mode), GA4 and Google Ads, per
+           https://developers.google.com/tag-platform/security/guides/csp.
+           CSP has no TLD wildcard, so google.com.br (Brazil) is listed by hand. */
+        "img-src 'self' data: https://*.google-analytics.com https://*.googletagmanager.com https://*.doubleclick.net https://*.google.com https://*.google.com.br https://www.googleadservices.com https://pagead2.googlesyndication.com https://ssl.gstatic.com https://www.gstatic.com",
+        "font-src 'self' data: https://fonts.gstatic.com",
         "media-src 'self'",
         /* Turnstile loads its widget in an iframe and talks back to its own
-           origin; nothing else on this site reaches outside. */
-        "connect-src 'self' https://challenges.cloudflare.com",
-        "frame-src https://challenges.cloudflare.com",
+           origin; the rest are the Google tags' beacons. */
+        "connect-src 'self' https://challenges.cloudflare.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.doubleclick.net https://*.google.com https://*.google.com.br https://www.googleadservices.com https://pagead2.googlesyndication.com",
+        "frame-src https://challenges.cloudflare.com https://td.doubleclick.net https://www.googletagmanager.com",
         "object-src 'none'",
         "base-uri 'self'",
         "form-action 'self'",
@@ -154,13 +157,25 @@ export default defineConfig({
           "'self'",
           "https://challenges.cloudflare.com",
           "https://static.cloudflareinsights.com",
+          "https://*.googletagmanager.com",
+          "https://www.googleadservices.com",
+          "https://googleads.g.doubleclick.net",
+          "https://www.google.com",
+          "https://tagmanager.google.com",
         ],
       },
       styleDirective: {
         /* Hashes cover the <style> elements. A handful of style="" attributes
            survive in the markup and cannot be hashed, so they are allowed on
            the attribute directive alone — not on style-src at large. */
-        resources: ["'self'", { resource: "'unsafe-inline'", kind: "attribute" }],
+        resources: [
+          "'self'",
+          { resource: "'unsafe-inline'", kind: "attribute" },
+          // GTM Preview mode badge.
+          "https://www.googletagmanager.com",
+          "https://tagmanager.google.com",
+          "https://fonts.googleapis.com",
+        ],
       },
     },
   },
